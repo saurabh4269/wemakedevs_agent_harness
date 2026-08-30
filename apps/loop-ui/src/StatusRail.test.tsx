@@ -25,9 +25,11 @@ describe("StatusRail", () => {
   it("does not apply an older poll after a newer one", async () => {
     vi.useFakeTimers();
     const waiting: LoopStatus = {
-      ...EMPTY_STATUS,
       phase: "waiting",
+      doing: EMPTY_STATUS.doing,
       waiting: "Approve the write before it runs",
+      did: EMPTY_STATUS.did,
+      error: EMPTY_STATUS.error,
     };
     let resolveOlder: (status: LoopStatus) => void = () => {};
     let resolveNewer: (status: LoopStatus) => void = () => {};

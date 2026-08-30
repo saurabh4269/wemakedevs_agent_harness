@@ -1,6 +1,11 @@
 export const DEFAULT_TRUEFORGE_URL = "http://localhost:8790";
 export const HOSTED_TRUEFORGE_URL = "https://loop.thexplorers.xyz";
 
+export type TrueForgeServerConfig = {
+  type: "trueforge";
+  baseUrl: string;
+};
+
 export function resolveTrueForgeBaseUrl(): string {
   const configured = import.meta.env.VITE_TRUEFORGE_URL;
   if (configured !== undefined && configured.length > 0) {
@@ -12,15 +17,9 @@ export function resolveTrueForgeBaseUrl(): string {
   return HOSTED_TRUEFORGE_URL;
 }
 
-export function trueForgeServer(): {
-  type: "trueforge";
-  baseUrl: string;
-  token?: string;
-} {
-  const token = import.meta.env.VITE_TRUEFORGE_TOKEN;
+export function trueForgeServer(): TrueForgeServerConfig {
   return {
     type: "trueforge",
     baseUrl: resolveTrueForgeBaseUrl(),
-    ...(token ? { token } : {}),
   };
 }

@@ -80,7 +80,13 @@ function hasPendingApproval(event: LoopEvent): boolean {
 }
 
 export function deriveLoopStatus(events: LoopEvent[]): LoopStatus {
-  const status: LoopStatus = { ...EMPTY_STATUS };
+  const status: LoopStatus = {
+    phase: EMPTY_STATUS.phase,
+    doing: EMPTY_STATUS.doing,
+    waiting: EMPTY_STATUS.waiting,
+    did: EMPTY_STATUS.did,
+    error: EMPTY_STATUS.error,
+  };
   if (events.length === 0) {
     return status;
   }

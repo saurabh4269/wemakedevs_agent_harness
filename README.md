@@ -131,9 +131,10 @@ TrueForge must already be running (step 2 above, http://localhost:8790). Then:
 
 ```bash
 npm install
-cd apps/loop-ui && npm install && cd ../..
 npm run ui
 ```
+
+apps/loop-ui is a workspace of this repo, so installing at the root also installs UI dependencies. The chat embed is unauthenticated and receives only the server URL.
 
 Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.thexplorers.xyz.
 
@@ -191,13 +192,22 @@ Qodo findings and status:
 | Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
 | Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
 
+**PR #2:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+
+| Finding | Severity | Status |
+| --- | --- | --- |
+| Clean install breaks tests (root install skipped loop-ui deps) | High | Fixed (root workspaces include `apps/loop-ui`; engines remain `>=22.14.0`) |
+| Client bundle exposes a browser credential | High | Fixed (unauthenticated client; URL only) |
+| `trueForgeServer` merges config (object spread) | Rule | Fixed (explicit `{ type, baseUrl }` object) |
+| `deriveLoopStatus` spreads state | Rule | Fixed (explicit field copy from `EMPTY_STATUS`) |
+
 To re-run the review, comment:
 
 ```text
 /agentic_review
 ```
 
-The `/agentic_review` comments plus the review thread on PR #1 are the hackathon evidence.
+The `/agentic_review` comments plus the review threads on PR #1 and PR #2 are the hackathon evidence.
 
 ## Layout
 

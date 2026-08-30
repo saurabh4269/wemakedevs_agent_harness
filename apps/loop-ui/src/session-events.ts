@@ -16,7 +16,6 @@ function createClient(): TrueForge {
   const server = trueForgeServer();
   return new TrueForge({
     baseUrl: sdkBaseUrl(server.baseUrl),
-    token: server.token,
   });
 }
 

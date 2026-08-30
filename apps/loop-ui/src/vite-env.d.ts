@@ -2,7 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_TRUEFORGE_URL?: string;
-  readonly VITE_TRUEFORGE_TOKEN?: string;
 }
 
 interface ImportMeta {

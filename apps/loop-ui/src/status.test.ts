@@ -123,4 +123,19 @@ describe("deriveLoopStatus", () => {
     expect(status.phase).toBe("did");
     expect(status.did.toLowerCase()).toMatch(/open_draft_pr|lesson|patch/);
   });
+
+  it("does not mutate EMPTY_STATUS when deriving a live phase", () => {
+    const snapshot = {
+      phase: EMPTY_STATUS.phase,
+      doing: EMPTY_STATUS.doing,
+      waiting: EMPTY_STATUS.waiting,
+      did: EMPTY_STATUS.did,
+      error: EMPTY_STATUS.error,
+    };
+    const status = deriveLoopStatus([{ type: "turn.created" }]);
+    expect(status.phase).toBe("doing");
+    status.phase = "error";
+    status.doing = "mutated";
+    expect(EMPTY_STATUS).toEqual(snapshot);
+  });
 });
