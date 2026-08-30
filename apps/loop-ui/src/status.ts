@@ -85,8 +85,20 @@ export function deriveLoopStatus(events: LoopEvent[]): LoopStatus {
     return status;
   }
 
+  // Phase comes from the latest turn, not a sticky cumulative Did.
+  let turnCompletedWrite = false;
+  let turnSawApproval = false;
+
+  const beginTurn = () => {
+    turnCompletedWrite = false;
+    turnSawApproval = false;
+  };
+
   for (const event of events) {
     if (event.type === "turn.created" || event.type === "model.message.delta") {
+      if (event.type === "turn.created") {
+        beginTurn();
+      }
       status.phase = "doing";
       status.doing = "Streaming a turn";
     }
@@ -104,11 +116,13 @@ export function deriveLoopStatus(events: LoopEvent[]): LoopStatus {
       if (WRITE_TOOLS.has(name) || DID_RE.test(textOf(event.content))) {
         status.did = `Completed ${name}`;
         status.phase = "did";
+        turnCompletedWrite = true;
       }
     }
     if (hasPendingApproval(event)) {
       status.phase = "waiting";
       status.waiting = "Approve the write before it runs";
+      turnSawApproval = true;
     }
     if (event.type === "turn.done") {
       if (hasPendingApproval(event)) {
@@ -116,21 +130,22 @@ export function deriveLoopStatus(events: LoopEvent[]): LoopStatus {
         status.waiting = "Paused on require_approval_for_tools";
       } else {
         const output = textOf(event.state?.output?.content ?? event.content);
-        if (DID_RE.test(output) || status.did !== EMPTY_STATUS.did) {
+        if (DID_RE.test(output) || turnCompletedWrite) {
           status.phase = "did";
           if (status.did === EMPTY_STATUS.did) {
             status.did = "Patch, proposal, or lesson is in the thread";
           }
         } else {
-          // turn.done with no remaining required actions leaves Waiting,
-          // including a denied approval that never produced a write.
-          status.phase = "doing";
+          // Completed turn with no pending write: idle, not Doing.
+          // A denied approval in this turn must surface even after an earlier write.
+          status.phase = "idle";
           status.doing = "Turn finished";
-          if (status.waiting !== EMPTY_STATUS.waiting) {
+          if (turnSawApproval) {
             status.waiting = "Write was not approved";
           }
         }
       }
+      beginTurn();
     }
   }
 
