@@ -5,11 +5,11 @@ One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hacka
 The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query.
 Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
 
-TrueForge chat is the UI. This repo is TypeScript only.
+TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
 
 ## What you need
 
-- Node 22.14+ for TrueForge and import-loop. Tests can still run on Node 20.
+- Node 22.14+ for TrueForge, tests, builds, and the LOOP UI. The TrueForge SDK and UI packages require Node 22.
 - Prefer OpenRouter as a custom OpenAI-compatible provider. NVIDIA NIM is the backup.
 - Daytona sandbox with snapshot write permission in Settings. Skills need sandbox enabled.
 - Register skills from this GitHub repo.
@@ -118,6 +118,29 @@ You should see three subagent threads first (analytics, logs, deploys) — the r
 
 Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Subagents must not call loop-github.
 
+## LOOP UI
+
+Stock TrueForge chat is the product UI. `apps/loop-ui` is a thin Vite + React embed of `@truefoundry/trueforge-ui`, locked to agent `loop` (no composer home), light Apple-like theme (bg #f5f5f7, ink #1d1d1f, accent #0071e3, Inter). A status rail next to the chat shows **Doing** (tool calls streaming), **Waiting** (`require_approval_for_tools` pause — this is the prize moment), and **Did** (completed patch, proposal, or lesson). Approval happens in the TrueForge chat before the write.
+
+Do not vendor the TrueForge server. Point the UI at a running harness.
+
+### How to run the UI
+
+TrueForge must already be running (step 2 above, http://localhost:8790). Then:
+
+
+```bash
+npm install
+npm run ui
+```
+
+apps/loop-ui is a workspace of this repo, so installing at the root also installs UI dependencies. The chat embed is unauthenticated and receives only the server URL.
+
+Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.thexplorers.xyz.
+
+Send the conversion-drop prompt from step 8. **Judges should watch Waiting** — that is the pause on `open_draft_pr` before any write. Allow or deny in the chat. The rail will move to Did after a patch, proposal, or lesson lands.
+
+
 ## Subagents share tools (honest split)
 
 TrueForge dynamic subagents get the same MCP tools as the root agent. AgentSpec.mcp_servers and DynamicSubAgentsConfig have no per-subagent enable_tools / disable_tools.
@@ -155,9 +178,9 @@ Put that in packages/trueforge/.env (Compose) or server.publicBaseUrl (Helm). Do
 
 ## Qodo Code Review Evidence
 
-**This pull request is the evidence PR:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
+**PR #1 is MERGED:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
 
-The PR is still open (not merged). Qodo-code-review is installed on the account. `/agentic_review` on this PR produced the review thread.
+Qodo-code-review is installed on the account. `/agentic_review` on PR #1 produced the review thread.
 
 Qodo findings and status:
 
@@ -169,13 +192,22 @@ Qodo findings and status:
 | Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
 | Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
 
+**PR #2:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+
+| Finding | Severity | Status |
+| --- | --- | --- |
+| Clean install breaks tests (root install skipped loop-ui deps) | High | Fixed (root workspaces include `apps/loop-ui`; engines remain `>=22.14.0`) |
+| Client bundle exposes a browser credential | High | Fixed (unauthenticated client; URL only) |
+| `trueForgeServer` merges config (object spread) | Rule | Fixed (explicit `{ type, baseUrl }` object) |
+| `deriveLoopStatus` spreads state | Rule | Fixed (explicit field copy from `EMPTY_STATUS`) |
+
 To re-run the review, comment:
 
 ```text
 /agentic_review
 ```
 
-The `/agentic_review` comments plus the review thread on PR #1 are the hackathon evidence.
+The `/agentic_review` comments plus the review threads on PR #1 and PR #2 are the hackathon evidence.
 
 ## Layout
 
@@ -187,4 +219,5 @@ fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
 src/                      independence, write policy, spec checks
 tests/
+apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
 ```

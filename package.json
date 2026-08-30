@@ -9,9 +9,11 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json",
-    "test": "vitest run",
+    "test": "vitest run && npm test -w loop-ui",
     "fixture:mcp": "tsx fixtures/mcp/server.ts",
-    "import:loop": "tsx scripts/import-loop.ts"
+    "import:loop": "tsx scripts/import-loop.ts",
+    "ui": "npm run dev -w loop-ui",
+    "ui:build": "npm run build -w loop-ui"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
@@ -25,5 +27,11 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
+  },
+  "workspaces": [
+    "apps/loop-ui"
+  ],
+  "overrides": {
+    "zustand": "^5.0.15"
   }
 }
