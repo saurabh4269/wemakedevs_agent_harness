@@ -67,6 +67,41 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     re: /If there is no sandbox, skip the patch/,
     message: "Type A patch stays in sandbox or skip",
   },
+  {
+    id: "materialize-tenant",
+    re: /git clone[\s\S]*wemakedevs_agent_harness/,
+    message: "Type A must clone the public tenant repo into the sandbox",
+  },
+  {
+    id: "sandbox-created-exists",
+    re: /sandbox\.created means a sandbox exists/,
+    message: "sandbox.created is not no sandbox",
+  },
+  {
+    id: "failed-cp-not-missing",
+    re: /failed cp of fixtures\/tenant is not "no sandbox"/,
+    message: "failed cp is not no sandbox",
+  },
+  {
+    id: "openui-after-three",
+    re: /generative UI \(OpenUI\)/,
+    message: "after three return, emit OpenUI",
+  },
+  {
+    id: "code-mode-aggregations",
+    re: /Code Mode[\s\S]*mcp_client/,
+    message: "aggregations use Code Mode mcp_client",
+  },
+  {
+    id: "code-mode-no-draft-pr",
+    re: /Do not put open_draft_pr[\s\S]*inside that script/,
+    message: "Code Mode script must not call open_draft_pr",
+  },
+  {
+    id: "no-direct-query-star",
+    re: /never call query_analytics, query_logs, or query_deploys from the root/,
+    message: "root must not call query_* as direct tools",
+  },
 ];
 
 export type McpServerSpec = {

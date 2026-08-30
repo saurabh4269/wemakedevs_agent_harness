@@ -61,6 +61,20 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).not.toMatch(/until those three reports exist/);
   });
 
+  it("teaches the root to clone the public tenant, keep the sandbox, emit OpenUI, and use Code Mode", () => {
+    const instructions = agent.manifest.instructions ?? "";
+    expect(instructions).toMatch(/git clone[\s\S]*wemakedevs_agent_harness/);
+    expect(instructions).toMatch(/sandbox\.created means a sandbox exists/);
+    expect(instructions).toMatch(/failed cp of fixtures\/tenant is not "no sandbox"/);
+    expect(instructions).toMatch(/generative UI \(OpenUI\)/);
+    expect(instructions).toMatch(/Code Mode[\s\S]*mcp_client/);
+    expect(instructions).toMatch(/Do not put open_draft_pr[\s\S]*inside that script/);
+    const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
+    expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
+    expect(typeA).toMatch(/sandbox\.created means a sandbox exists/);
+    expect(typeA).toMatch(/enterprise-annual-v3/);
+  });
+
   it("does not embed connector credentials", () => {
     const raw = readFileSync(join(root, "agents/loop.json"), "utf8").toLowerCase();
     expect(raw).not.toMatch(/api[_-]?key/);

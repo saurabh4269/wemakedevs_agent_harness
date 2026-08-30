@@ -11,13 +11,31 @@ Use this only after three-source independence passes.
 
 Something that used to work now fails. The **root** does this work. Do not spawn a `patcher` (or any fourth subagent) to patch or to call `loop-github`.
 
-1. Point at the tenant file. In fixture mode that is `fixtures/tenant/src/checkout.ts` (plan alias still using a pre-v3 catalog id).
-2. Patch **in the Daytona sandbox**, not in production. If there is no sandbox, skip the patch and say so.
-3. Re-run the tiny tenant check if the sandbox allows it (`npx tsx src/checkout.ts` from `fixtures/tenant`).
-4. Measure: what signal should recover (checkout conversion, InvalidPlanId count).
-5. Lesson: one short paragraph — what we believed, what the three sources showed, what we changed.
+1. Point at the tenant file. In fixture mode that is `fixtures/tenant/src/checkout.ts` (plan alias still using a pre-v3 catalog id: `enterprise` → `enterprise-annual` after the `*-v3` catalog rename).
+2. Patch **in the Daytona sandbox**, not in production. **sandbox.created means a sandbox exists.** The TrueForge Daytona snapshot does **not** include this git repo. A failed `cp fixtures/tenant` is not "no sandbox" — the cwd is empty until you seed it. If there is no sandbox (no `sandbox.created`, exec tools missing), skip the patch and say so.
+3. Materialize the tenant the same way a real incident would: check out the **public** repo (no secrets, no host fixture path judges cannot see):
 
-Then, if a human wants a GitHub draft, the **root** follows license-to-write. Never merge. Never prod-deploy the tenant.
+```bash
+pwd; ls
+test -f wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts \
+  || git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
+test -f wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts
+```
+
+Keep trying until that file exists. If clone fails, write the known tenant sources into `wemakedevs_agent_harness/fixtures/tenant/` via exec (public files only). Then patch **only** the enterprise alias in `wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts`:
+
+```ts
+enterprise: "enterprise-annual-v3",
+```
+
+Do not rewrite starter/pro aliases that already point at `*-v3`. Do not treat a failed `cp` as a missing sandbox.
+
+4. Re-run the tiny tenant check if the sandbox allows it (`npx --yes tsx src/checkout.ts` from `wemakedevs_agent_harness/fixtures/tenant`). Enterprise must succeed with `enterprise-annual-v3`.
+5. Then the **root** calls `open_draft_pr` (license-to-write). That call **pauses**. Do not claim "no sandbox" and skip the pause after a failed `cp`.
+6. Measure: what signal should recover (checkout conversion, InvalidPlanId count).
+7. Lesson: one short paragraph — what we believed, what the three sources showed, what we changed.
+
+Never merge. Never prod-deploy the tenant. Never spawn a fourth subagent.
 
 ## Type B — opportunity
 

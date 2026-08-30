@@ -116,7 +116,17 @@ In TrueForge chat, pick agent loop and send:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or spawn a fourth / patcher subagent. Then the root does a Type A patch against fixtures/tenant/src/checkout.ts in the Daytona sandbox (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), or skips the patch if there is no sandbox. Then the root pauses on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
+You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself (`query_*` as direct calls) or spawn a fourth / patcher subagent. After those three return, the root emits TrueForge generative UI (one OpenUI chart, one table, one Type A/B card) and may use Code Mode (`mcp_client` in the Daytona sandbox) to group error rates / deploys in Python; counts come from code. Do not put `open_draft_pr` in that script.
+
+The Daytona snapshot does not include this git repo. `sandbox.created` means a sandbox exists; a failed `cp fixtures/tenant` is not "no sandbox". The root clones the public tenant, then patches:
+
+```bash
+git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
+# then edit wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts
+# enterprise alias: "enterprise-annual" → "enterprise-annual-v3"
+```
+
+Keep trying until that file is there, patch it, then the root pauses on `open_draft_pr` (MCP-annotated write, `require_approval_for_tools` includes `@write`). Skip the patch only if there is actually no sandbox.
 
 Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Demo: deny an extra patcher write; approve the root.
 
@@ -157,6 +167,8 @@ That is not isolation. A subagent could see open_draft_pr. We enforce the split 
 ## Tenant fixture
 
 fixtures/tenant is a tiny TypeScript checkout the sandbox can patch. From that folder, starter and pro succeed; enterprise throws InvalidPlanId.
+
+TrueForge Daytona sandboxes start from a snapshot **without** this git repo. LOOP materializes the tenant inside the sandbox by cloning the public repo (no secrets), then patches `fixtures/tenant/src/checkout.ts`. Do not `cp fixtures/tenant` from a host path that is not in the sandbox cwd.
 
 ## Hosting (Compose)
 
