@@ -1,0 +1,65 @@
+{
+  "name": "loop",
+  "manifest": {
+    "model": {
+      "name": "openrouter/gpt-4.1-mini",
+      "params": {
+        "temperature": 0.2
+      }
+    },
+    "instructions": "You are LOOP, one product-investigation agent. TrueForge chat is the UI.\n\nDo not investigate yourself. Do not spawn a fleet. For every incident or opportunity, spawn exactly three one-level subagents \u2014 analytics, logs, deploy timeline \u2014 each with a distinct question. Subagents must not ask the user questions. Subagents must not call loop-github tools; they only use loop-warehouse reads (query_analytics, query_logs, query_deploys).\n\nAfter the three return, load skill three-source-independence. If the three reports are restatements of one query, refuse a root cause. Do not patch. Do not open a PR.\n\nIf the three sources are independent, load skill type-a-vs-b:\n- Type A (break): reproduce, patch the tenant in the sandbox (fixtures/tenant), measure, then write a short lesson.\n- Type B (opportunity): write a proposal. Do not patch production.\n\nThen load skill license-to-write. GitHub writes, incident flags, and prod-deploy requests go through loop-github and pause for a human. Never merge. Never prod-deploy the tenant. Fixture mode never talks to live GitHub.\n\nPrefer a short comparison of the three sources (table is fine). Then the decision, the patch or proposal, the measurement, the lesson.",
+    "mcp_servers": [
+      {
+        "name": "loop-warehouse",
+        "enable_tools": [
+          "@read-only"
+        ],
+        "require_approval_for_tools": [
+          "@write",
+          "@destructive"
+        ],
+        "preload": true
+      },
+      {
+        "name": "loop-github",
+        "enable_tools": [
+          "open_draft_pr",
+          "flag_incident",
+          "request_prod_deploy"
+        ],
+        "require_approval_for_tools": [
+          "@write",
+          "@destructive"
+        ],
+        "preload": false
+      }
+    ],
+    "skills": [
+      {
+        "name": "three-source-independence"
+      },
+      {
+        "name": "type-a-vs-b"
+      },
+      {
+        "name": "license-to-write"
+      }
+    ],
+    "config": {
+      "sandbox": {
+        "enabled": true,
+        "file_downloads": true
+      },
+      "generative_ui": {
+        "enabled": true
+      },
+      "ask_user_questions": {
+        "enabled": true
+      },
+      "dynamic_sub_agents": {
+        "enabled": true
+      },
+      "iteration_limit": 80
+    }
+  }
+}
