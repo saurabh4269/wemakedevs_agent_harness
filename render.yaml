@@ -1,0 +1,90 @@
+# LOOP hosted TrueForge (STANDALONE=false: Postgres + Redis).
+# OIDC is intentionally unset: anyone who can reach the host is admin (no-login judges).
+# Secrets are dashboard-prompted (sync: false). Do not put keys in this file.
+#
+# Greenfield workspace: Apply the Blueprint from feat/render-host until merged
+# https://dashboard.render.com/blueprint/new?repo=https://github.com/saurabh4269/wemakedevs_agent_harness
+#
+# Existing Saurabh workspace (tea-ctoktrjtq21c73cufog0, Oregon) already has
+# loop-postgres and loop-redis. Do NOT Apply this Blueprint there (it would
+# duplicate those datastores). Create the web service from this branch via API
+# and wire env from the existing DBs. See README hosting section.
+#
+# Fixture MCP is colocated in the TrueForge image on 127.0.0.1:8788 (no pserv).
+# Render private services do not offer plan: free.
+
+services:
+  - type: web
+    name: loop-trueforge
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: deploy/trueforge.Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: HOST
+        value: "0.0.0.0"
+      - key: NODE_ENV
+        value: production
+      - key: STANDALONE
+        value: "false"
+      - key: PUBLIC_BASE_URL
+        value: https://loop.thexplorers.xyz
+      - key: LOOP_FIXTURE_PORT
+        value: "8788"
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: loop-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: loop-postgres
+          property: port
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: loop-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: loop-postgres
+          property: password
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: loop-postgres
+          property: database
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: loop-redis
+          property: connectionString
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: DAYTONA_API_KEY
+        sync: false
+      - key: DAYTONA_API_URL
+        sync: false
+      - key: OPENROUTER_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: NVIDIA_BASE_URL
+        value: https://integrate.api.nvidia.com/v1
+
+  - type: keyvalue
+    name: loop-redis
+    plan: free
+    region: oregon
+    maxmemoryPolicy: noeviction
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+
+databases:
+  - name: loop-postgres
+    plan: free
+    region: oregon
+    postgresMajorVersion: "17"
+    databaseName: trueforge
+    user: trueforge

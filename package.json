@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "LOOP — one TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon",
+  "description": "LOOP \u2014 one TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon",
   "engines": {
     "node": ">=22.14.0"
   },
@@ -13,7 +13,8 @@
     "fixture:mcp": "tsx fixtures/mcp/server.ts",
     "import:loop": "tsx scripts/import-loop.ts",
     "ui": "npm run dev -w loop-ui",
-    "ui:build": "npm run build -w loop-ui"
+    "ui:build": "npm run build -w loop-ui",
+    "start:hosted": "tsx scripts/start-hosted-trueforge.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
