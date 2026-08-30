@@ -10,8 +10,6 @@ One TrueForge investigation agent. Not a fleet. Chat is the UI.
 
 Given a product signal, LOOP spawns three one-level subagents (analytics, logs, deploys), refuses a root cause if those three are restatements of one query, then either patches a break in the sandbox (Type A) or writes a proposal (Type B). Writes pause for a human. LOOP never merges. LOOP never prod-deploys the tenant.
 
-Hackathon hero card is **Incident responder**. That is this product.
-
 ## Hard rules
 
 1. **TypeScript only.** `.ts` / `.tsx`. `"type": "module"`. Strict `tsconfig`. No Python product code. No untyped JS.
@@ -42,23 +40,23 @@ If independent, skill `type-a-vs-b`:
 
 Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.
 
-**Fixture MCP** is `mode:fixture`. Warehouse `@read-only`. GitHub connector is fake. Official page wants tools **connected, not mocked** — fixture warehouse is an honest Best Use risk. Conversion-drop story stays on fixtures; live GitHub write can stay gated. Do not pretend fixtures are production.
+**Fixture MCP** is `mode:fixture` — a local warehouse adapter you would swap for live analytics, logs, and deploys later. Warehouse `@read-only`. GitHub connector is fake. Conversion-drop is one seeded incident in that warehouse. Do not pretend fixtures are live Grafana or live GitHub. Do not fake Daytona.
 
-**Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. Root spec still splits servers (`loop-warehouse` `@read-only`; `loop-github` named writes + `require_approval_for_tools`). That is not isolation. A subagent can see `open_draft_pr`. Writes still pause. Demo: deny the extra **patcher** write; approve the **root**. Fixture never talks to live GitHub.
+**Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. Root spec still splits servers (`loop-warehouse` `@read-only`; `loop-github` named writes + `require_approval_for_tools`). That is not isolation. A subagent can see `open_draft_pr`. Writes still pause. If a subagent still calls `loop-github`, deny that write; approve the **root**. Writes are root-only. Fixture never talks to live GitHub.
 
-Skills require sandbox. Daytona key needs **Sandboxes** access and **Snapshots write**. LOOP spec sets `config.sandbox.enabled: true`. If Daytona 401s, skills will not load — fix that; do not silently drop the three-subagent path.
+Skills require sandbox. Daytona key needs **Sandboxes** access and **Snapshots write**. LOOP spec sets `config.sandbox.enabled: true`. If Daytona 401s, skills will not load — fix that; do not silently drop the three-subagent path. Snapshot 403 / no provider is a blocker: skip the patch and say so. Do not fake a sandbox run.
 
 ## Layout
 
 ```
 agents/loop.json          TrueForge agent { name, manifest }
-fixtures/mcp/             mode:fixture warehouse + github
+fixtures/mcp/             mode:fixture warehouse adapter + github
 fixtures/tenant/          patchable checkout (enterprise alias still enterprise-annual after *-v3)
 skills/*/SKILL.md         git-backed skills
 src/                      independence, write-policy, spec
 scripts/import-loop.ts    SDK import
 tests/
-apps/loop-ui/             optional TrueForgeUI embed — on feat/loop-ui if present. Do not clobber.
+apps/loop-ui/             optional thin TrueForgeUI rail — on feat/loop-ui if present. Do not clobber.
 docs/                     curated handoff. status.md is the living file.
 ```
 
@@ -66,26 +64,26 @@ docs/                     curated handoff. status.md is the living file.
 
 Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). Compose: :8791 (Postgres + Redis). Intended public host: https://loop.thexplorers.xyz with `PUBLIC_BASE_URL`.
 
-TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
+TrueForge wants Node **22.14+**. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
 
 Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 
 ## What NOT to build
 
 - A 19-agent fleet. One agent, three one-level subagents.
-- A campus / dark SOC UI. Light Apple-like if themed.
-- A Product OS / ADK / Goodman / Bhoonaksha port. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
-- Auth for judges. Login ON only if live GitHub writes require it.
-- Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Sai: stock TrueForge UI unless the product needs another.
+- A dark SOC dashboard. Light Apple-like if themed. The thin LOOP rail is enough.
+- Login unless live GitHub writes require it.
+- Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Stock TrueForge UI unless the product needs another.
+- Live Grafana, live GitHub, or a faked Daytona patch.
 
-## Demo prompt
+## Seeded incident
 
 TrueForge chat, agent `loop`:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. Extra patcher write: deny. Root write: approve. Collapsed story (`LOOP_STORY=collapsed`) must refuse a root cause.
+That signal is the seeded conversion-drop in the local warehouse (`independent` dataset). Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. If a `patcher` subagent pauses on a write: deny it. Approve the root. Collapsed dataset (`LOOP_DATASET=collapsed`) must refuse a root cause.
 
 ## Docs
 
-[docs/README.md](docs/README.md). Living state: [docs/status.md](docs/status.md). Judge shot list: [docs/demo.md](docs/demo.md).
+[docs/README.md](docs/README.md). Living state: [docs/status.md](docs/status.md). Operator runbook: [docs/demo.md](docs/demo.md). Hackathon notes stay in [docs/hackathon.md](docs/hackathon.md); they are not the product.

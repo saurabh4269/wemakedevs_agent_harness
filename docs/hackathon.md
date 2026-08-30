@@ -20,7 +20,7 @@ Also required:
 - Keys and personal data out of the repo **and** the video.
 - AI coding assistants allowed; **must be disclosed**. Participants must understand the code.
 
-Official page: tools should be **connected, not mocked**. LOOP's warehouse MCP is `mode:fixture` for the conversion-drop story — honest Best Use risk. Live GitHub write can stay gated. Do not claim fixtures are production.
+Official page: tools should be **connected, not mocked**. LOOP's warehouse MCP is `mode:fixture` for the conversion-drop dataset — honest Best Use risk. It is a local adapter you would swap later, not a mock UI. Live GitHub write can stay gated. Do not claim fixtures are production.
 
 ## Six equal criteria
 
@@ -80,3 +80,20 @@ As of **Monday 31 Aug 2026 morning IST** the live site still showed submissions/
 ## Skills / sandbox
 
 Skills require a sandbox. Daytona is the provider. Key needs **Sandboxes** access and **Snapshots write** (create). Missing snapshot permission fails provider setup even if the key otherwise looks valid.
+
+## Qualify beats (recording)
+
+A 3-minute run is a consequence of the product, not the product. If you record:
+
+A judge has to see TrueForge reach a tool, run code in the sandbox, and stop for a person.
+
+| Clock | Shot | On screen | Line |
+| --- | --- | --- | --- |
+| 0:00-0:25 | Problem | Stock TrueForge at :8790, no login. Paste the seeded conversion-drop signal. | Checkout conversion dropped ~19% Friday afternoon on desktop Chrome. |
+| 0:25-1:10 | Three looks | Subagent threads analytics / logs / deploys. MCP warehouse tools. | Three independent looks. Root does not investigate itself. |
+| 1:10-1:40 | Sandbox patch | Daytona running code against fixtures/tenant. | Type A break: catalog rename left the enterprise alias pointing at a gone plan. If snapshots 403 / no provider: hold a card that says BLOCKED, Spark hole. Do not fake a patch. |
+| 1:40-2:10 | Pause | Approve / Deny on root open_draft_pr. Do not click. | Writes wait. LOOP never merges and never deploys prod. |
+| 2:10-2:40 | Reconnect | Refresh. Pause still there. Deny extra patcher if it appears. Approve root. | Session survived the refresh. Writes are root-only. |
+| 2:40-3:00 | One-line lesson | Lesson in chat. | Three looks, a sandbox patch, a human on the write. |
+
+Operator runbook (the product path): [demo.md](demo.md).

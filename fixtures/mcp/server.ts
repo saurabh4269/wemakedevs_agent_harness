@@ -1,8 +1,8 @@
 import express from "express";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { createGithubServer, createWarehouseServer, defaultStory } from "./servers.js";
-import { FIXTURE_MODE } from "./stories.js";
+import { createGithubServer, createWarehouseServer, defaultDataset } from "./servers.js";
+import { FIXTURE_MODE } from "./datasets.js";
 
 const port = Number.parseInt(process.env.LOOP_FIXTURE_PORT ?? "8788", 10);
 
@@ -25,7 +25,7 @@ app.get("/health", (_req, res) => {
     ok: true,
     mode: FIXTURE_MODE,
     live_github: false,
-    story: defaultStory(),
+    dataset: defaultDataset(),
     warehouse: "/warehouse",
     github: "/github",
   });
@@ -57,7 +57,7 @@ app.all("/github", (_req, res) => {
 
 app.listen(port, "127.0.0.1", () => {
   process.stdout.write(
-    `LOOP fixture MCP (mode:${FIXTURE_MODE}) on 127.0.0.1:${port} story=${defaultStory()}\n` +
+    `LOOP fixture MCP (mode:${FIXTURE_MODE}) on 127.0.0.1:${port} dataset=${defaultDataset()}\n` +
       `  warehouse: http://127.0.0.1:${port}/warehouse\n` +
       `  github:    http://127.0.0.1:${port}/github\n`,
   );

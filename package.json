@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "LOOP — one TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon",
+  "description": "LOOP — one TrueForge product-investigation agent. Signal in, three independent looks, sandbox patch, stop before a write.",
   "engines": {
     "node": ">=22.14.0"
   },

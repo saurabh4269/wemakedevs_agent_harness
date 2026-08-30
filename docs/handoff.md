@@ -18,14 +18,14 @@ Prefer OpenRouter. NVIDIA backup. Daytona required for skills/sandbox.
 
 ## Form (draft, not submitted)
 
-Constraints and URLs: [form.md](form.md). Copy must sound human, about **this week's TrueForge LOOP**. Omit Product OS / ADK.
+Constraints and URLs: [form.md](form.md). Copy must sound human, about **this week's TrueForge LOOP** as a production incident agent.
 
 ## Work split
 
 - Agent spec / fixtures / skills / tests: PR #1 **merged** (`f1651fa`). Qodo follow-up on `9b8b17ed`: Bugs (0); all five findings resolved.
 - UI shell: PR #2 **merged** (`e221fb05`). Qodo Bugs (0). Do not clobber `feat/loop-ui`.
-- This docs handoff: own branch `docs/agent-handoff`.
+- Docs handoff: PR #3 **merged** (`36aa532`).
 
 ## Priority
 
-Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: Daytona Spark hole (key auth-200s, snapshot create 403, missing write:snapshots, no provider configured), deny extra patcher write / approve root. PR #1 and #2 merged with Qodo Bugs (0). Blog last. CodeRabbit is noise; Qodo is required. Remaining Qodo on PR #3: dismiss loop-github inheritance as a documented platform limit.
+Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: Daytona Spark hole (key auth-200s, snapshot create 403, missing write:snapshots, no provider configured). Writes are root-only: deny extra patcher write / approve root. PRs #1–#3 merged. Blog last. CodeRabbit is noise; Qodo is required. Subagent `loop-github` inheritance is a documented platform limit.

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { assessThreeSourceIndependence, type SourceReport } from "../src/independence.js";
-import { storyReports } from "../fixtures/mcp/stories.js";
+import { datasetReports } from "../fixtures/mcp/datasets.js";
 
 describe("three-source independence", () => {
   it("accepts the independent conversion-drop fixture", () => {
-    const result = assessThreeSourceIndependence(storyReports("independent"));
+    const result = assessThreeSourceIndependence(datasetReports("independent"));
     expect(result.independent).toBe(true);
     expect(result.uniqueEvidenceIds).toEqual([
       "funnel-cta-desktop-chrome",
@@ -14,7 +14,7 @@ describe("three-source independence", () => {
   });
 
   it("refuses the collapsed fixture where all three restate one query", () => {
-    const result = assessThreeSourceIndependence(storyReports("collapsed"));
+    const result = assessThreeSourceIndependence(datasetReports("collapsed"));
     expect(result.independent).toBe(false);
     expect(result.reason.toLowerCase()).toMatch(/refuse/);
   });
@@ -44,7 +44,7 @@ describe("three-source independence", () => {
   });
 
   it("refuses when a source is missing", () => {
-    const two = storyReports("independent").slice(0, 2);
+    const two = datasetReports("independent").slice(0, 2);
     expect(assessThreeSourceIndependence(two).independent).toBe(false);
   });
 });

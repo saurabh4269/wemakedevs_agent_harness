@@ -25,7 +25,7 @@ Never spawn a fourth subagent to write (no `patcher`, no github writer). Type A 
 
 ## Subagents
 
-TrueForge dynamic subagents share the root agent's tools. The saved agent spec has no per-subagent `enable_tools` / `disable_tools`. They must still **not** call `loop-github`. If a subagent tries, the pause is the backstop — deny it.
+TrueForge dynamic subagents share the root agent's tools. The saved agent spec has no per-subagent `enable_tools` / `disable_tools`. They must still **not** call `loop-github`. If a subagent tries, deny the approval. Writes are root-only.
 
 ## Fixture mode
 

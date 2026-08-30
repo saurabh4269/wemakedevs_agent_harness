@@ -1,13 +1,18 @@
 # LOOP
 
-One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon.
+LOOP investigates a product break with three independent looks, patches in a sandbox, and stops before a write.
+
+One TrueForge investigation agent. Signal in. The root does not investigate itself.
 
 The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query.
 Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
 
-TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
+TrueForge chat is the UI (optional thin TrueForgeUI rail in `apps/loop-ui`). This repo is TypeScript only.
+
+The fixture MCP is a local warehouse adapter (`mode:fixture`) you would swap for live analytics, logs, and deploys later. Conversion-drop is one seeded incident in that warehouse, like a staging dataset.
 
 - **Handoff** — next agent: [docs/README.md](docs/README.md)
+- **Operator runbook** — [docs/demo.md](docs/demo.md)
 
 ## What you need
 
@@ -86,10 +91,10 @@ Listens on 127.0.0.1:8788 labeled mode:fixture. There is no live GitHub in this 
 - Warehouse (read-only): http://127.0.0.1:8788/warehouse tools query_analytics, query_logs, query_deploys
 - Write connector: http://127.0.0.1:8788/github tools open_draft_pr, flag_incident, request_prod_deploy
 
-Default story is independent conversion-drop. To collapse the three sources:
+Default dataset is independent conversion-drop. To serve the collapsed negative test (three restatements of one query):
 
 ```bash
-LOOP_STORY=collapsed npm run fixture:mcp
+LOOP_DATASET=collapsed npm run fixture:mcp
 ```
 
 Or pass scenario=collapsed on warehouse tools. LOOP should refuse a root cause.
@@ -110,19 +115,21 @@ npx tsx scripts/import-loop.ts
 
 Fill OpenRouter (and Daytona if you want the script to register it) in .env. The script uses the TrueForge TypeScript SDK to create or update agent loop. It never prints secrets. Credentials stay on connectors, not in agents/loop.json.
 
-### 8. One prompt, then the pause
+### 8. Investigate the seeded incident
 
 In TrueForge chat, pick agent loop and send:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
+That Friday ~19% drop is the seeded incident in the local warehouse, not a live board.
+
 You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or spawn a fourth / patcher subagent. Then the root does a Type A patch against fixtures/tenant/src/checkout.ts in the Daytona sandbox (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), or skips the patch if there is no sandbox. Then the root pauses on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
 
-Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Demo: deny an extra patcher write; approve the root.
+Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. If a write-capable subagent (`patcher`) also pauses, deny it — writes are root-only. Approve the root.
 
 ## LOOP UI
 
-Stock TrueForge chat is the product UI. `apps/loop-ui` is a thin Vite + React embed of `@truefoundry/trueforge-ui`, locked to agent `loop` (no composer home), light Apple-like theme (bg #f5f5f7, ink #1d1d1f, accent #0071e3, Inter). A status rail next to the chat shows **Doing** (tool calls streaming), **Waiting** (`require_approval_for_tools` pause — this is the prize moment), and **Did** (completed patch, proposal, or lesson). Approval happens in the TrueForge chat before the write.
+Stock TrueForge chat is the product UI. `apps/loop-ui` is a thin Vite + React embed of `@truefoundry/trueforge-ui`, locked to agent `loop` (no composer home), light Apple-like theme (bg #f5f5f7, ink #1d1d1f, accent #0071e3, Inter). A status rail next to the chat shows **Doing** (tool calls streaming), **Waiting** (`require_approval_for_tools` pause), and **Did** (completed patch, proposal, or lesson). Approval happens in the TrueForge chat before the write.
 
 Do not vendor the TrueForge server. Point the UI at a running harness.
 
@@ -140,7 +147,7 @@ apps/loop-ui is a workspace of this repo, so installing at the root also install
 
 Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.thexplorers.xyz.
 
-Send the conversion-drop prompt from step 8. **Judges should watch Waiting** — that is the pause on `open_draft_pr` before any write. Allow or deny in the chat. The rail will move to Did after a patch, proposal, or lesson lands.
+Send the conversion-drop signal from step 8. **Waiting** is the pause on `open_draft_pr` before any write. Allow or deny in the chat. The rail will move to Did after a patch, proposal, or lesson lands.
 
 
 ## Subagents share tools (honest split)
@@ -152,7 +159,7 @@ LOOP still splits servers on the root spec:
 - loop-warehouse -> enable_tools @read-only
 - loop-github -> named write tools plus require_approval_for_tools @write and @destructive
 
-That is not isolation. A subagent could see open_draft_pr. We enforce the split with instructions + skill license-to-write + the approval pause: spawn only analytics, logs, deploys; never a fourth write-capable subagent; Type A patch stays on the root in the Daytona sandbox (skip if no sandbox); only the root may call open_draft_pr / flag_incident after the independence check; request_prod_deploy remains refuse. If a subagent still calls loop-github, deny the pause. The fixture never talks to live GitHub and never merges.
+That is not isolation. A subagent could see open_draft_pr. We enforce the split with instructions + skill license-to-write + the approval pause: spawn only analytics, logs, deploys; never a fourth write-capable subagent; Type A patch stays on the root in the Daytona sandbox (skip if no sandbox); only the root may call open_draft_pr / flag_incident after the independence check; request_prod_deploy remains refuse. If a subagent still calls loop-github, deny the pause. Writes are root-only. The fixture never talks to live GitHub and never merges.
 
 ## Tenant fixture
 
@@ -205,13 +212,17 @@ Qodo follow-up on head `8c96416`: **Bugs (0)**.
 | `trueForgeServer` merges config (object spread) | Rule | Fixed (explicit `{ type, baseUrl }` object) |
 | `deriveLoopStatus` spreads state | Rule | Fixed (explicit field copy from `EMPTY_STATUS`) |
 
+**PR #3 is MERGED** (`36aa532`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/3
+
+Qodo finding that subagents inherit `loop-github` is a documented TrueForge platform limit (`DynamicSubAgentsConfig` is `{ enabled }` only). Writes still pause. Deny a subagent write; approve the root.
+
 To re-run the review, comment:
 
 ```text
 /agentic_review
 ```
 
-The `/agentic_review` comments plus the review threads on PR #1 and PR #2 are the hackathon evidence.
+The `/agentic_review` comments plus the review threads on PR #1, PR #2, and PR #3 are the review trail.
 
 ## Layout
 
@@ -219,10 +230,10 @@ The `/agentic_review` comments plus the review threads on PR #1 and PR #2 are th
 agents/loop.json          TrueForge agent { name, manifest }
 scripts/import-loop.ts    SDK import
 skills/*/SKILL.md         git-backed skills
-fixtures/mcp/             mode:fixture warehouse + github MCP
+fixtures/mcp/             mode:fixture warehouse adapter + github MCP
 fixtures/tenant/          patchable checkout
 src/                      independence, write policy, spec checks
 tests/
 docs/                     agent handoff (start at docs/README.md)
-apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
+apps/loop-ui/             thin Vite TrueForgeUI rail (agent loop)
 ```

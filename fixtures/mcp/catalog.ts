@@ -16,10 +16,10 @@ function tool(
 }
 
 export const WAREHOUSE_TOOLS = [
-  tool(READ_SERVER, "query_analytics", "read", "Product analytics for the LOOP fixture tenant."),
-  tool(READ_SERVER, "query_logs", "read", "Application logs for the LOOP fixture tenant."),
-  tool(READ_SERVER, "query_deploys", "read", "Deploy timeline for the LOOP fixture tenant."),
-  tool(READ_SERVER, "get_fixture_meta", "read", "Fixture mode label. Always mode:fixture; never live GitHub."),
+  tool(READ_SERVER, "query_analytics", "read", "Product analytics from the LOOP warehouse adapter (mode:fixture)."),
+  tool(READ_SERVER, "query_logs", "read", "Application logs from the LOOP warehouse adapter (mode:fixture)."),
+  tool(READ_SERVER, "query_deploys", "read", "Deploy timeline from the LOOP warehouse adapter (mode:fixture)."),
+  tool(READ_SERVER, "get_fixture_meta", "read", "Warehouse adapter meta. Always mode:fixture; never live GitHub."),
 ] as const;
 
 export const GITHUB_TOOLS = [

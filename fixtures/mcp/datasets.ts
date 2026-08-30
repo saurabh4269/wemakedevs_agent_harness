@@ -1,6 +1,17 @@
 import type { SourceReport } from "../../src/independence.js";
 
-export type StoryName = "independent" | "collapsed";
+/**
+ * Local warehouse datasets for the fixture MCP (`mode:fixture`).
+ *
+ * This adapter is what you would swap for live analytics / logs / deploys
+ * later. Conversion-drop is one seeded incident in that warehouse, like a
+ * staging dataset — not a scripted scene.
+ *
+ * `independent` and `collapsed` are test data, not demo modes:
+ * - independent: distinct evidence ids per source (the seeded ~19% drop)
+ * - collapsed: three restatements of one query (LOOP must refuse a root cause)
+ */
+export type DatasetName = "independent" | "collapsed";
 
 export const FIXTURE_MODE = "fixture" as const;
 
@@ -67,7 +78,10 @@ const collapsedDeploys: SourceReport = {
   summary: "A deploy broke checkout and conversion dropped.",
 };
 
-export const STORIES: Record<StoryName, { analytics: SourceReport; logs: SourceReport; deploys: SourceReport }> = {
+export const DATASETS: Record<
+  DatasetName,
+  { analytics: SourceReport; logs: SourceReport; deploys: SourceReport }
+> = {
   independent: {
     analytics: independentAnalytics,
     logs: independentLogs,
@@ -80,20 +94,20 @@ export const STORIES: Record<StoryName, { analytics: SourceReport; logs: SourceR
   },
 };
 
-export function isStoryName(value: string): value is StoryName {
+export function isDatasetName(value: string): value is DatasetName {
   return value === "independent" || value === "collapsed";
 }
 
-export function storyReports(name: StoryName): SourceReport[] {
-  const story = STORIES[name];
-  return [story.analytics, story.logs, story.deploys];
+export function datasetReports(name: DatasetName): SourceReport[] {
+  const dataset = DATASETS[name];
+  return [dataset.analytics, dataset.logs, dataset.deploys];
 }
 
-export function payloadFor(source: SourceReport["source"], name: StoryName): Record<string, unknown> {
-  const report = STORIES[name][source];
+export function payloadFor(source: SourceReport["source"], name: DatasetName): Record<string, unknown> {
+  const report = DATASETS[name][source];
   return {
     mode: FIXTURE_MODE,
-    story: name,
+    dataset: name,
     source: report.source,
     evidence_id: report.evidenceId,
     unique_facts: report.uniqueFacts,

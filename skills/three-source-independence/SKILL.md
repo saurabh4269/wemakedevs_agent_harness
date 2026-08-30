@@ -21,6 +21,8 @@ Give each subagent a *different question*. "What broke checkout?" three times is
 
 Subagents cannot ask the user questions. They return evidence only.
 
+The warehouse MCP is a local adapter (`mode:fixture`). Swap it later for live analytics, logs, and deploys. `independent` vs `collapsed` are warehouse datasets (test data), not demo modes.
+
 ## Independent vs collapsed
 
 Independent evidence means each source adds facts the others do not:

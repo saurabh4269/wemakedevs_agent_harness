@@ -3,14 +3,14 @@ import { z } from "zod";
 import { GITHUB_TOOLS, WAREHOUSE_TOOLS } from "./catalog.js";
 import {
   FIXTURE_MODE,
-  isStoryName,
+  isDatasetName,
   payloadFor,
-  type StoryName,
-} from "./stories.js";
+  type DatasetName,
+} from "./datasets.js";
 
-export function defaultStory(): StoryName {
-  const raw = process.env.LOOP_STORY ?? "independent";
-  return isStoryName(raw) ? raw : "independent";
+export function defaultDataset(): DatasetName {
+  const raw = process.env.LOOP_DATASET ?? process.env.LOOP_STORY ?? "independent";
+  return isDatasetName(raw) ? raw : "independent";
 }
 
 function jsonResult(payload: unknown, isError = false) {
@@ -20,11 +20,11 @@ function jsonResult(payload: unknown, isError = false) {
   };
 }
 
-function resolveStory(scenario: string | undefined): StoryName {
-  if (scenario && isStoryName(scenario)) {
+function resolveDataset(scenario: string | undefined): DatasetName {
+  if (scenario && isDatasetName(scenario)) {
     return scenario;
   }
-  return defaultStory();
+  return defaultDataset();
 }
 
 export function createWarehouseServer(): McpServer {
@@ -42,10 +42,10 @@ export function createWarehouseServer(): McpServer {
           jsonResult({
             mode: FIXTURE_MODE,
             live_github: false,
-            default_story: defaultStory(),
-            stories: ["independent", "collapsed"],
+            default_dataset: defaultDataset(),
+            datasets: ["independent", "collapsed"],
             tenant: "fixtures/tenant",
-            note: "Sources must stay independent. Collapsed story should refuse a root cause.",
+            note: "Sources must stay independent. The collapsed dataset should refuse a root cause.",
           }),
       );
       continue;
@@ -62,11 +62,11 @@ export function createWarehouseServer(): McpServer {
           scenario: z
             .enum(["independent", "collapsed"])
             .optional()
-            .describe("independent = distinct evidence. collapsed = three restatements; LOOP should refuse."),
+            .describe("Warehouse dataset. independent = distinct evidence. collapsed = three restatements; LOOP should refuse."),
         },
         annotations: tool.annotations,
       },
-      async ({ scenario }) => jsonResult(payloadFor(source, resolveStory(scenario))),
+      async ({ scenario }) => jsonResult(payloadFor(source, resolveDataset(scenario))),
     );
   }
 

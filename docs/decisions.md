@@ -2,8 +2,8 @@
 
 1. **TypeScript only.** TrueForge SDK and this repo are TS. No second language for product code.
 2. **Write in Grok Bot, not Cursor CloudAgent**, unless Saurabh asks. CloudAgent is a hard no by default.
-3. **Fixture GitHub, not live, for demo safety.** Warehouse + github MCP are `mode:fixture`. No token in git. Honest Best Use risk vs "connected not mocked."
+3. **Fixture GitHub, not live.** Warehouse + github MCP are `mode:fixture` — a local adapter you would swap later. No token in git. Do not claim fixtures are production Grafana or live GitHub.
 4. **Never merge. Never prod-deploy.** Agents open PRs. `request_prod_deploy` refuses. Humans merge after Qodo.
-5. **Four-track thinking.** Form selected all four. Judges give one judged-track prize. Build so Best Use (tool + sandbox + pause + session) and Best UI (doing/waiting/did + ask before write) are visible on the same demo. Qodo trail is the Code Quality evidence. Blog is last.
-6. **TrueForge UI over custom campus.** Stock chat, or a themed `@truefoundry/trueforge-ui` embed. No dark SOC. No auth for judges.
-7. **Independence as code, not only prompt.** `src/independence.ts` + tests. Skill restates it. Collapsed fixture story must refuse.
+5. **One investigation agent.** Three one-level subagents. Thin LOOP rail. Qodo trail on PRs. Do not expand into a 19-agent platform.
+6. **TrueForge UI over a custom dashboard.** Stock chat, or a themed `@truefoundry/trueforge-ui` embed. No dark SOC. Login only if live GitHub writes require it.
+7. **Independence as code, not only prompt.** `src/independence.ts` + tests. Skill restates it. Collapsed warehouse dataset must refuse.
