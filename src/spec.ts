@@ -73,6 +73,31 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     message: "Type A must clone the public tenant repo into the sandbox",
   },
   {
+    id: "clone-no-deadlock",
+    re: /rm -rf[\s\S]*git clone[\s\S]*at most twice/,
+    message: "incomplete clone dir must be removed; clone at most twice",
+  },
+  {
+    id: "clone-fail-skip",
+    re: /say clone failed/,
+    message: "clone failure must skip the patch, not retry forever",
+  },
+  {
+    id: "no-fabricated-tenant",
+    re: /do not write fabricated tenant sources/,
+    message: "must not fabricate tenant sources after clone failure",
+  },
+  {
+    id: "clone-empty-cwd",
+    re: /empty cwd with no wemakedevs_agent_harness/,
+    message: "empty Daytona cwd must still clone",
+  },
+  {
+    id: "must-open-draft-pr",
+    re: /MUST call the MCP tool open_draft_pr with merge false/,
+    message: "Type A must call open_draft_pr, not write next steps",
+  },
+  {
     id: "sandbox-created-exists",
     re: /sandbox\.created means a sandbox exists/,
     message: "sandbox.created is not no sandbox",

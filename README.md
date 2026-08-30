@@ -126,7 +126,7 @@ git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
 # enterprise alias: "enterprise-annual" → "enterprise-annual-v3"
 ```
 
-Keep trying until that file is there, patch it, then the root pauses on `open_draft_pr` (MCP-annotated write, `require_approval_for_tools` includes `@write`). Skip the patch only if there is actually no sandbox.
+Empty cwd is the normal Daytona case: clone even when `wemakedevs_agent_harness/` does not exist. If that directory exists without `checkout.ts`, `rm -rf` it first. Clone at most twice. If still missing, skip the patch and say clone failed (do not loop, do not write fabricated tenant sources). If the file exists, patch it, then the root MUST call `open_draft_pr` with `merge: false` (`require_approval_for_tools` includes `@write`). A written next-steps list is not a substitute. Skip the patch only if `sandbox.created` never fired.
 
 Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Demo: deny an extra patcher write; approve the root.
 

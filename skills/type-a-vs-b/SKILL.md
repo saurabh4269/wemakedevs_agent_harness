@@ -17,12 +17,24 @@ Something that used to work now fails. The **root** does this work. Do not spawn
 
 ```bash
 pwd; ls
-test -f wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts \
-  || git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
-test -f wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts
+CHECKOUT=wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts
+if test -f "$CHECKOUT"; then
+  : # already materialized — skip clone
+else
+  if test -d wemakedevs_agent_harness && ! test -f "$CHECKOUT"; then
+    rm -rf wemakedevs_agent_harness
+  fi
+  git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
+  if ! test -f "$CHECKOUT"; then
+    if test -d wemakedevs_agent_harness; then
+      rm -rf wemakedevs_agent_harness
+    fi
+    git clone --depth 1 https://github.com/saurabh4269/wemakedevs_agent_harness.git
+  fi
+fi
 ```
 
-Keep trying until that file exists. If clone fails, write the known tenant sources into `wemakedevs_agent_harness/fixtures/tenant/` via exec (public files only). Then patch **only** the enterprise alias in `wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts`:
+`test -f` skips clone when the file is already there. If the directory exists without that file, `rm -rf` it, then clone. At most two clone attempts. Do **not** keep trying after that. If `checkout.ts` is still missing, skip the patch and say clone failed. Do **not** write fabricated tenant sources. If the file exists, patch **only** the enterprise alias in `wemakedevs_agent_harness/fixtures/tenant/src/checkout.ts`:
 
 ```ts
 enterprise: "enterprise-annual-v3",

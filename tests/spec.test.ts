@@ -69,10 +69,23 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/generative UI \(OpenUI\)/);
     expect(instructions).toMatch(/Code Mode[\s\S]*mcp_client/);
     expect(instructions).toMatch(/Do not put open_draft_pr[\s\S]*inside that script/);
+    expect(instructions).toMatch(/rm -rf/);
+    expect(instructions).toMatch(/at most twice/);
+    expect(instructions).toMatch(/say clone failed/);
+    expect(instructions).toMatch(/do not write fabricated tenant sources/);
+    expect(instructions).not.toMatch(/Keep trying until that file exists/);
+    expect(instructions).toMatch(/empty cwd with no wemakedevs_agent_harness/);
+    expect(instructions).toMatch(/MUST call the MCP tool open_draft_pr with merge false/);
     const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
     expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
     expect(typeA).toMatch(/sandbox\.created means a sandbox exists/);
     expect(typeA).toMatch(/enterprise-annual-v3/);
+    expect(typeA).toMatch(/test -f/);
+    expect(typeA).toMatch(/rm -rf/);
+    expect(typeA).toMatch(/At most two clone attempts/);
+    expect(typeA).toMatch(/fabricated tenant sources/);
+    expect(typeA).not.toMatch(/Keep trying until that file exists/);
+    expect(typeA).not.toMatch(/write the known tenant sources/);
   });
 
   it("does not embed connector credentials", () => {
