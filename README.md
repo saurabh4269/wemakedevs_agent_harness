@@ -118,7 +118,7 @@ In TrueForge chat, pick agent loop and send:
 
 You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or spawn a fourth / patcher subagent. Then the root does a Type A patch against fixtures/tenant/src/checkout.ts in the Daytona sandbox (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), or skips the patch if there is no sandbox. Then the root pauses on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
 
-Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Subagents must not call loop-github.
+Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Demo: deny an extra patcher write; approve the root.
 
 ## LOOP UI
 

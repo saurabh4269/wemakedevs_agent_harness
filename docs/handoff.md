@@ -6,7 +6,7 @@ Living PR/blocker/URL state: **[status.md](status.md)**. Rewrite that file. Do n
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness (public)
 - Team: **thExplorers**
-- Saurabh Gupta `saurabh4269` — saurabhgupta0342@gmail.com
+- Saurabh Gupta `saurabh4269`
 - Collaborator: `shiwani42`
 - `gh` is authed as `saurabh4269`
 
@@ -28,4 +28,4 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Priority
 
-Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher writes, PR #2 rebase + Qodo Highs in flight. Blog last. CodeRabbit is noise; Qodo is required.
+Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher write / approve root, PR #2 `8c96416` (workspaces + no client token) with Qodo follow-up in flight. Blog last. CodeRabbit is noise; Qodo is required.

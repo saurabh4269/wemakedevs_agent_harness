@@ -25,7 +25,7 @@ Hackathon hero card is **Incident responder**. That is this product.
 
 Root coordinates. Root does **not** investigate itself.
 
-Spawn exactly three **one-level** subagents. Distinct questions. Subagents do not ask the user. Subagents do not call `loop-github`.
+Spawn exactly three **one-level** subagents. Distinct questions. Subagents do not ask the user.
 
 | Subagent | Tool | Must contribute |
 | --- | --- | --- |
@@ -40,11 +40,11 @@ If independent, skill `type-a-vs-b`:
 - **Type A** (break): patch `fixtures/tenant` in the **sandbox**, measure, write a lesson.
 - **Type B** (opportunity): proposal only. Do not patch production.
 
-Then skill `license-to-write`. Writes live only on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny.
+Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.
 
 **Fixture MCP** is `mode:fixture`. Warehouse `@read-only`. GitHub connector is fake. Official page wants tools **connected, not mocked** — fixture warehouse is an honest Best Use risk. Conversion-drop story stays on fixtures; live GitHub write can stay gated. Do not pretend fixtures are production.
 
-**Honest shared-tool-set limit.** TrueForge dynamic subagents inherit the **root** MCP tools. There is no per-subagent connector list. The warehouse/github split is enable lists + approval + skills, not isolation. Say so if asked. A subagent can see `open_draft_pr`; deny the pause.
+**Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. Root spec still splits servers (`loop-warehouse` `@read-only`; `loop-github` named writes + `require_approval_for_tools`). That is not isolation. A subagent can see `open_draft_pr`. Writes still pause. Demo: deny the extra **patcher** write; approve the **root**. Fixture never talks to live GitHub.
 
 Skills require sandbox. Daytona key needs **Sandboxes** access and **Snapshots write**. LOOP spec sets `config.sandbox.enabled: true`. If Daytona 401s, skills will not load — fix that; do not silently drop the three-subagent path.
 
@@ -84,7 +84,7 @@ TrueForge chat, agent `loop`:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. Collapsed story (`LOOP_STORY=collapsed`) must refuse a root cause.
+Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. Extra patcher write: deny. Root write: approve. Collapsed story (`LOOP_STORY=collapsed`) must refuse a root cause.
 
 ## Docs
 

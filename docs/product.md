@@ -28,6 +28,6 @@ TrueForge chat is the product UI. Optional themed `@truefoundry/trueforge-ui` em
 
 ## Honest limits
 
-- Subagents share the root tool set. Split is enable lists + `require_approval_for_tools` + skills.
+- Subagents share the root tool set. `DynamicSubAgentsConfig` is `{ enabled }` only — no per-subagent `enable_tools`. Writes pause via `require_approval_for_tools`. Demo: deny extra patcher write; approve root. Never merge / prod-deploy.
 - Fixture MCP is fixture. Official "connected not mocked" is a Best Use risk — say it.
 - Skills need sandbox. If Daytona 401s and `sandbox.enabled` is false, skills will not be on the agent and the three-subagent path will not run. That is a blocker, not a feature.
