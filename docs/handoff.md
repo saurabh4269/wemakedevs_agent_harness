@@ -22,10 +22,10 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Work split
 
-- Agent spec / fixtures / skills / tests: PR #1 `feat/loop-trueforge-agent`. Do not merge until Qodo Highs are fixed or dismissed + follow-up review.
+- Agent spec / fixtures / skills / tests: PR #1 **merged** (`f1651fa`). Qodo follow-up on `9b8b17ed`: Bugs (0); all five findings resolved.
 - UI shell: PR #2 `feat/loop-ui`. Do not clobber that worktree or branch.
 - This docs handoff: own branch `docs/agent-handoff`.
 
 ## Priority
 
-Product first: live conversion-drop → three **subagent** looks → sandbox patch → pause. Blog last. CodeRabbit is noise; Qodo is required.
+Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher writes, Qodo 5 bugs on #2. Blog last. CodeRabbit is noise; Qodo is required.
