@@ -31,7 +31,7 @@ services:
       - key: STANDALONE
         value: "false"
       - key: PUBLIC_BASE_URL
-        value: https://loop.thexplorers.xyz
+        value: https://loop.heisenbug.in
       - key: LOOP_FIXTURE_PORT
         value: "8788"
       - key: POSTGRES_HOST
