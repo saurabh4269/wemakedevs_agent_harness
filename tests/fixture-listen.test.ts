@@ -28,6 +28,14 @@ describe("fixture MCP listen bind", () => {
     expect(() => fixtureListenBind({ LOOP_FIXTURE_PORT: "nope" })).toThrow(/Invalid fixture MCP port/);
   });
 
+  it("rejects a numeric-prefix port", () => {
+    expect(() => fixtureListenBind({ LOOP_FIXTURE_PORT: "8788abc" })).toThrow(/Invalid fixture MCP port/);
+  });
+
+  it("rejects a decimal port", () => {
+    expect(() => fixtureListenBind({ LOOP_FIXTURE_PORT: "8788.5" })).toThrow(/Invalid fixture MCP port/);
+  });
+
   it("keeps the colocated sidecar on loopback 8788 while TrueForge uses Render PORT", () => {
     const env = colocatedFixtureEnv({ HOST: "0.0.0.0", PORT: "10000", NODE_ENV: "production" });
     expect(env.PORT).toBeUndefined();

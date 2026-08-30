@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~03:50 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~09:50 IST**.
 
 ## PRs
 
@@ -12,7 +12,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#4](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/4) | `feat/loop-product-first` | Production-shaped LOOP | **Closed** without merge (stale Daytona-403). Do not reopen. |
 | [#5](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/5) | `feat/loop-sandbox-tenant` | Seed tenant into Daytona; empty-cwd clone + MUST `open_draft_pr` | **Merged**. |
 | [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `feat/docs-organizer-research` | Organizer extras + previous-winners | **Merged**. |
-| [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `feat/render-host` | Hosted TrueForge on Render | Open. This worktree. Human merges after Qodo. |
+| [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `feat/render-host` | Hosted TrueForge on Render + live URL + audit | Open. This worktree. Live image is still `fc7621c` until this lands. |
 
 Worktrees: one writer per branch. New work from `origin/main`.
 
@@ -63,6 +63,12 @@ Clock ~02:42 IST, session `01m1a87xjewncn310ymqy3yz01` / turn `01m1a87xk1s82h6j3
 Attempt 1 FAIL (`01m1a80698wrqk841j72tey3fy`): fourth subagent `type-a-vs-b`; `sed` on `/opt/tf/tenant` missing. Instruction harden (never spawn skill names as subagents; root clones then pauses) is on PR #5 `agents/loop.json`; live PUT already applied.
 
 Gen UI and Code Mode did **not** appear on the passing run. Still Spark extras, not qualify blockers. Prior `cp -r fixtures/tenant` hole is closed for this qualify trio.
+
+### Sandbox (Daytona)
+
+Hosted sandbox providers: **ready** (full-access key stored off-git in TrueForge Settings). Local qualify PASS cloned the public tenant then paused on root `open_draft_pr`. Do not paste keys in chat or git.
+
+Honest audit of real vs fixture: [audit.md](audit.md).
 
 ## Form / demo URLs (draft)
 

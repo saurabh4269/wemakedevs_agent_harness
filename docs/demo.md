@@ -4,7 +4,7 @@ Judge-facing shot list. Not a transcript dump. A judge or Saurabh can run this w
 
 **Qualify** (live page, fetched 2026-08-31 morning IST): a judge has to see TrueForge reaching a tool, running code in the sandbox, and stopping for a person.
 
-LOOP is the **Incident responder** hero card. Stock TrueForge UI at http://localhost:8790 is the demo. LOOP rail at http://localhost:5173 is optional extra (PR #2 **merged** `e221fb05`, Qodo **Bugs (0)**). Do not call localhost "hosted".
+LOOP is the **Incident responder** hero card. Judges: stock TrueForge UI at https://loop.heisenbug.in. Local film host remains http://localhost:8790. LOOP rail at http://localhost:5173 is optional extra (PR #2 **merged** `e221fb05`, Qodo **Bugs (0)**). Do not call localhost "hosted".
 
 ## Prompt (exact)
 
@@ -37,7 +37,7 @@ Pick agent `loop`. Send this and nothing else:
 
 - Prior internal control-plane work, or any prior campus product.
 - Keys, .env, Settings credential paste. Never put a Daytona key in git or on camera.
-- Localhost as "hosted" (https://loop.thexplorers.xyz is not live).
+- Localhost as "hosted". Live host is https://loop.heisenbug.in.
 - A mocked tool call that is not MCP. Fixture warehouse is already an honest Best Use risk; do not add a fake sandbox.
 - Chat-only investigation with no subagents, no pause, no (attempted) sandbox.
 
@@ -47,6 +47,6 @@ Pick agent `loop`. Send this and nothing else:
 2. Optional extra: LOOP rail on port 5173 for Doing / Waiting / Did.
 3. Daytona: provider ready. Passing seed is `git clone` of the public harness, then patch `enterprise-annual-v3`. Pause is sitting on root `open_draft_pr` — film that; do not click yet.
 4. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
-5. Film Agent steps, not a zoomed chat bubble.
+5. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
 
 PR #1–#3 merged. Living state: [status.md](status.md).

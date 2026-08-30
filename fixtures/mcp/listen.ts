@@ -11,7 +11,10 @@ export type FixtureListenBind = {
  * Host: HOST, else 0.0.0.0 when a platform set PORT, else 127.0.0.1.
  */
 export function fixtureListenBind(env: NodeJS.Dict<string> = process.env): FixtureListenBind {
-  const portRaw = env.LOOP_FIXTURE_PORT || env.PORT || "8788";
+  const portRaw = (env.LOOP_FIXTURE_PORT || env.PORT || "8788").trim();
+  if (!/^[0-9]+$/.test(portRaw)) {
+    throw new Error(`Invalid fixture MCP port "${portRaw}"`);
+  }
   const port = Number.parseInt(portRaw, 10);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     throw new Error(`Invalid fixture MCP port "${portRaw}"`);
