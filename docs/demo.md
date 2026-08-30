@@ -17,7 +17,7 @@ Pick agent `loop`. Send this and nothing else:
 | # | Beat | What "done" looks like | If it fails |
 | --- | --- | --- | --- |
 | 1 | MCP warehouse tools via **three named** subagents: `analytics` / `logs` / `deploys` | Agent steps show `query_analytics`, `query_logs`, `query_deploys` on those threads. Root does **not** call `query_*`. | Stop. This is the "reach a tool" qualify beat. |
-| 2 | Daytona sandbox patch of `fixtures/tenant` | Type A: sandbox edits `fixtures/tenant/src/checkout.ts` so `enterprise` aliases `enterprise-annual-v3`. | **BLOCKED.** Key authenticates (`GET api-keys/current` 200) but `POST /snapshots` is **403**. Scopes are `write:sandboxes` + `delete:sandboxes` only — missing `write:snapshots`. TrueForge `GET /api/v1/settings/sandbox-providers` is **404** (none configured). Spark hole. Do not fake a patch. |
+| 2 | Daytona sandbox patch of `fixtures/tenant` | Type A: sandbox `git clone` of the public harness, then `checkout.ts` so `enterprise` aliases `enterprise-annual-v3`. Seed = git clone, not write-files. Provider **ready**. Qualify **PASS** on session `01m1a87xjewncn310ymqy3yz01`. | If clone/patch fails, stop. Do not fake a patch. Do not `sed /opt/tf/tenant`. |
 | 3 | Pause on root `open_draft_pr` with Approve / Deny | Agent steps: write tool held. Buttons visible. Do not click yet. | Stop. This is the "stopping for a person" qualify beat. |
 | 4 | Refresh still paused. Deny extra patcher write. Approve root | Reload http://localhost:8790. Same session, same pause. If a `patcher` subagent also paused on a write: **Deny** it. **Approve** the root `open_draft_pr` only. Never merge. Never prod-deploy. | If refresh loses the pause, Best Use session claim is dead. |
 
@@ -25,16 +25,17 @@ Pick agent `loop`. Send this and nothing else:
 
 | Clock | Shot | On screen | Line |
 | --- | --- | --- | --- |
-| 0:00-0:25 | Problem | Stock TrueForge at :8790, no login. Paste the prompt. | Checkout conversion dropped ~19% Friday afternoon on desktop Chrome. LOOP is an incident responder. |
-| 0:25-1:10 | Three looks | Subagent threads analytics / logs / deploys. MCP warehouse tools. | Three independent looks. Root does not investigate itself. |
-| 1:10-1:40 | Sandbox patch | Daytona running code against fixtures/tenant. | Type A break: catalog rename left the enterprise alias pointing at a gone plan. If snapshots 403 / no provider: hold a card that says BLOCKED, Spark hole. |
-| 1:40-2:10 | Pause | Approve / Deny on root open_draft_pr. Do not click. | Writes wait. LOOP never merges and never deploys prod. |
-| 2:10-2:40 | Reconnect | Refresh. Pause still there. Deny extra patcher if it appears. Approve root. | Session survived the refresh. Deny the extra write; approve the root. |
+| 0:00-0:20 | Problem | Stock TrueForge at :8790, no login. Paste the prompt. | Checkout conversion dropped ~19% Friday afternoon on desktop Chrome. LOOP is an incident responder. |
+| 0:20-1:00 | Three looks | Subagent threads analytics / logs / deploys. MCP warehouse tools. | Three independent looks. Root does not investigate itself. |
+| 1:00-1:20 | Gen UI + Code Mode | Chart/table/Type A card. Optional sandbox print table. | Harness rendered this. Counts from code, not the model. |
+| 1:20-1:50 | Sandbox patch | Daytona running code against fixtures/tenant. | Type A break: catalog rename left the enterprise alias pointing at a gone plan. If tenant files are missing in the sandbox, stop — do not fake it. |
+| 1:50-2:15 | Pause | Approve / Deny on root open_draft_pr. Do not click. | Writes wait. LOOP never merges and never deploys prod. |
+| 2:15-2:40 | Reconnect | Refresh. Pause still there. Deny extra patcher if it appears. Approve root. | Session survived the refresh. Deny the extra write; approve the root. |
 | 2:40-3:00 | One-line lesson | Lesson in chat. | Three looks, a sandbox patch, a human on the write. |
 
 ## What NOT to show
 
-- Product OS, ADK, or any prior campus product.
+- Prior internal control-plane work, or any prior campus product.
 - Keys, .env, Settings credential paste. Never put a Daytona key in git or on camera.
 - Localhost as "hosted" (https://loop.thexplorers.xyz is not live).
 - A mocked tool call that is not MCP. Fixture warehouse is already an honest Best Use risk; do not add a fake sandbox.
@@ -44,11 +45,8 @@ Pick agent `loop`. Send this and nothing else:
 
 1. TrueForge at http://localhost:8790 (npx, SQLite, no login). Fixture MCP at `127.0.0.1:8788`. Agent `loop` imported.
 2. Optional extra: LOOP rail on port 5173 for Doing / Waiting / Did.
-3. Daytona Spark hole (not a vague auth failure):
-   - Stored key authenticates (api-keys/current returns 200) but snapshot create is forbidden (403).
-   - Scopes on that key: write:sandboxes and delete:sandboxes only. Missing write:snapshots.
-   - TrueForge sandbox-providers settings endpoint returns 404: no provider configured.
-   - User action: Daytona dashboard, mint a key with Sandboxes write plus Snapshots write (create). Paste only in TrueForge Settings, Sandbox providers. Until then beat 2 is BLOCKED.
-4. Film Agent steps, not a zoomed chat bubble.
+3. Daytona: provider ready. Passing seed is `git clone` of the public harness, then patch `enterprise-annual-v3`. Pause is sitting on root `open_draft_pr` — film that; do not click yet.
+4. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
+5. Film Agent steps, not a zoomed chat bubble.
 
-PR #1 merged (f1651fa, Qodo Bugs (0)). PR #2 merged (e221fb05, Qodo Bugs (0)). Living state: [status.md](status.md).
+PR #1–#3 merged. Living state: [status.md](status.md).

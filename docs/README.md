@@ -5,7 +5,8 @@ Curated handoff for the next agent. Not a chat dump. If a fact moved, rewrite th
 | File | Owns |
 | --- | --- |
 | [hackathon.md](hackathon.md) | Official rules, tracks, Qodo trail, qualify trio |
-| [organizers.md](organizers.md) | Kickoff + harness explainer (Kunal, Sai) |
+| [organizers.md](organizers.md) | Kickoff + harness explainer (Kunal, Sai). What they mark. |
+| [previous-winners.md](previous-winners.md) | WeMakeDevs prior winners + TrueForge examples. Steal onto LOOP only. |
 | [product.md](product.md) | LOOP decisions and honest limits |
 | [handoff.md](handoff.md) | Team, secrets *path*, form URLs, priorities |
 | [status.md](status.md) | **Living.** PRs, blockers, live TrueForge, demo URLs |
@@ -22,4 +23,6 @@ Agent OS is the root [AGENTS.md](../AGENTS.md). How to run is the root [README.m
 3. Change of official rules → [hackathon.md](hackathon.md) (cite the page). Record contradictions; do not invent a late-submit policy.
 4. Form field or URL change → [form.md](form.md).
 5. A decision that should survive the week → add an ADR in [decisions.md](decisions.md).
-6. Never commit secrets. Never paste `.env`. Point at `/home/box/.secrets/loop-trueforge.env` and stop.
+6. Organizer quotes, extras they named, skip-list → [organizers.md](organizers.md).
+7. Prior WeMakeDevs winners / TrueForge example agents → [previous-winners.md](previous-winners.md). Curate. No transcript dumps.
+8. Never commit secrets. Never paste `.env`. Point at `/home/box/.secrets/loop-trueforge.env` and stop.
