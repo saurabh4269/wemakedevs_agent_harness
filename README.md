@@ -180,9 +180,9 @@ Put that in packages/trueforge/.env (Compose) or server.publicBaseUrl (Helm). Do
 
 ## Qodo Code Review Evidence
 
-**PR #1 is MERGED:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
+**PR #1 is MERGED** (`f1651fa`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
 
-Qodo-code-review is installed on the account. `/agentic_review` on PR #1 produced the review thread.
+Qodo-code-review is installed on the account. `/agentic_review` on that PR produced the review thread.
 
 Qodo findings and status:
 

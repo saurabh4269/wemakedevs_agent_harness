@@ -66,7 +66,7 @@ docs/                     curated handoff. status.md is the living file.
 
 Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). Compose: :8791 (Postgres + Redis). Intended public host: https://loop.thexplorers.xyz with `PUBLIC_BASE_URL`.
 
-TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package currently advertises `>=20.19` so tests run on Node 20; importer/SDK want 22.
+TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
 
 Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 

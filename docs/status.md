@@ -1,14 +1,14 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~01:45 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~01:55 IST**.
 
 ## PRs
 
 | PR | Branch | What | State |
 | --- | --- | --- | --- |
 | [#1](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1) | `feat/loop-trueforge-agent` | Agent spec, fixture MCP, skills, import, tests | **Merged** (`f1651fa`). Head SHA `9b8b17ed44ca453fb62a27c8e8973491d8d951dd`. Qodo follow-up on that SHA: **Bugs (0)**. All five findings resolved, including High MCP URL logging and Medium lockfile `engines` (`>=22.14.0`). README Qodo evidence section links this PR. Human merge. |
-| [#2](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2) | `feat/loop-ui` | LOOP TrueForgeUI shell for the write-pause demo | Open. Qodo **5 bugs being fixed now**. Do not clobber. |
-| [#3](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/3) | `docs/agent-handoff` | AGENTS.md rewrite + `docs/` | This docs PR. Open against `feat/loop-trueforge-agent`. |
+| [#2](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2) | `feat/loop-ui` | LOOP TrueForgeUI shell for the write-pause demo | Open. Rebase + Qodo Highs in flight. Do not clobber. |
+| [#3](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/3) | `docs/agent-handoff` | AGENTS.md rewrite + `docs/` | This docs PR. Open against `main` (retargeted from `feat/loop-trueforge-agent`; rebased onto `f1651fa`). |
 
 CodeRabbit comments exist; ignore for evidence.
 

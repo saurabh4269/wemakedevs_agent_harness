@@ -28,4 +28,4 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Priority
 
-Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher writes, Qodo 5 bugs on #2. Blog last. CodeRabbit is noise; Qodo is required.
+Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher writes, PR #2 rebase + Qodo Highs in flight. Blog last. CodeRabbit is noise; Qodo is required.
