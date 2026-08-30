@@ -23,7 +23,7 @@ Hackathon hero card is **Incident responder**. That is this product.
 
 ## Architecture
 
-Root coordinates. Root does **not** investigate itself.
+Root coordinates. Root does **not** investigate itself. Root does **not** call `query_*` as direct tools. After the three subagents return: OpenUI (chart + table + Type A/B card) and Code Mode aggregations (`mcp_client`, no `open_draft_pr` in the script).
 
 Spawn exactly three **one-level** subagents. Distinct questions. Subagents do not ask the user.
 
@@ -37,7 +37,7 @@ Spawn exactly three **one-level** subagents. Distinct questions. Subagents do no
 
 If independent, skill `type-a-vs-b`:
 
-- **Type A** (break): patch `fixtures/tenant` in the **sandbox**, measure, write a lesson.
+- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo), patch `fixtures/tenant/src/checkout.ts`, call `open_draft_pr` (pauses). A failed `cp fixtures/tenant` is not "no sandbox". Measure, write a lesson.
 - **Type B** (opportunity): proposal only. Do not patch production.
 
 Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.

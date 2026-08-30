@@ -61,6 +61,33 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).not.toMatch(/until those three reports exist/);
   });
 
+  it("teaches the root to clone the public tenant, keep the sandbox, emit OpenUI, and use Code Mode", () => {
+    const instructions = agent.manifest.instructions ?? "";
+    expect(instructions).toMatch(/git clone[\s\S]*wemakedevs_agent_harness/);
+    expect(instructions).toMatch(/sandbox\.created means a sandbox exists/);
+    expect(instructions).toMatch(/failed cp of fixtures\/tenant is not "no sandbox"/);
+    expect(instructions).toMatch(/generative UI \(OpenUI\)/);
+    expect(instructions).toMatch(/Code Mode[\s\S]*mcp_client/);
+    expect(instructions).toMatch(/Do not put open_draft_pr[\s\S]*inside that script/);
+    expect(instructions).toMatch(/rm -rf/);
+    expect(instructions).toMatch(/at most twice/);
+    expect(instructions).toMatch(/say clone failed/);
+    expect(instructions).toMatch(/do not write fabricated tenant sources/);
+    expect(instructions).not.toMatch(/Keep trying until that file exists/);
+    expect(instructions).toMatch(/empty cwd with no wemakedevs_agent_harness/);
+    expect(instructions).toMatch(/MUST call the MCP tool open_draft_pr with merge false/);
+    const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
+    expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
+    expect(typeA).toMatch(/sandbox\.created means a sandbox exists/);
+    expect(typeA).toMatch(/enterprise-annual-v3/);
+    expect(typeA).toMatch(/test -f/);
+    expect(typeA).toMatch(/rm -rf/);
+    expect(typeA).toMatch(/At most two clone attempts/);
+    expect(typeA).toMatch(/fabricated tenant sources/);
+    expect(typeA).not.toMatch(/Keep trying until that file exists/);
+    expect(typeA).not.toMatch(/write the known tenant sources/);
+  });
+
   it("does not embed connector credentials", () => {
     const raw = readFileSync(join(root, "agents/loop.json"), "utf8").toLowerCase();
     expect(raw).not.toMatch(/api[_-]?key/);

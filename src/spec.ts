@@ -67,6 +67,66 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     re: /If there is no sandbox, skip the patch/,
     message: "Type A patch stays in sandbox or skip",
   },
+  {
+    id: "materialize-tenant",
+    re: /git clone[\s\S]*wemakedevs_agent_harness/,
+    message: "Type A must clone the public tenant repo into the sandbox",
+  },
+  {
+    id: "clone-no-deadlock",
+    re: /rm -rf[\s\S]*git clone[\s\S]*at most twice/,
+    message: "incomplete clone dir must be removed; clone at most twice",
+  },
+  {
+    id: "clone-fail-skip",
+    re: /say clone failed/,
+    message: "clone failure must skip the patch, not retry forever",
+  },
+  {
+    id: "no-fabricated-tenant",
+    re: /do not write fabricated tenant sources/,
+    message: "must not fabricate tenant sources after clone failure",
+  },
+  {
+    id: "clone-empty-cwd",
+    re: /empty cwd with no wemakedevs_agent_harness/,
+    message: "empty Daytona cwd must still clone",
+  },
+  {
+    id: "must-open-draft-pr",
+    re: /MUST call the MCP tool open_draft_pr with merge false/,
+    message: "Type A must call open_draft_pr, not write next steps",
+  },
+  {
+    id: "sandbox-created-exists",
+    re: /sandbox\.created means a sandbox exists/,
+    message: "sandbox.created is not no sandbox",
+  },
+  {
+    id: "failed-cp-not-missing",
+    re: /failed cp of fixtures\/tenant is not "no sandbox"/,
+    message: "failed cp is not no sandbox",
+  },
+  {
+    id: "openui-after-three",
+    re: /generative UI \(OpenUI\)/,
+    message: "after three return, emit OpenUI",
+  },
+  {
+    id: "code-mode-aggregations",
+    re: /Code Mode[\s\S]*mcp_client/,
+    message: "aggregations use Code Mode mcp_client",
+  },
+  {
+    id: "code-mode-no-draft-pr",
+    re: /Do not put open_draft_pr[\s\S]*inside that script/,
+    message: "Code Mode script must not call open_draft_pr",
+  },
+  {
+    id: "no-direct-query-star",
+    re: /never call query_analytics, query_logs, or query_deploys from the root/,
+    message: "root must not call query_* as direct tools",
+  },
 ];
 
 export type McpServerSpec = {
