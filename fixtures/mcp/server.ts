@@ -31,11 +31,21 @@ app.get("/health", (_req, res) => {
   });
 });
 
+function handleMcp(create: () => McpServer, req: express.Request, res: express.Response): void {
+  void attach(create, req, res).catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(`MCP attach failed: ${message}\n`);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "MCP request failed" });
+    }
+  });
+}
+
 app.post("/warehouse", (req, res) => {
-  void attach(createWarehouseServer, req, res);
+  handleMcp(createWarehouseServer, req, res);
 });
 app.post("/github", (req, res) => {
-  void attach(createGithubServer, req, res);
+  handleMcp(createGithubServer, req, res);
 });
 
 app.all("/warehouse", (_req, res) => {

@@ -9,7 +9,7 @@ TrueForge chat is the UI. This repo is TypeScript only.
 
 ## What you need
 
-- Node 22.14+ for TrueForge. Node 20 can run the tests and build.
+- Node 22.14+ for TrueForge and import-loop. Tests can still run on Node 20.
 - Prefer OpenRouter as a custom OpenAI-compatible provider. NVIDIA NIM is the backup.
 - Daytona sandbox with snapshot write permission in Settings. Skills need sandbox enabled.
 - Register skills from this GitHub repo.
@@ -169,6 +169,8 @@ Qodo is installed on the account as the Qodo-code-review GitHub App. To run the 
 3. Qodo reacts and posts the review on the PR.
 
 That comment plus the review thread is the hackathon evidence. If the app is not on this repository yet, install Qodo-code-review for saurabh4269/wemakedevs_agent_harness and re-comment.
+
+The first `/agentic_review` on this PR found URL logging of MCP connectors, Node engines below the TrueForge SDK, uncaught MCP attach rejections, and a loose model FQN check.
 
 ## Layout
 

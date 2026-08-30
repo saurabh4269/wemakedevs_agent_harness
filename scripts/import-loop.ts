@@ -134,11 +134,24 @@ async function registerDaytona(baseUrl: string): Promise<void> {
   }
 }
 
+/** Log-safe URL: drop userinfo and query so connector credentials never hit stdout. */
+function redactUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.username = "";
+    parsed.password = "";
+    parsed.search = "";
+    return parsed.toString();
+  } catch {
+    return "[unparseable-url]";
+  }
+}
+
 async function registerMcp(baseUrl: string, name: string, url: string, description: string): Promise<void> {
   await putSettings(baseUrl, "/api/v1/settings/mcp-servers", {
     manifest: { type: "remote", name, url, description },
   });
-  process.stdout.write(`MCP ${name}: ${url}\n`);
+  process.stdout.write(`MCP ${name}: ${redactUrl(url)}\n`);
 }
 
 async function registerSkill(

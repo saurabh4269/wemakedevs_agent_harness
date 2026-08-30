@@ -27,7 +27,20 @@ describe("LOOP agent spec shape", () => {
     expect(agent.manifest.config?.dynamic_sub_agents?.enabled).toBe(true);
     expect(agent.manifest.config?.generative_ui?.enabled).toBe(true);
     expect(agent.manifest.skills?.map((skill) => skill.name)).toEqual([...LOOP_SKILL_NAMES]);
-    expect(agent.manifest.model.name).toContain("/");
+    const parts = agent.manifest.model.name.split("/");
+    expect(parts).toHaveLength(2);
+    expect(parts[0] !== undefined && isResourceName(parts[0])).toBe(true);
+    expect(parts[1] !== undefined && isResourceName(parts[1])).toBe(true);
+  });
+
+  it("rejects model FQNs that are not exactly provider/name", () => {
+    const clone = structuredClone(agent);
+    for (const bad of ["", "openrouter", "/model", "provider/", "a/b/c", "OpenRouter/gpt-4.1-mini"]) {
+      clone.manifest.model.name = bad;
+      expect(validateLoopAgent(clone).some((issue) => issue.path === "manifest.model.name")).toBe(true);
+    }
+    clone.manifest.model.name = "openrouter/gpt-4.1-mini";
+    expect(validateLoopAgent(clone).filter((issue) => issue.path === "manifest.model.name")).toEqual([]);
   });
 
   it("does not embed connector credentials", () => {

@@ -5,7 +5,7 @@
   "type": "module",
   "description": "LOOP — one TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.14.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json",

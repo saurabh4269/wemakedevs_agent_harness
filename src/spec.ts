@@ -49,7 +49,8 @@ export function validateLoopAgent(agent: SavedAgent): SpecIssue[] {
   }
 
   const spec = agent.manifest;
-  if (!spec.model?.name || !spec.model.name.includes("/")) {
+  const modelParts = spec.model?.name?.split("/") ?? [];
+  if (modelParts.length !== 2 || !modelParts.every((part) => isResourceName(part))) {
     issues.push({ path: "manifest.model.name", message: "model FQN must be provider/name" });
   }
 
