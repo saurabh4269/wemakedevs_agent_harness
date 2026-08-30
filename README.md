@@ -7,6 +7,8 @@ Type A is a break (the root patches in the Daytona sandbox, or skips if there is
 
 TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
 
+- **Handoff** — next agent: [docs/README.md](docs/README.md)
+
 ## What you need
 
 - Node 22.14+ for TrueForge, tests, builds, and the LOOP UI. The TrueForge SDK and UI packages require Node 22.
@@ -219,5 +221,6 @@ fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
 src/                      independence, write policy, spec checks
 tests/
+docs/                     agent handoff (start at docs/README.md)
 apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
 ```
