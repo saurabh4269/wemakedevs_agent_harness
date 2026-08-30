@@ -25,7 +25,7 @@ Pick one small job. Ship V1, save it, then add. Small fully working > big half-d
 
 Sai: TrueForge is the open-source harness. `npx @truefoundry/trueforge` local chat UI. Settings: models, connectors (MCP), skills, Daytona sandbox. Use **stock TrueForge UI** unless the product needs another. Want a **real-world** job, not a toy. Demo ~2.5–3 min.
 
-User heard Kunal say look at previous winners "on V McDuff or something." Phonetic match is **WeMakeDevs**. Written kickoff blog does not name those winners; it points at TrueForge example agents. See [previous-winners.md](previous-winners.md). Do not invent a timestamped quote until captions are recovered.
+User heard Kunal say look at previous winners "on V McDuff or something." ASR of **WeMakeDevs**. Quote recovered in the kickoff Q&A (no cue timestamp). He names no project: go to the website, simple ideas executed well. See [previous-winners.md](previous-winners.md).
 
 ### Quotes (watch-page auto-transcript)
 

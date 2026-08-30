@@ -1,56 +1,75 @@
 # Previous winners (steal onto LOOP only)
 
-Kunal told builders to look at previous WeMakeDevs winners. User heard "V McDuff or something" — treat that as **WeMakeDevs**, not a person. LOOP stays the incident responder. Steal **patterns**. Do not steal a domain. Do not replace LOOP.
+Kunal told builders to look at previous WeMakeDevs winners. User heard “V McDuff or something” — ASR of **WeMakeDevs**, not a person. He named no project. LOOP stays the incident responder. Steal **patterns**. Do not steal a domain. Do not replace LOOP.
 
-## What is sourced vs not
+## Kickoff Q&A (sourced)
 
-| Claim | Source | Status |
-| --- | --- | --- |
-| Look at previous WeMakeDevs winners | User recollection of kickoff Q&A | Phonetic match WeMakeDevs. **No timestamped caption recovered** in this pass. Do not invent a quote. Replace this row if captions land. |
-| TrueForge Example Agents as starting points | [Kickoff blog](https://www.wemakedevs.org/blogs/agent-harness-hackathon-kick-off) (Sachin Sharma, 24 Aug 2026) | Named: security auditing, research, codebase onboarding, CI fixes, database analysis, issue triage, **incident investigation**. |
-| Blog example #1 is a DevOps / incident agent | Same blog | MCP + subagents + sandbox diagnostic + ask before sensitive action. That **is** LOOP. |
-| This is the **3rd** WeMakeDevs DGX Spark | Kunal LinkedIn 26 Aug 2026 | Spark #2 = Into the Scrape-Verse (17–23 Aug 2026). Spark #1 winner **not found** in public posts searched 31 Aug 2026. Do not invent a name. |
-| Scrape-Verse track winners | Event page https://www.wemakedevs.org/hackathons/scrape-verse | Page does not list project winners as of 31 Aug 2026. |
-| Agents of SigNoz track winners | WeMakeDevs LinkedIn 5 Aug 2026 | Official names below. Closest prior WeMakeDevs hackathon with a published winner list. |
+Video: https://www.youtube.com/watch?v=KgcRgk8Xqgw (`KgcRgk8Xqgw`). Cue-level YouTube timestamps were **not recoverable** (unsigned timedtext empty). Passage is in the live Q&A after Sai’s answer to Jay, right after Sai says “Kunal, if you want to add something to it.” Quoted from the watch-page auto-transcript. Do not treat a clock time as a chapter.
 
-truefoundry/trueforge PR #390 adds an `examples/` tree (including `incident-investigator` on Sentry). That tree was **404 on `main`** when fetched 31 Aug 2026. Do not assume it is on the default branch.
+> **Kunal:** So the theme is open-ended. You can build anything. but you have to use TrueForge as the tool, which is what it's all about, like learning about Agent Harnesses. we also look at the idea itself because we have to give credit where it's due. so any important interesting interesting idea that you can find my other recommendation would be **go to the website for previous winners. See what the kind of projects were winning. and we also highlight top 100 something projects out of the thousands that we get. So you can see what kind of ideas they were.** So like people just think outside the box and do something. One other thing is the idea doesn't have to be complex. Many times we have given given away prizes to the very simple ideas, but they were executed very nicely and it was just fun. but that's what I would recommend.
 
-## Agents of SigNoz (20–26 Jul 2026) — announced winners
+There is **no single /winners hub**. Pattern is per-event `/projects` galleries, e.g. https://www.wemakedevs.org/hackathons/signoz/projects. Index: https://www.wemakedevs.org/hackathons.
 
-Source: WeMakeDevs LinkedIn, 5 Aug 2026, "Agents of SigNoz: Track Winners Announcement".
+Same stream, nearby: this is the **3rd** DGX Spark; last event already gave two. “One person did this at the last event. We had Port as a sponsor and they built a different UI for Port.” Sai in the same stream: **don’t** spend the week on a custom UI.
 
-| Track | Winner | What they built |
-| --- | --- | --- |
-| 1 AI & Agent Observability | Srinjoy Roy | Native OpenTelemetry instrumentation for CrewAI: agent / LLM / tool traces into SigNoz with dashboards and alerts. |
-| 2 Signals & Dashboards | Dhruv Sachdev | **DebugProof** — release gate that uses SigNoz telemetry to check whether production failures remain diagnosable before deploy. |
-| 3 Build Your Own | Shashwat Pratap Singh | **RootCause** — hydroponic farm observability on OTel + SigNoz, live dashboards, alerts, fault injection. |
+Kickoff blog (Sachin, 24 Aug 2026) does **not** name previous winners. It points at TrueForge Example Agents (security, research, onboarding, CI, DB, triage, **incident investigation**). Example #1 is a DevOps / incident agent — that **is** LOOP. truefoundry/trueforge PR #390 `examples/incident-investigator` was **404 on `main`** 31 Aug 2026.
 
-GitHub URLs for those three were **not verified** here. Do not paste guessed repos.
+## Spark history (this is #3)
 
-Related SigNoz builds (not the track winners; useful as SRE shape, not as "Kunal named these"):
+| Event | When | Prize | Winners (as of 2026-08-31) |
+| --- | --- | --- | --- |
+| **Zero Downtime** (Port + Bright Data + SigNoz, SF) | 22–23 Aug 2026 | Two Sparks | **Nitish Mane** — consumer app + Port drift-detect / auto-fix behind a gate. **Gracelyn N, Ben O’Connor, Hugh Hoford** — papers → runnable code. Repos **not public**. Recap: Port.io LinkedIn. WeMakeDevs page 404s. |
+| **Into the Scrape-Verse** | 17–23 Aug 2026 | One Spark | **Not published.** Skip (scraping). |
+| This week (TrueForge) | 24–30 Aug 2026 | One Spark | LOOP is the page’s Incident responder hero card. |
 
-- [Agent K](https://github.com/100xRahul/agent-k-signoz) — on-call SRE through SigNoz, guarded remediation, hash-chained audit. README fetched.
-- [Aro](https://github.com/Shivam-Katare/signoz-hackathon) — SRE copilot on self-hosted SigNoz. Swag, not a track prize.
+Honorables at Zero Downtime (DriftForge, ALWAYSUP, Daisy, VoC factory): skip. Kunal’s “custom UI for Port” is this event. Do not copy it.
 
-Official SigNoz page example build: "SRE Sidekick with SigNoz MCP". LOOP is that shape on TrueForge, not SigNoz.
+## Named WeMakeDevs track winners (public)
 
-## Two patterns to steal (LOOP only)
+Kunal pointed at the **gallery pattern**, not these names. Recorded so a later agent does not re-search.
 
-1. **Sponsor product is the product.** CrewAI winner won by making SigNoz the spine (traces, dashboards, alerts), not a wrapper UI. For LOOP: stock TrueForge chat + Agent Steps is the demo. Generative UI and Code Mode are harness features, not a custom dashboard. Sai: do not spend the week on auth.
-2. **Diagnosability gate before the irreversible write.** DebugProof refuses a release if the failure would be undiagnosable. Agent K remediates only behind a gate. LOOP already has this: three independent looks, refuse if collapsed, Type A patch in Daytona, pause on root `open_draft_pr`, never merge, never prod-deploy. Make that gate **visible** (independence card / gen UI) the way their dashboards made the gate visible.
+### The Hangover Part AI (Jun–Jul 2026, Cognee)
+
+| Project | Who | What | Steal? |
+| --- | --- | --- | --- |
+| **Lethe** (Track 1) | Vinayak Sonthalia | Incident-triage assistant; **cited** runbook answers; **verifiably forgets** decommissioned systems | **Pattern #2**. Hackathon repo 404 as of 31 Aug 2026. Do **not** take `yerramsettysuchita/lethe` (different product). Later ARGUS: https://github.com/vinayaksonthalia/argus |
+| Classroom Memory (Track 2) | Rajdeep Kushwaha | Student memory | Skip |
+
+### Pirates of the Coral-Bean (May 2026, Coral)
+
+| Project | Who | What | Steal? |
+| --- | --- | --- | --- |
+| **Manthan** (Track 1) | Akash Mondal, Hitakshi Arora (Miny-Labs) | Parallel read specialists (Stripe + CRM + logs + support) → cited brief → **one-click approval**. LLM never holds write creds. | **Pattern #1**. https://github.com/akash-mondal/manthan · https://github.com/Miny-Labs/manthan |
+| GSoC matchmaker (Track 2) | | | Skip |
+
+### Agents of SigNoz (Jul 2026)
+
+Gallery: https://www.wemakedevs.org/hackathons/signoz/projects
+
+| Project | Who | What | Steal? |
+| --- | --- | --- | --- |
+| CrewAI OpenTelemetry | Srinjoy Roy | Native OTel for CrewAI into SigNoz | Skip (instrumentation). Public repo not found. |
+| **DebugProof** | Dhruv Sachdev | CI gate: block a build that isn’t diagnosable | Adjacent idea only. Not LOOP’s incident loop. Repo not found. |
+| **RootCause** | Shashwat Pratap Singh | Hydroponic farm observability | Skip (domain) |
+
+Not track winners, SRE-shaped (do not cite as “Kunal named these”): [Agent K](https://github.com/100xRahul/agent-k-signoz), [Aro](https://github.com/Shivam-Katare/signoz-hackathon).
+
+## Two patterns onto LOOP (stop there)
+
+1. **Manthan shape.** Coordinator fans out **scoped parallel readers**; they write a **shared cited evidence set**; coordinator emits a **decision brief**; a **policy gate** sits in front of a **deterministic actor** that holds the write. The model never executes the irreversible step. LOOP already: analytics / logs / deploys → independence check → Type A Daytona patch → pause on root `open_draft_pr`. Steal **citation chips on the brief** (generative UI card), not a fifth agent, not Coral/Stripe/Clerk.
+2. **Lethe “still true?”** Do not apply a runbook for a service or version that is gone. Before the pause: one MCP check that the deploy SHA / plan id in the brief still matches live. If stale, say so and **do not** open a PR. Implement with LOOP warehouse reads, not Cognee `forget()`.
 
 ## Skip
 
-- Do not rebuild SigNoz, CrewAI instrumentation, a farm IoT stack, or a Bright Data scraper (Scrape-Verse).
-- Do not add HMAC theater, five extra subagents, or a second agent because this week's **other** Agent Harness blogs did (TrueSRE, AutoVault). Those are this hackathon, not previous winners. Kunal/Sai: fewer features working perfectly.
-- Do not nest subagents. TrueForge docs: one level.
-- Do not treat "closed loop: agent is also observed" as a new product. Linger on Agent Steps instead.
+- Custom Port / sponsor UI (Kunal called it funny; Sai said don’t).
+- Port “factory not an app.” LOOP is one incident, end to end.
+- Scrape-Verse, CrewAI OTel, farm IoT, papers→code, Classroom Memory, chargebacks, Cognee APIs.
+- DebugProof as a product. HMAC theater, five extra subagents, this week’s TrueSRE / AutoVault feature-max.
+- Nested subagents. Auth walls. Replacing analytics / logs / deploys. Leaving TrueForge.
 
-## This week's competitors (not previous winners)
+## This week’s competitors (not previous winners)
 
-Public Agent Harness write-ups as of 31 Aug 2026, for contrast only:
+- TrueSRE (Vishal Rajput) — same incident domain, platform sprawl. Don’t copy.
+- AutoVault (Parth Pinjarkar) — five parallel security subagents. LOOP already has three named looks + pause.
 
-- TrueSRE (Vishal Rajput) — multi-agent SRE, FastMCP, Daytona, HMAC HITL. Same incident domain as LOOP. Do not copy the platform sprawl.
-- AutoVault (Parth Pinjarkar) — five parallel security subagents, pause before irreversible. Same harness extras. LOOP already has three named looks + pause.
-
-LOOP wins Spark by being the hero card **done**, not by matching their feature count.
+LOOP wins Spark by being the hero card **done**, not by matching their feature count. Simple ideas, executed cleanly — Kunal’s own words.
