@@ -64,7 +64,7 @@ docs/                     curated handoff. status.md is the living file.
 
 ## How to run
 
-Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). **Do not kill local :8790.** Hosted: Render web `loop-trueforge` (`STANDALONE=false`, Postgres + Redis) at https://loop.thexplorers.xyz once CNAME is live. Fixture MCP colocated at `127.0.0.1:8788` inside that image. Compose :8791 remains optional locally.
+Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). **Do not kill local :8790.** Hosted: Render web `loop-trueforge` (`STANDALONE=false`, Postgres + Redis) at https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Fixture MCP colocated at `127.0.0.1:8788` inside that image. Compose :8791 remains optional locally.
 
 TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
 
