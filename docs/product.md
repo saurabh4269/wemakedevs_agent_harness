@@ -18,7 +18,7 @@ Independence is **code** (`src/independence.ts`) plus skill, not prompt-only. Fi
 | --- | --- | --- | --- |
 | Local `npx` | 8790 | SQLite | none |
 | Compose | 8791 | Postgres + Redis | optional OIDC |
-| Intended public | https://loop.thexplorers.xyz | Compose/Helm, `PUBLIC_BASE_URL` | ON only if live GitHub writes |
+| Public | https://loop.heisenbug.in | Render Postgres + Redis, `PUBLIC_BASE_URL` | none (OIDC unset) |
 
 Judges should run without creating an account if possible.
 

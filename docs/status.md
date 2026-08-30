@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~02:50 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~09:50 IST**.
 
 ## PRs
 
@@ -9,20 +9,44 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#1](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1) | `feat/loop-trueforge-agent` | Agent spec, fixture MCP, skills, import, tests | **Merged** (`f1651fa`). Qodo follow-up **Bugs (0)**. README Qodo evidence links this PR. |
 | [#2](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2) | `feat/loop-ui` | LOOP TrueForgeUI shell | **Merged** (`e221fb05`). Qodo **Bugs (0)**. Do not clobber `feat/loop-ui`. |
 | [#3](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/3) | `docs/agent-handoff` | AGENTS.md + `docs/` | **Merged** (`36aa532`). |
-| [#4](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/4) | `feat/loop-product-first` | Production-shaped LOOP, not demo-theater | **Open**. Do not merge. Its status still talks Daytona 403 — stale. Do not clobber. |
-| [#5](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/5) | `feat/loop-sandbox-tenant` | Seed tenant into Daytona; instruction harden (`agents/loop.json`) | **Open**. Live PUT already applied. Do not clobber. |
-| [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `feat/docs-organizer-research` | Organizer extras + previous-winners + this living status | This PR. |
+| [#4](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/4) | `feat/loop-product-first` | Production-shaped LOOP | **Closed** without merge (stale Daytona-403). Do not reopen. |
+| [#5](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/5) | `feat/loop-sandbox-tenant` | Seed tenant into Daytona; empty-cwd clone + MUST `open_draft_pr` | **Merged**. |
+| [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `feat/docs-organizer-research` | Organizer extras + previous-winners | **Merged**. |
+| [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `feat/render-host` | Hosted TrueForge on Render + live URL + audit | Open. This worktree. Live image is still `fc7621c` until this lands. |
 
 Worktrees: one writer per branch. New work from `origin/main`.
 
 ## Live TrueForge
 
-- Standalone **v0.1.4** on **[::1]:8790** (IPv6). SQLite, no login. This is the demo. `127.0.0.1:8790` may miss it.
+### Judge host (live)
+
+- **Judge URL:** https://loop.heisenbug.in — custom domain verified. TLS is Google Trust Services WE1, SAN `loop.heisenbug.in`.
+- Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`), Oregon free. Dashboard: https://dashboard.render.com/web/srv-daaaa65g1s2s73cjsq0g
+- Fallback: https://loop-trueforge.onrender.com — keep it. Do not disable the onrender subdomain.
+- Hosted LOOP agent `01m1aaemb86czjax2v232nxygf`, model `openrouter/nemotron-3-super-120b-a12b-free`, `max_tokens` 8192.
+- `PUBLIC_BASE_URL` is `https://loop.heisenbug.in` (set after first deploy; second deploy `dep-daaam7cs728c73fs35vg` from `fc7621c` so the running process picked it up).
+- Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`) available, free, Oregon. Redis `loop-redis` (`red-daaa7ohsrm7s73ed64mg`) available. Project `loop` `prj-daaa8g5g1s2s73cjo950`, env production `evm-daaa8g5g1s2s73cjo95g`.
+- `autoDeploy: no`. **Do not Apply `render.yaml` Blueprint** on this workspace (unrelated existing services + would duplicate DBs).
+- Free web sleeps when idle. Ping `/healthz` first (~30s wake) before a judge demo.
+- OIDC unset: anyone who can reach the server is admin (intended no-login judge path).
+- Fixture MCP is colocated in that image on `127.0.0.1:8788`. No Render private service (`plan: free` is not valid for pserv).
+- Secrets stay in the Render dashboard (`sync: false`). Never commit keys.
+
+### DNS
+
+- `thexplorers.xyz` is **expired** (Namecheap parking). Do not rely on `loop.thexplorers.xyz`. That Render custom domain was deleted to free the Hobby 2-domain slot.
+- `heisenbug.in` is Cloudflare (`aisha` / `ken.ns.cloudflare.com`). Apex and `www` stay on Vercel — **never touch `@` or `www`**.
+- Only subdomain: CNAME `loop` → `loop-trueforge.onrender.com`, DNS only (grey cloud) until cert issued. Cert is now issued.
+
+### Local (keep running)
+
+- Standalone **v0.1.4** on **[::1]:8790** (IPv6). SQLite, no login. Sitting-pause film host. `127.0.0.1:8790` may miss it. **Do not kill local :8790.**
 - Fixture MCP at `127.0.0.1:8788`.
-- LOOP UI at http://localhost:5173 (optional; PR #2 on main).
-- Intended public host https://loop.thexplorers.xyz is **not live hosted yet**. Compose path is :8791.
-- Agent `loop` id `01m1a383mce9cs0bsr7hs26zct`. Model still leftover `openrouter/gpt-4.1-mini`. User is OpenRouter **FREE** ($0 credits). Next model after the pause is captured: `openrouter/nemotron-3-super-120b-a12b-free` (TrueForge FQN; upstream OpenRouter id `nvidia/nemotron-3-super-120b-a12b:free`). Do **not** use `gpt-5.6-luna`. NVIDIA Build is the spare provider. **Do not PUT the model until the sitting pause is filmed.**
+- LOOP UI at http://localhost:5173 (optional extra; PR #2 is on main).
+- Local agent `loop` id `01m1a383mce9cs0bsr7hs26zct`. Model leftover `openrouter/gpt-4.1-mini`. **Do not PUT the local live agent model.** User is OpenRouter **FREE**. Do **not** use `gpt-5.6-luna`.
 - Secrets: `/home/box/.secrets/loop-trueforge.env` (mode 600). Never echo. Never commit. User pasted a Daytona key in chat — **rotate** if that transcript is shared.
+- Sitting pause session `01m1a87xjewncn310ymqy3yz01` is **still local-only**. Qualify **PASS**. **Do not click Approve/Deny** on that TrueForge session.
+- Shot list: [demo.md](demo.md).
 
 ### Session reconnect — PASS
 
@@ -40,11 +64,17 @@ Attempt 1 FAIL (`01m1a80698wrqk841j72tey3fy`): fourth subagent `type-a-vs-b`; `s
 
 Gen UI and Code Mode did **not** appear on the passing run. Still Spark extras, not qualify blockers. Prior `cp -r fixtures/tenant` hole is closed for this qualify trio.
 
+### Sandbox (Daytona)
+
+Hosted sandbox providers: **ready** (full-access key stored off-git in TrueForge Settings). Local qualify PASS cloned the public tenant then paused on root `open_draft_pr`. Do not paste keys in chat or git.
+
+Honest audit of real vs fixture: [audit.md](audit.md).
+
 ## Form / demo URLs (draft)
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness
-- Deployed (optional): https://loop.thexplorers.xyz/ — not live hosted yet
-- Video field is **YouTube**, ≤3 min. Shot list: [demo.md](demo.md). Placeholder https://vimeo.com/1222508816 (4s, Shiwani) is the **wrong host** — replace.
+- Deployed (optional on the form): https://loop.heisenbug.in — live. Fallback https://loop-trueforge.onrender.com. Do not put `loop.thexplorers.xyz` on the form.
+- Video field is **YouTube**, ≤3 min. Shot list: [demo.md](demo.md). Current placeholder https://vimeo.com/1222508816 (4s, Shiwani) is the **wrong host** — replace.
 - Blog https://saurabh4269.github.io/blog/trueforge-harness/ — 404, do last.
 
 ## Deadline
@@ -54,8 +84,8 @@ Clock deadline (Sun 30 Aug 2026 8:00pm London) has **passed**. Live page still s
 ## Next (priority)
 
 1. Film YouTube ≤3 min from the **sitting pause** + Agent Steps. Do not click Approve yet. Linger the write hold.
-2. Optional host loop.thexplorers.xyz.
-3. After the pause is captured: switch model to `openrouter/nemotron-3-super-120b-a12b-free` (hosted live TrueForge FQN; upstream OpenRouter id `nvidia/nemotron-3-super-120b-a12b:free`). Do not PUT before capture. Do not use `gpt-5.6-luna`.
+2. Judge host https://loop.heisenbug.in is live. Keep `/healthz` wake in the demo.
+3. Hosted model is already `openrouter/nemotron-3-super-120b-a12b-free`. Do not use `gpt-5.6-luna`. Do not PUT the local live agent model.
 4. Gen UI / Code Mode on a later take if time ([organizers.md](organizers.md)).
 5. Blog last. Form only when repo + Qodo + video exist.
 

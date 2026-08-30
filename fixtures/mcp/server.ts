@@ -3,8 +3,9 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createGithubServer, createWarehouseServer, defaultStory } from "./servers.js";
 import { FIXTURE_MODE } from "./stories.js";
+import { fixtureListenBind } from "./listen.js";
 
-const port = Number.parseInt(process.env.LOOP_FIXTURE_PORT ?? "8788", 10);
+const { host, port } = fixtureListenBind();
 
 async function attach(create: () => McpServer, req: express.Request, res: express.Response): Promise<void> {
   const server = create();
@@ -55,10 +56,10 @@ app.all("/github", (_req, res) => {
   res.status(405).json({ error: "Use POST for MCP Streamable HTTP" });
 });
 
-app.listen(port, "127.0.0.1", () => {
+app.listen(port, host, () => {
   process.stdout.write(
-    `LOOP fixture MCP (mode:${FIXTURE_MODE}) on 127.0.0.1:${port} story=${defaultStory()}\n` +
-      `  warehouse: http://127.0.0.1:${port}/warehouse\n` +
-      `  github:    http://127.0.0.1:${port}/github\n`,
+    `LOOP fixture MCP (mode:${FIXTURE_MODE}) on ${host}:${port} story=${defaultStory()}\n` +
+      `  warehouse: http://${host}:${port}/warehouse\n` +
+      `  github:    http://${host}:${port}/github\n`,
   );
 });

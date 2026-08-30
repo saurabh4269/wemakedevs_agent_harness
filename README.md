@@ -24,7 +24,7 @@ Copy .env.example to .env locally. Do not commit secrets.
 | --- | --- | --- |
 | Local npx trueforge | 8790 | SQLite |
 | Docker Compose hosted topology | 8791 | Postgres + Redis |
-| Later public host loop.thexplorers.xyz | 443 | Compose or Helm |
+| Public host loop.heisenbug.in | 443 | Render Postgres + Redis |
 
 Local npx is the path below. Compose notes are at the bottom.
 
@@ -148,7 +148,7 @@ npm run ui
 
 apps/loop-ui is a workspace of this repo, so installing at the root also installs UI dependencies. The chat embed is unauthenticated and receives only the server URL.
 
-Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.thexplorers.xyz.
+Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.heisenbug.in.
 
 Send the conversion-drop prompt from step 8. **Judges should watch Waiting** — that is the pause on `open_draft_pr` before any write. Allow or deny in the chat. The rail will move to Did after a patch, proposal, or lesson lands.
 
@@ -170,9 +170,43 @@ fixtures/tenant is a tiny TypeScript checkout the sandbox can patch. From that f
 
 TrueForge Daytona sandboxes start from a snapshot **without** this git repo. LOOP materializes the tenant inside the sandbox by cloning the public repo (no secrets), then patches `fixtures/tenant/src/checkout.ts`. Do not `cp fixtures/tenant` from a host path that is not in the sandbox cwd.
 
-## Hosting (Compose)
+## Hosting (Render)
 
-For a shared TrueForge, use the upstream Compose topology (Postgres + Redis), not local npx.
+Public judges should use https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com — do not disable the onrender subdomain). Hosted TrueForge is **not** local npx SQLite and **not** a Cloudflare tunnel. One free web service (`loop-trueforge`) runs `STANDALONE=false` against Postgres + Redis. The fixture MCP is **colocated** in that image on `127.0.0.1:8788` (Render private services have no free plan). OIDC is unset on purpose so anyone who can reach the host is admin (no-login judges). Free web sleeps when idle — ping `/healthz` first (~30s wake) before a judge demo. `autoDeploy` is off.
+
+Leave local `npx` TrueForge on :8790 running. Sitting pause session `01m1a87xjewncn310ymqy3yz01` is local-only. Do not Approve/Deny it.
+
+### Greenfield workspace (Blueprint Apply)
+
+If the workspace has **no** `loop-postgres` / `loop-redis` yet:
+
+https://dashboard.render.com/blueprint/new?repo=https://github.com/saurabh4269/wemakedevs_agent_harness
+
+Select branch `feat/render-host` until this lands on main. Paste OpenRouter / NVIDIA / Daytona keys in the dashboard (`sync: false` — they are not in git). Do not enable OIDC env vars.
+
+This workspace already has the live web service. Custom domain is Cloudflare CNAME `loop` → `loop-trueforge.onrender.com` on `heisenbug.in` only — never touch apex or `www` (Vercel). `thexplorers.xyz` is expired; do not use it. A greenfield Apply elsewhere would mint another `onrender.com` hostname; do not Apply here.
+
+### Existing Saurabh workspace — do not Apply
+
+Workspace `tea-ctoktrjtq21c73cufog0` (Oregon, free) already has:
+
+- Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`)
+- Key Value `loop-redis` (`red-daaa7ohsrm7s73ed64mg`)
+
+**Do not Apply the Blueprint there** — Render would duplicate those datastores. Web service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is already live and wired to those instances. `autoDeploy` is off. `render.yaml` still lists the datastores so a greenfield Apply elsewhere stays valid.
+
+### Hosted import (already done)
+
+Hosted LOOP agent `01m1aaemb86czjax2v232nxygf` is imported. Point LOOP MCP warehouse / github at the **in-container** fixture:
+
+- `http://127.0.0.1:8788/warehouse`
+- `http://127.0.0.1:8788/github`
+
+Hosted model is OpenRouter free Nemotron (`nvidia/nemotron-3-super-120b-a12b:free`, FQN `openrouter/nemotron-3-super-120b-a12b-free`), `max_tokens` 8192. Do not change the local live agent model. Do not put keys in git.
+
+### Local Compose (optional)
+
+For a shared TrueForge on your machine, upstream Compose is still Postgres + Redis, not local npx.
 
 ```bash
 git clone https://github.com/truefoundry/trueforge && cd trueforge
@@ -180,15 +214,7 @@ cp packages/trueforge/.env.example packages/trueforge/.env
 docker compose up --build
 ```
 
-Open http://localhost:8791. Set TRUEFORGE_BASE_URL=http://localhost:8791 before import-loop.
-
-PUBLIC_BASE_URL is the origin TrueForge hands to MCP OAuth callbacks. Localhost is fine on your machine. For the later public host:
-
-```bash
-PUBLIC_BASE_URL=https://loop.thexplorers.xyz
-```
-
-Put that in packages/trueforge/.env (Compose) or server.publicBaseUrl (Helm). Do not put model or Daytona credentials in this repo.
+Open http://localhost:8791. Set TRUEFORGE_BASE_URL=http://localhost:8791 before import-loop. `PUBLIC_BASE_URL=https://loop.heisenbug.in` on the public host.
 
 ## Qodo Code Review Evidence
 

@@ -17,9 +17,8 @@ Hackathon hero card is **Incident responder**. That is this product.
 1. **TypeScript only.** `.ts` / `.tsx`. `"type": "module"`. Strict `tsconfig`. No Python product code. No untyped JS.
 2. **No Cursor CloudAgent** unless Saurabh explicitly asks. Work in this repo with `gh` as `saurabh4269`.
 3. **No secrets in git.** Never commit `.env`, `node_modules`, keys. `.env.example` keeps empty slots. Box secrets path: `/home/box/.secrets/loop-trueforge.env`. Do not echo that file.
-4. **Qodo PR trail.** Branch → PR → `/agentic_review` → fix High or dismiss in-thread with a reason → follow-up review → **human** merge. Direct pushes to `main` do not count. You never merge.
-5. **Never merge.** Agents open PRs. Humans merge after Qodo is clean.
-6. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
+4. **Qodo PR trail.** Branch → PR → `/agentic_review` → fix Highs → follow-up review. Direct pushes to `main` do not count as the Qodo evidence trail.
+5. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
 
 ## Architecture
 
@@ -46,7 +45,7 @@ Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `f
 
 **Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. Root spec still splits servers (`loop-warehouse` `@read-only`; `loop-github` named writes + `require_approval_for_tools`). That is not isolation. A subagent can see `open_draft_pr`. Writes still pause. Demo: deny the extra **patcher** write; approve the **root**. Fixture never talks to live GitHub.
 
-Skills require sandbox. Daytona key needs **Sandboxes** access and **Snapshots write**. LOOP spec sets `config.sandbox.enabled: true`. If Daytona 401s, skills will not load — fix that; do not silently drop the three-subagent path.
+Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`. If sandbox-providers is not ready, skills will not load — fix that; do not silently drop the three-subagent path.
 
 ## Layout
 
@@ -64,7 +63,7 @@ docs/                     curated handoff. status.md is the living file.
 
 ## How to run
 
-Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). Compose: :8791 (Postgres + Redis). Intended public host: https://loop.thexplorers.xyz with `PUBLIC_BASE_URL`.
+Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). **Do not kill local :8790.** Hosted: Render web `loop-trueforge` (`STANDALONE=false`, Postgres + Redis) at https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Fixture MCP colocated at `127.0.0.1:8788` inside that image. Compose :8791 remains optional locally.
 
 TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
 
