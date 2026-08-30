@@ -43,6 +43,15 @@ describe("LOOP agent spec shape", () => {
     expect(validateLoopAgent(clone).filter((issue) => issue.path === "manifest.model.name")).toEqual([]);
   });
 
+  it("requires first action to spawn analytics, logs, deploys", () => {
+    const instructions = agent.manifest.instructions ?? "";
+    expect(instructions).toMatch(/FIRST ACTION/);
+    expect(instructions).toMatch(/analytics, logs, deploys/);
+    expect(instructions).toMatch(/must not call loop-warehouse/);
+    expect(instructions).toMatch(/must not ask the user/);
+    expect(instructions).toMatch(/until those three reports exist/);
+  });
+
   it("does not embed connector credentials", () => {
     const raw = readFileSync(join(root, "agents/loop.json"), "utf8").toLowerCase();
     expect(raw).not.toMatch(/api[_-]?key/);

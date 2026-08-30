@@ -2,7 +2,7 @@
 
 One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon.
 
-LOOP does not investigate itself. It spawns three one-level subagents (analytics, logs, deploy timeline) and refuses a root cause if those three are restatements of one query.
+The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself and does not skip to a patch until those three reports exist. LOOP refuses a root cause if those three are restatements of one query.
 Type A is a break (patch in the sandbox). Type B is an opportunity (proposal only). Writes pause for a human. LOOP never merges and never prod-deploys the tenant.
 
 TrueForge chat is the UI. This repo is TypeScript only.
@@ -114,7 +114,7 @@ In TrueForge chat, pick agent loop and send:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-You should see three subagent threads (analytics, logs, deploys), a Type A patch against fixtures/tenant/src/checkout.ts (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), then a pause on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
+You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or jump to a patch subagent. Then a Type A patch against fixtures/tenant/src/checkout.ts (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), then a pause on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
 
 Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses.
 

@@ -9,7 +9,9 @@ LOOP may name a root cause only after three **independent** sources agree they a
 
 ## Spawn, don't self-investigate
 
-The root agent does not query warehouse tools for all three sources itself when subagents are available. Spawn one-level subagents:
+The first action of an investigation is always to spawn three named one-level subagents: analytics, logs, deploys. The root must not call warehouse tools itself. The root must not spawn a patch subagent until those three reports exist. Subagents cannot ask the user.
+
+Spawn one-level subagents:
 
 1. **analytics** — funnel, segment, metric, when it moved. Use `query_analytics`.
 2. **logs** — error class, file, route, first seen. Use `query_logs`.

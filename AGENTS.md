@@ -2,8 +2,8 @@
 
 LOOP is one TrueForge agent. Chat is the UI. Do not add a campus UI or a 19-agent fleet.
 
-- Root agent coordinates. It does not investigate itself.
-- Spawn three one-level subagents: analytics, logs, deploys. Subagents do not ask the user questions.
+- Root agent coordinates. It does not investigate itself. First action: spawn three named one-level subagents (analytics, logs, deploys). Root must not call warehouse tools. Root must not spawn a patch subagent until those three reports exist.
+- Subagents do not ask the user questions.
 - Refuse a root cause if those three are restatements of one query (`src/independence.ts`, skill `three-source-independence`).
 - Type A = break → patch `fixtures/tenant` in the sandbox. Type B = opportunity → proposal. Then measure and write a lesson.
 - `loop-warehouse` is `@read-only`. Writes live only on `loop-github` and pause (`@write` / `@destructive`). Never merge. Never prod-deploy the tenant.
