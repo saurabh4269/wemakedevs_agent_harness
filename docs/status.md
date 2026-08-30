@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~01:20 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~01:25 IST**.
 
 ## PRs
 
@@ -8,7 +8,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | --- | --- | --- | --- |
 | [#1](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1) | `feat/loop-trueforge-agent` | Agent spec, fixture MCP, skills, import, tests | Open. `/agentic_review` posted. Qodo summary + **4 Highs** in. Waiting: fix or dismiss Highs, then follow-up review. **Do not merge.** |
 | [#2](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2) | `feat/loop-ui` | LOOP TrueForgeUI shell for the write-pause demo | Open. Do not clobber. |
-| this docs PR | `docs/agent-handoff` | AGENTS.md rewrite + `docs/` | Open against `feat/loop-trueforge-agent` |
+| [#3](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/3) | `docs/agent-handoff` | AGENTS.md rewrite + `docs/` | Open against `feat/loop-trueforge-agent`. `/agentic_review` not posted yet. |
 
 Qodo Highs on #1 (must handle before merge): MCP URL logged in `import-loop`; package `engines` Node `>=20.19` vs SDK 22; detached MCP `attach()` promises; model FQN check is "contains `/`" not `provider/name`. CodeRabbit comments exist; ignore for evidence.
 
