@@ -35,7 +35,7 @@ Pick agent `loop`. Send this and nothing else:
 
 ## What NOT to show
 
-- Product OS, ADK, or any prior campus product.
+- Prior internal control-plane work, or any prior campus product.
 - Keys, .env, Settings credential paste. Never put a Daytona key in git or on camera.
 - Localhost as "hosted" (https://loop.thexplorers.xyz is not live).
 - A mocked tool call that is not MCP. Fixture warehouse is already an honest Best Use risk; do not add a fake sandbox.

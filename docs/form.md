@@ -17,6 +17,6 @@ Do **not** paste long essay answers here unless you have the latest human copy. 
 
 ## Copy constraints
 
-Spoken. This week. TrueForge pause (and tool + sandbox). Not Product OS, not ADK, not a prior campus product. Human voice. Disclose AI assistants.
+Spoken. This week. TrueForge pause (and tool + sandbox). Not prior internal control-plane work. Not a prior campus product. Human voice. Disclose AI assistants.
 
 Draft URLs (not submitted): see [status.md](status.md).

@@ -13,7 +13,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#5](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/5) | `feat/loop-sandbox-tenant` | Seed tenant into Daytona; instruction harden (`agents/loop.json`) | **Open**. Live PUT already applied. Do not clobber. |
 | [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `feat/docs-organizer-research` | Organizer extras + previous-winners + this living status | This PR. |
 
-CodeRabbit comments exist; ignore for evidence. Worktrees: one writer per branch. New work from `origin/main`. Agents never merge. Human merges after Qodo.
+Worktrees: one writer per branch. New work from `origin/main`.
 
 ## Live TrueForge
 
@@ -21,7 +21,7 @@ CodeRabbit comments exist; ignore for evidence. Worktrees: one writer per branch
 - Fixture MCP at `127.0.0.1:8788`.
 - LOOP UI at http://localhost:5173 (optional; PR #2 on main).
 - Intended public host https://loop.thexplorers.xyz is **not live hosted yet**. Compose path is :8791.
-- Agent `loop` id `01m1a383mce9cs0bsr7hs26zct`. Model still leftover `openrouter/gpt-4.1-mini`. User is OpenRouter **FREE** ($0 credits). Next model after the pause is captured: `nvidia/nemotron-3-super-120b-a12b:free`. Do **not** use `gpt-5.6-luna`. NVIDIA Build is the spare provider. **Do not PUT the model until the sitting pause is filmed.**
+- Agent `loop` id `01m1a383mce9cs0bsr7hs26zct`. Model still leftover `openrouter/gpt-4.1-mini`. User is OpenRouter **FREE** ($0 credits). Next model after the pause is captured: `openrouter/nemotron-3-super-120b-a12b-free` (TrueForge FQN; upstream OpenRouter id `nvidia/nemotron-3-super-120b-a12b:free`). Do **not** use `gpt-5.6-luna`. NVIDIA Build is the spare provider. **Do not PUT the model until the sitting pause is filmed.**
 - Secrets: `/home/box/.secrets/loop-trueforge.env` (mode 600). Never echo. Never commit. User pasted a Daytona key in chat — **rotate** if that transcript is shared.
 
 ### Session reconnect — PASS
@@ -55,7 +55,7 @@ Clock deadline (Sun 30 Aug 2026 8:00pm London) has **passed**. Live page still s
 
 1. Film YouTube ≤3 min from the **sitting pause** + Agent Steps. Do not click Approve yet. Linger the write hold.
 2. Optional host loop.thexplorers.xyz.
-3. After the pause is captured: switch model to `nvidia/nemotron-3-super-120b-a12b:free` (OpenRouter free). Do not PUT before capture. Do not use `gpt-5.6-luna`.
+3. After the pause is captured: switch model to `openrouter/nemotron-3-super-120b-a12b-free` (hosted live TrueForge FQN; upstream OpenRouter id `nvidia/nemotron-3-super-120b-a12b:free`). Do not PUT before capture. Do not use `gpt-5.6-luna`.
 4. Gen UI / Code Mode on a later take if time ([organizers.md](organizers.md)).
 5. Blog last. Form only when repo + Qodo + video exist.
 

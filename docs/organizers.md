@@ -75,7 +75,7 @@ Extras Sai named, in order, **inside the same conversion-drop run** (ADR 8):
 
 ## Skip
 
-Custom UI/auth, second agent, nested/19 subagents, merge/prod-deploy, TrueFoundry gateway traces, new domains (land maps, DPDP, eBPF, Product OS), clarifying-questions as a second form, Qodo as a Spark extra (it is Mac Mini), Bright Data / NVIDIA NIM as the product.
+Custom UI/auth, second agent, nested/19 subagents, merge/prod-deploy, TrueFoundry gateway traces, new domains (land maps, DPDP, eBPF, prior internal control-plane work), clarifying-questions as a second form, Qodo as a Spark extra (it is Mac Mini), Bright Data / NVIDIA NIM as the product.
 
 ## Official written examples
 

@@ -1,6 +1,6 @@
 # Product
 
-LOOP is one TrueForge investigation agent for a conversion-drop (or similar) signal. Not a campus. Not a 19-agent fleet. Not a Product OS / ADK port (do not mention those in README, form, or judge-facing copy).
+LOOP is one TrueForge investigation agent for a conversion-drop (or similar) signal. Not a campus. Not a 19-agent fleet. Not prior internal control-plane work. Do not name prior art in README, form, or judge-facing copy.
 
 ## Loop
 

@@ -74,7 +74,7 @@ Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 
 - A 19-agent fleet. One agent, three one-level subagents.
 - A campus / dark SOC UI. Light Apple-like if themed.
-- A Product OS / ADK / Goodman / Bhoonaksha port. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
+- Prior internal control-plane work, Goodman, or Bhoonaksha. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
 - Auth for judges. Login ON only if live GitHub writes require it.
 - Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Sai: stock TrueForge UI unless the product needs another.
 
