@@ -1,0 +1,99 @@
+@import "@truefoundry/trueforge-ui/styles.css";
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.loop-shell {
+  display: flex;
+  height: 100dvh;
+  min-height: 0;
+  background: #f5f5f7;
+}
+
+.loop-rail {
+  width: 220px;
+  flex: 0 0 220px;
+  padding: 20px 16px;
+  border-right: 1px solid #d2d2d7;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.loop-rail h1 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.loop-rail-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6e6e73;
+}
+
+.loop-rail-hint {
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #6e6e73;
+}
+
+.loop-rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loop-rail li {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f5f5f7;
+  border: 1px solid transparent;
+}
+
+.loop-rail li[data-active="true"] {
+  background: #e8f1fb;
+  border-color: #0071e3;
+}
+
+.loop-rail-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.loop-rail-detail {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6e6e73;
+}
+
+.loop-chat {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.loop-chat > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}

@@ -9,9 +9,11 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json",
-    "test": "vitest run",
+    "test": "vitest run && cd apps/loop-ui && npm test",
     "fixture:mcp": "tsx fixtures/mcp/server.ts",
-    "import:loop": "tsx scripts/import-loop.ts"
+    "import:loop": "tsx scripts/import-loop.ts",
+    "ui": "cd apps/loop-ui && npm run dev",
+    "ui:build": "cd apps/loop-ui && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

@@ -5,7 +5,7 @@ One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hacka
 The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query.
 Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
 
-TrueForge chat is the UI. This repo is TypeScript only.
+TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
 
 ## What you need
 
@@ -118,6 +118,28 @@ You should see three subagent threads first (analytics, logs, deploys) — the r
 
 Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Subagents must not call loop-github.
 
+## LOOP UI
+
+Stock TrueForge chat is the product UI. `apps/loop-ui` is a thin Vite + React embed of `@truefoundry/trueforge-ui`, locked to agent `loop` (no composer home), light Apple-like theme (bg #f5f5f7, ink #1d1d1f, accent #0071e3, Inter). A status rail next to the chat shows **Doing** (tool calls streaming), **Waiting** (`require_approval_for_tools` pause — this is the prize moment), and **Did** (completed patch, proposal, or lesson). Approval happens in the TrueForge chat before the write.
+
+Do not vendor the TrueForge server. Point the UI at a running harness.
+
+### How to run the UI
+
+TrueForge must already be running (step 2 above, http://localhost:8790). Then:
+
+
+```bash
+npm install
+cd apps/loop-ui && npm install && cd ../..
+npm run ui
+```
+
+Open http://localhost:5173. In dev the Vite app same-origin-proxies `/api` to `VITE_TRUEFORGE_URL` (default http://localhost:8790). Hosted origin is https://loop.thexplorers.xyz.
+
+Send the conversion-drop prompt from step 8. **Judges should watch Waiting** — that is the pause on `open_draft_pr` before any write. Allow or deny in the chat. The rail will move to Did after a patch, proposal, or lesson lands.
+
+
 ## Subagents share tools (honest split)
 
 TrueForge dynamic subagents get the same MCP tools as the root agent. AgentSpec.mcp_servers and DynamicSubAgentsConfig have no per-subagent enable_tools / disable_tools.
@@ -187,4 +209,5 @@ fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
 src/                      independence, write policy, spec checks
 tests/
+apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
 ```
