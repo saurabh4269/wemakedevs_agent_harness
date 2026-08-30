@@ -9,7 +9,7 @@ Do **not** paste long essay answers here unless you have the latest human copy. 
 ## Fields we know
 
 - Public GitHub repo.
-- **Video is YouTube**, not more than 3 minutes. Shape: about / stack / demo / optional learnings. Vimeo is the wrong host for this field. Current 4s Vimeo placeholder must be replaced.
+- **Video is YouTube**, not more than 3 minutes. Shot list: [demo.md](demo.md). Shape: problem / three looks / sandbox patch / pause / reconnect / one-line lesson. Vimeo is the wrong host for this field. Current 4s Vimeo placeholder must be replaced.
 - Deployed link is **optional**.
 - Short write-up: what the agent does and how it uses TrueForge.
 - Blog link if entering that prize.

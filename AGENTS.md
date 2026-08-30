@@ -88,4 +88,4 @@ Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts`
 
 ## Docs
 
-[docs/README.md](docs/README.md). Living state: [docs/status.md](docs/status.md).
+[docs/README.md](docs/README.md). Living state: [docs/status.md](docs/status.md). Judge shot list: [docs/demo.md](docs/demo.md).

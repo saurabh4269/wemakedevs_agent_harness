@@ -10,6 +10,7 @@ Curated handoff for the next agent. Not a chat dump. If a fact moved, rewrite th
 | [handoff.md](handoff.md) | Team, secrets *path*, form URLs, priorities |
 | [status.md](status.md) | **Living.** PRs, blockers, live TrueForge, demo URLs |
 | [decisions.md](decisions.md) | Numbered ADRs |
+| [demo.md](demo.md) | Judge-facing 3-min shot list (stock TrueForge :8790) |
 | [form.md](form.md) | Submission form constraints (no essay paste) |
 
 Agent OS is the root [AGENTS.md](../AGENTS.md). How to run is the root [README.md](../README.md).

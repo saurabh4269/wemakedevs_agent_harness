@@ -23,9 +23,9 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 ## Work split
 
 - Agent spec / fixtures / skills / tests: PR #1 **merged** (`f1651fa`). Qodo follow-up on `9b8b17ed`: Bugs (0); all five findings resolved.
-- UI shell: PR #2 `feat/loop-ui`. Do not clobber that worktree or branch.
+- UI shell: PR #2 **merged** (`e221fb05`). Qodo Bugs (0). Do not clobber `feat/loop-ui`.
 - This docs handoff: own branch `docs/agent-handoff`.
 
 ## Priority
 
-Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: fresh Daytona key in Settings → Sandbox (Spark hole), deny extra patcher write / approve root, PR #2 `8c96416` (workspaces + no client token) with Qodo follow-up in flight. Blog last. CodeRabbit is noise; Qodo is required.
+Product: conversion-drop with three named subagents + root pause is live; reconnect PASS. Remaining: Daytona Spark hole (key auth-200s, snapshot create 403, missing write:snapshots, no provider configured), deny extra patcher write / approve root. PR #1 and #2 merged with Qodo Bugs (0). Blog last. CodeRabbit is noise; Qodo is required. Remaining Qodo on PR #3: dismiss loop-github inheritance as a documented platform limit.

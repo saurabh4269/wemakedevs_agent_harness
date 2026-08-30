@@ -194,7 +194,9 @@ Qodo findings and status:
 | Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
 | Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
 
-**PR #2:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+**PR #2 is MERGED** (`e221fb05`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+
+Qodo follow-up on head `8c96416`: **Bugs (0)**.
 
 | Finding | Severity | Status |
 | --- | --- | --- |

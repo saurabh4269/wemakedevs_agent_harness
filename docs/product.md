@@ -24,7 +24,7 @@ Judges should run without creating an account if possible.
 
 ## UI
 
-TrueForge chat is the product UI. Optional themed `@truefoundry/trueforge-ui` embed: `apps/loop-ui` on `feat/loop-ui` (PR #2). Not a dark SOC. Light Apple-like if themed. Doing / waiting / did. Ask **before** write.
+TrueForge chat is the product UI. Demo is stock TrueForge at :8790 (no login). Optional themed `@truefoundry/trueforge-ui` embed: `apps/loop-ui` (PR #2 **merged**). Not a dark SOC. Light Apple-like. Doing / waiting / did. Ask **before** write. LOOP rail at :5173 is extra.
 
 ## Honest limits
 
