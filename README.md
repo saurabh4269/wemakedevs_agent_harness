@@ -7,6 +7,8 @@ Type A is a break (the root patches in the Daytona sandbox, or skips if there is
 
 TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
 
+- **Handoff** — next agent: [docs/README.md](docs/README.md)
+
 ## What you need
 
 - Node 22.14+ for TrueForge, tests, builds, and the LOOP UI. The TrueForge SDK and UI packages require Node 22.
@@ -116,7 +118,7 @@ In TrueForge chat, pick agent loop and send:
 
 You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or spawn a fourth / patcher subagent. Then the root does a Type A patch against fixtures/tenant/src/checkout.ts in the Daytona sandbox (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), or skips the patch if there is no sandbox. Then the root pauses on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
 
-Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Subagents must not call loop-github.
+Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Demo: deny an extra patcher write; approve the root.
 
 ## LOOP UI
 
@@ -178,9 +180,9 @@ Put that in packages/trueforge/.env (Compose) or server.publicBaseUrl (Helm). Do
 
 ## Qodo Code Review Evidence
 
-**PR #1 is MERGED:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
+**PR #1 is MERGED** (`f1651fa`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
 
-Qodo-code-review is installed on the account. `/agentic_review` on PR #1 produced the review thread.
+Qodo-code-review is installed on the account. `/agentic_review` on that PR produced the review thread.
 
 Qodo findings and status:
 
@@ -192,7 +194,9 @@ Qodo findings and status:
 | Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
 | Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
 
-**PR #2:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+**PR #2 is MERGED** (`e221fb05`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
+
+Qodo follow-up on head `8c96416`: **Bugs (0)**.
 
 | Finding | Severity | Status |
 | --- | --- | --- |
@@ -219,5 +223,6 @@ fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
 src/                      independence, write policy, spec checks
 tests/
+docs/                     agent handoff (start at docs/README.md)
 apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
 ```
