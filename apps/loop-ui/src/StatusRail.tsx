@@ -8,7 +8,15 @@ const PHASE_BY_LABEL: Record<(typeof STATUS_LABELS)[number], StatusPhase> = {
   Did: "did",
 };
 
-export function StatusRail({ snapshot }: { snapshot?: LoopStatus }) {
+export function StatusRail({
+  snapshot,
+  sessionId,
+  loadStatus = loadLoopStatus,
+}: {
+  snapshot?: LoopStatus;
+  sessionId?: string;
+  loadStatus?: (sessionId?: string) => Promise<LoopStatus>;
+}) {
   const [live, setLive] = useState<LoopStatus>(snapshot ?? EMPTY_STATUS);
 
   useEffect(() => {
@@ -17,9 +25,11 @@ export function StatusRail({ snapshot }: { snapshot?: LoopStatus }) {
       return;
     }
     let cancelled = false;
+    let generation = 0;
     const tick = async () => {
-      const next = await loadLoopStatus();
-      if (!cancelled) {
+      const gen = ++generation;
+      const next = await loadStatus(sessionId);
+      if (!cancelled && gen === generation) {
         setLive(next);
       }
     };
@@ -31,7 +41,7 @@ export function StatusRail({ snapshot }: { snapshot?: LoopStatus }) {
       cancelled = true;
       window.clearInterval(id);
     };
-  }, [snapshot]);
+  }, [loadStatus, sessionId, snapshot]);
 
   const view = snapshot ?? live;
   const details: Record<(typeof STATUS_LABELS)[number], string> = {
@@ -45,17 +55,23 @@ export function StatusRail({ snapshot }: { snapshot?: LoopStatus }) {
       <p className="loop-rail-kicker">Agent loop</p>
       <h1>LOOP</h1>
       <p className="loop-rail-hint">Watch Waiting — that is the pause before any write.</p>
-      <ol>
-        {STATUS_LABELS.map((label) => {
-          const active = view.phase === PHASE_BY_LABEL[label];
-          return (
-            <li key={label} data-active={active ? "true" : "false"}>
-              <span className="loop-rail-label">{label}</span>
-              <span className="loop-rail-detail">{details[label]}</span>
-            </li>
-          );
-        })}
-      </ol>
+      {view.phase === "error" ? (
+        <p className="loop-rail-error" role="alert">
+          {view.error || "Could not load LOOP status"}
+        </p>
+      ) : (
+        <ol>
+          {STATUS_LABELS.map((label) => {
+            const active = view.phase === PHASE_BY_LABEL[label];
+            return (
+              <li key={label} data-active={active ? "true" : "false"}>
+                <span className="loop-rail-label">{label}</span>
+                <span className="loop-rail-detail">{details[label]}</span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
     </section>
   );
 }

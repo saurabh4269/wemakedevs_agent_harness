@@ -29,5 +29,8 @@
   },
   "overrides": {
     "zustand": "^5.0.15"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

@@ -1,6 +1,6 @@
 export const STATUS_LABELS = ["Doing", "Waiting", "Did"] as const;
 
-export type StatusPhase = "idle" | "doing" | "waiting" | "did";
+export type StatusPhase = "idle" | "doing" | "waiting" | "did" | "error";
 
 export type LoopEvent = {
   type: string;
@@ -23,6 +23,7 @@ export type LoopStatus = {
   doing: string;
   waiting: string;
   did: string;
+  error: string;
 };
 
 export const EMPTY_STATUS: LoopStatus = {
@@ -30,7 +31,18 @@ export const EMPTY_STATUS: LoopStatus = {
   doing: "No tool calls yet",
   waiting: "No write pause yet",
   did: "No patch, proposal, or lesson yet",
+  error: "",
 };
+
+export function statusLoadError(reason: string): LoopStatus {
+  return {
+    phase: "error",
+    doing: "Status unavailable",
+    waiting: "Status unavailable",
+    did: "Status unavailable",
+    error: reason,
+  };
+}
 
 const WRITE_TOOLS = new Set(["open_draft_pr", "flag_incident", "request_prod_deploy"]);
 const DID_RE = /\b(patch|proposal|lesson|draft pr|root cause)\b/i;
@@ -109,8 +121,14 @@ export function deriveLoopStatus(events: LoopEvent[]): LoopStatus {
           if (status.did === EMPTY_STATUS.did) {
             status.did = "Patch, proposal, or lesson is in the thread";
           }
-        } else if (status.phase === "doing") {
+        } else {
+          // turn.done with no remaining required actions leaves Waiting,
+          // including a denied approval that never produced a write.
+          status.phase = "doing";
           status.doing = "Turn finished";
+          if (status.waiting !== EMPTY_STATUS.waiting) {
+            status.waiting = "Write was not approved";
+          }
         }
       }
     }

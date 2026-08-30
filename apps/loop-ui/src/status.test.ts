@@ -39,6 +39,35 @@ describe("deriveLoopStatus", () => {
     expect(status.waiting.toLowerCase()).toMatch(/approv|pause/);
   });
 
+  it("leaves Waiting when turn.done has no required actions", () => {
+    const status = deriveLoopStatus([
+      { type: "turn.created" },
+      { type: "tool.approval_required" },
+      { type: "turn.done", state: { status: "done" } },
+    ]);
+    expect(status.phase).not.toBe("waiting");
+    expect(status.phase).toBe("doing");
+    expect(status.doing).toBe("Turn finished");
+  });
+
+  it("does not keep Waiting after a denied approval", () => {
+    const status = deriveLoopStatus([
+      { type: "turn.created" },
+      {
+        type: "model.message",
+        toolCalls: [{ function: { name: "open_draft_pr" } }],
+      },
+      { type: "tool.approval_required" },
+      {
+        type: "turn.done",
+        state: { status: "done", requiredActions: [] },
+      },
+    ]);
+    expect(status.phase).not.toBe("waiting");
+    expect(status.waiting).toBe("Write was not approved");
+    expect(status.doing).toBe("Turn finished");
+  });
+
   it("marks Did after a completed patch or draft PR", () => {
     const status = deriveLoopStatus([
       { type: "tool.response", toolInfo: { name: "open_draft_pr" }, content: "draft PR opened" },

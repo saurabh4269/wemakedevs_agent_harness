@@ -9,7 +9,7 @@ TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo i
 
 ## What you need
 
-- Node 22.14+ for TrueForge and import-loop. Tests can still run on Node 20.
+- Node 22.14+ for TrueForge, tests, builds, and the LOOP UI. The TrueForge SDK and UI packages require Node 22.
 - Prefer OpenRouter as a custom OpenAI-compatible provider. NVIDIA NIM is the backup.
 - Daytona sandbox with snapshot write permission in Settings. Skills need sandbox enabled.
 - Register skills from this GitHub repo.
