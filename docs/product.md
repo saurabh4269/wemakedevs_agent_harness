@@ -30,4 +30,5 @@ TrueForge chat is the product UI. Demo is stock TrueForge at :8790 (no login). O
 
 - Subagents share the root tool set. `DynamicSubAgentsConfig` is `{ enabled }` only — no per-subagent `enable_tools`. Writes pause via `require_approval_for_tools`. Demo: deny extra patcher write; approve root. Never merge / prod-deploy.
 - Fixture MCP is fixture. Official "connected not mocked" is a Best Use risk — say it.
-- Skills need sandbox. If Daytona 401s and `sandbox.enabled` is false, skills will not be on the agent and the three-subagent path will not run. That is a blocker, not a feature.
+- Skills need sandbox. Daytona provider is **ready** as of 2026-08-31 ~02:22 IST (exec proven). Remaining Type A hole is **tenant sources in the sandbox cwd**, not provider config. See [status.md](status.md).
+- Spark extras (ADR 8): generative UI + Code Mode inside this incident. Do not add a second product.
