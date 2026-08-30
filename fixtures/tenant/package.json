@@ -1,0 +1,8 @@
+{
+  "name": "loop-tenant-checkout",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsx src/checkout.ts"
+  }
+}
