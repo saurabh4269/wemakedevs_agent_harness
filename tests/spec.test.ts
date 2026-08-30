@@ -3,7 +3,15 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isResourceName } from "../src/resource-name.js";
-import { LOOP_AGENT_NAME, LOOP_SKILL_NAMES, validateLoopAgent, type SavedAgent } from "../src/spec.js";
+import {
+  LOOP_AGENT_NAME,
+  LOOP_INSTRUCTION_RULES,
+  LOOP_SKILL_NAMES,
+  REQUIRED_SUBAGENTS,
+  TRUEFORGE_HAS_PER_SUBAGENT_TOOLS,
+  validateLoopAgent,
+  type SavedAgent,
+} from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -43,13 +51,14 @@ describe("LOOP agent spec shape", () => {
     expect(validateLoopAgent(clone).filter((issue) => issue.path === "manifest.model.name")).toEqual([]);
   });
 
-  it("requires first action to spawn analytics, logs, deploys", () => {
+  it("requires first action to spawn analytics, logs, deploys and forbids a write-capable fourth", () => {
+    expect(TRUEFORGE_HAS_PER_SUBAGENT_TOOLS).toBe(false);
+    expect([...REQUIRED_SUBAGENTS]).toEqual(["analytics", "logs", "deploys"]);
     const instructions = agent.manifest.instructions ?? "";
-    expect(instructions).toMatch(/FIRST ACTION/);
-    expect(instructions).toMatch(/analytics, logs, deploys/);
-    expect(instructions).toMatch(/must not call loop-warehouse/);
-    expect(instructions).toMatch(/must not ask the user/);
-    expect(instructions).toMatch(/until those three reports exist/);
+    for (const rule of LOOP_INSTRUCTION_RULES) {
+      expect(instructions, rule.id).toMatch(rule.re);
+    }
+    expect(instructions).not.toMatch(/until those three reports exist/);
   });
 
   it("does not embed connector credentials", () => {

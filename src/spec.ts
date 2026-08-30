@@ -9,6 +9,65 @@ export const LOOP_SKILL_NAMES = [
 ] as const;
 
 export const WRITE_TOOLS = ["open_draft_pr", "flag_incident", "request_prod_deploy"] as const;
+export const ROOT_WRITE_TOOLS = ["open_draft_pr", "flag_incident"] as const;
+export const REFUSED_WRITE_TOOL = "request_prod_deploy";
+export const REQUIRED_SUBAGENTS = ["analytics", "logs", "deploys"] as const;
+
+/** TrueForge AgentSpec has no per-subagent MCP enable/disable. DynamicSubAgentsConfig is only `{ enabled }`. */
+export const TRUEFORGE_HAS_PER_SUBAGENT_TOOLS = false;
+
+export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; message: string }> = [
+  {
+    id: "first-action-three",
+    re: /FIRST ACTION[\s\S]*analytics, logs, deploys/,
+    message: "first action must spawn analytics, logs, deploys",
+  },
+  {
+    id: "no-warehouse-on-root",
+    re: /must not call loop-warehouse/,
+    message: "root must not call loop-warehouse",
+  },
+  {
+    id: "subagents-no-questions",
+    re: /must not ask the user/,
+    message: "subagents must not ask the user",
+  },
+  {
+    id: "subagents-no-github",
+    re: /Subagents must not call loop-github/,
+    message: "subagents must not call loop-github",
+  },
+  {
+    id: "no-fourth-subagent",
+    re: /Never spawn a fourth subagent/,
+    message: "must forbid a fourth / write-capable subagent",
+  },
+  {
+    id: "no-patcher",
+    re: /Never spawn patcher/,
+    message: "must name patcher as a forbidden subagent",
+  },
+  {
+    id: "root-only-writes",
+    re: /Only the root may call open_draft_pr or flag_incident/,
+    message: "only root may call open_draft_pr / flag_incident",
+  },
+  {
+    id: "after-independence",
+    re: /only after the independence check/,
+    message: "root writes only after the independence check",
+  },
+  {
+    id: "prod-deploy-refuse",
+    re: /request_prod_deploy remains refuse/,
+    message: "request_prod_deploy must remain refuse",
+  },
+  {
+    id: "sandbox-or-skip",
+    re: /If there is no sandbox, skip the patch/,
+    message: "Type A patch stays in sandbox or skip",
+  },
+];
 
 export type McpServerSpec = {
   name: string;
@@ -112,6 +171,12 @@ export function validateLoopAgent(agent: SavedAgent): SpecIssue[] {
       message: "writes must pause (@write)",
     });
   }
+  if (!approval.includes("@destructive")) {
+    issues.push({
+      path: "manifest.mcp_servers[loop-github].require_approval_for_tools",
+      message: "destructive tools must pause (@destructive)",
+    });
+  }
 
   const warehouseApproval = warehouse?.require_approval_for_tools ?? ["@write", "@destructive"];
   if (!warehouseApproval.includes("@write")) {
@@ -121,8 +186,14 @@ export function validateLoopAgent(agent: SavedAgent): SpecIssue[] {
     });
   }
 
-  if ((spec.instructions ?? "").length < 80) {
+  const instructions = spec.instructions ?? "";
+  if (instructions.length < 80) {
     issues.push({ path: "manifest.instructions", message: "instructions are too thin for LOOP" });
+  }
+  for (const rule of LOOP_INSTRUCTION_RULES) {
+    if (!rule.re.test(instructions)) {
+      issues.push({ path: "manifest.instructions", message: rule.message });
+    }
   }
 
   return issues;

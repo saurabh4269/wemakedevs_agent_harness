@@ -43,4 +43,15 @@ describe("write tools only on the write MCP", () => {
     }
     expect(github?.require_approval_for_tools).toContain("@write");
   });
+
+  it("keeps GitHub writes on the root: pause, no fourth subagent, prod-deploy refuse", () => {
+    const agent = JSON.parse(readFileSync(join(root, "agents/loop.json"), "utf8")) as SavedAgent;
+    const github = agent.manifest.mcp_servers?.find((server) => server.name === WRITE_SERVER);
+    expect(github?.require_approval_for_tools).toEqual(expect.arrayContaining(["@write", "@destructive"]));
+    const instructions = agent.manifest.instructions ?? "";
+    expect(instructions).toMatch(/Only the root may call open_draft_pr or flag_incident/);
+    expect(instructions).toMatch(/Never spawn a fourth subagent/);
+    expect(instructions).toMatch(/request_prod_deploy remains refuse/);
+    expect(instructions).toMatch(/Subagents must not call loop-github/);
+  });
 });

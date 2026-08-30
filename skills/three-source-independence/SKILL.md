@@ -9,7 +9,7 @@ LOOP may name a root cause only after three **independent** sources agree they a
 
 ## Spawn, don't self-investigate
 
-The first action of an investigation is always to spawn three named one-level subagents: analytics, logs, deploys. The root must not call warehouse tools itself. The root must not spawn a patch subagent until those three reports exist. Subagents cannot ask the user.
+The first action of an investigation is always to spawn three named one-level subagents: analytics, logs, deploys. The root must not call warehouse tools itself. Spawn no other subagent — never a fourth, never a `patcher`. Subagents cannot ask the user. Subagents must not call loop-github tools.
 
 Spawn one-level subagents:
 
@@ -39,4 +39,4 @@ Refuse a root cause. Say so plainly. Do not patch. Do not open a PR. Ask for bet
 
 ## If they are independent
 
-Synthesize. Name the causal chain (deploy → log signature → funnel step). Then follow type-a-vs-b.
+Synthesize. Name the causal chain (deploy → log signature → funnel step). Then follow type-a-vs-b on the **root** thread.

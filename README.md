@@ -2,8 +2,8 @@
 
 One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon.
 
-The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself and does not skip to a patch until those three reports exist. LOOP refuses a root cause if those three are restatements of one query.
-Type A is a break (patch in the sandbox). Type B is an opportunity (proposal only). Writes pause for a human. LOOP never merges and never prod-deploys the tenant.
+The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query.
+Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
 
 TrueForge chat is the UI. This repo is TypeScript only.
 
@@ -114,20 +114,20 @@ In TrueForge chat, pick agent loop and send:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or jump to a patch subagent. Then a Type A patch against fixtures/tenant/src/checkout.ts (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), then a pause on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
+You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself or spawn a fourth / patcher subagent. Then the root does a Type A patch against fixtures/tenant/src/checkout.ts in the Daytona sandbox (enterprise alias still points at enterprise-annual after the *-v3 catalog rename), or skips the patch if there is no sandbox. Then the root pauses on open_draft_pr because that tool is MCP-annotated write and require_approval_for_tools includes @write.
 
-Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses.
+Allow or deny in the UI. Fixture mode returns a fake PR URL and merged: false. request_prod_deploy always refuses. Subagents must not call loop-github.
 
 ## Subagents share tools (honest split)
 
-TrueForge dynamic subagents get the same MCP tools as the root agent. There is no per-subagent connector list.
+TrueForge dynamic subagents get the same MCP tools as the root agent. AgentSpec.mcp_servers and DynamicSubAgentsConfig have no per-subagent enable_tools / disable_tools.
 
 LOOP still splits servers on the root spec:
 
 - loop-warehouse -> enable_tools @read-only
 - loop-github -> named write tools plus require_approval_for_tools @write and @destructive
 
-That is not isolation. A subagent could see open_draft_pr. We enforce the split with enable lists, the approval pause, and skill/instructions: subagents only query warehouse tools; only the root may call loop-github after the human pause. The fixture never talks to live GitHub and never merges.
+That is not isolation. A subagent could see open_draft_pr. We enforce the split with instructions + skill license-to-write + the approval pause: spawn only analytics, logs, deploys; never a fourth write-capable subagent; Type A patch stays on the root in the Daytona sandbox (skip if no sandbox); only the root may call open_draft_pr / flag_incident after the independence check; request_prod_deploy remains refuse. If a subagent still calls loop-github, deny the pause. The fixture never talks to live GitHub and never merges.
 
 ## Tenant fixture
 
