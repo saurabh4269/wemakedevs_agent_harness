@@ -155,22 +155,27 @@ Put that in packages/trueforge/.env (Compose) or server.publicBaseUrl (Helm). Do
 
 ## Qodo Code Review Evidence
 
-**This pull request is the evidence PR.**
+**This pull request is the evidence PR:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
 
-Qodo is installed on the account as the Qodo-code-review GitHub App. To run the review on this PR:
+The PR is still open (not merged). Qodo-code-review is installed on the account. `/agentic_review` on this PR produced the review thread.
 
-1. Open the pull request on GitHub.
-2. Comment:
+Qodo findings and status:
+
+| Finding | Severity | Status |
+| --- | --- | --- |
+| URL logging of MCP connector URLs in `registerMcp` | High | Fixed (redacted URL; unparseable URLs print `[unparseable-url]`) |
+| Node engines below TrueForge SDK (`>=20.19` vs SDK `>=22`) | Medium | Fixed (`package.json` `engines.node` is `>=22.14.0`) |
+| Uncaught MCP `attach()` rejections on fixture POST routes | Medium | Fixed (catch and 500 if headers not sent) |
+| Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
+| Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
+
+To re-run the review, comment:
 
 ```text
 /agentic_review
 ```
 
-3. Qodo reacts and posts the review on the PR.
-
-That comment plus the review thread is the hackathon evidence. If the app is not on this repository yet, install Qodo-code-review for saurabh4269/wemakedevs_agent_harness and re-comment.
-
-The first `/agentic_review` on this PR found URL logging of MCP connectors, Node engines below the TrueForge SDK, uncaught MCP attach rejections, and a loose model FQN check.
+The `/agentic_review` comments plus the review thread on PR #1 are the hackathon evidence.
 
 ## Layout
 
