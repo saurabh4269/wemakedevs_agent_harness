@@ -76,8 +76,8 @@ render.yaml               Blueprint for a *greenfield* workspace only
 Full commands: [docs/runbook.md](docs/runbook.md).
 
 - **Local film host:** `npx @truefoundry/trueforge@latest` on `[::1]:8790` (SQLite). **Do not kill it.** Local agent `loop` is `openrouter/gpt-4.1-mini`. Do not PUT that model off 4.1-mini while the sitting pause is the film source.
-- **Judge host:** https://loop.heisenbug.in. Render free is exhausted — stand up Heroku with [docs/heroku.md](docs/heroku.md). Do **not** Apply `render.yaml`. Do not put `HEROKU_API_KEY` or `RENDER_API_KEY` in git.
-- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
+- **Judge host:** https://loop.heisenbug.in. Render free is exhausted — stand up Heroku with [docs/heroku.md](docs/heroku.md). **Port Render Postgres** (skip Redis). Do **not** Apply `render.yaml`. Do not put `HEROKU_API_KEY`, `RENDER_API_KEY`, or dumps in git.
+- **Import is not on boot.** Postgres persists the hosted agent. Cutover prefers `heroku pg:push` / dump+restore. After `agents/loop.json` / skills change (or if dump failed), re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
 - TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
 - Prefer OpenAI GPT-5.6 Luna on the judge host. Local film may stay OpenRouter 4.1-mini. NVIDIA NIM is backup locally. Daytona required for skills/sandbox.
 

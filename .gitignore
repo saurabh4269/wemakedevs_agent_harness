@@ -5,6 +5,7 @@ coverage/
 .env.local
 .env.*.local
 *.log
+*.dump
 .DS_Store
 .trueforge/
 tmp/
