@@ -1,0 +1,37 @@
+{
+  "total": 72.264,
+  "timeline": [
+    {
+      "id": "open",
+      "startSec": 0.2,
+      "endSec": 11.120926045016075
+    },
+    {
+      "id": "looks",
+      "startSec": 11.120926045016075,
+      "endSec": 31.394347266881027
+    },
+    {
+      "id": "fixtures",
+      "startSec": 31.394347266881027,
+      "endSec": 40.4563922829582
+    },
+    {
+      "id": "sandbox",
+      "startSec": 40.4563922829582,
+      "endSec": 53.93327974276527
+    },
+    {
+      "id": "pause",
+      "startSec": 53.93327974276527,
+      "endSec": 64.9122958199357
+    },
+    {
+      "id": "lesson",
+      "startSec": 64.9122958199357,
+      "endSec": 72.464
+    }
+  ],
+  "model": "gpt-4o-mini-tts",
+  "voice": "cedar"
+}

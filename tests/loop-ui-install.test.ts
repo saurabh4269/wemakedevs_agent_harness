@@ -6,14 +6,15 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 describe("loop-ui install and client config", () => {
-  it("includes apps/loop-ui in root workspaces and keeps Node 22.14+", () => {
+  it("includes apps/loop-ui and apps/loop-demo in root workspaces and keeps Node 22.14+", () => {
     const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
       workspaces?: string[];
       engines?: { node?: string };
     };
-    expect(pkg.workspaces).toEqual(["apps/loop-ui"]);
+    expect(pkg.workspaces).toEqual(["apps/loop-ui", "apps/loop-demo"]);
     expect(pkg.engines?.node).toBe(">=22.14.0");
     expect(existsSync(join(root, "apps/loop-ui/package.json"))).toBe(true);
+    expect(existsSync(join(root, "apps/loop-demo/package.json"))).toBe(true);
   });
 
   it("does not ship a Vite-bundled TrueForge credential", () => {

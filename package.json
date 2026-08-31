@@ -10,6 +10,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json",
     "test": "vitest run && npm test -w loop-ui",
+    "demo:voiceover": "npm run voiceover -w loop-demo",
+    "demo:render": "npm run render -w loop-demo",
     "fixture:mcp": "tsx fixtures/mcp/server.ts",
     "import:loop": "tsx scripts/import-loop.ts",
     "benchmark": "tsx scripts/benchmark.ts",
@@ -31,7 +33,8 @@
     "vitest": "^3.2.4"
   },
   "workspaces": [
-    "apps/loop-ui"
+    "apps/loop-ui",
+    "apps/loop-demo"
   ],
   "overrides": {
     "zustand": "^5.0.15"

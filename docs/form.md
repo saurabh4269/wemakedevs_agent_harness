@@ -26,7 +26,7 @@ Fallback: https://loop-trueforge.onrender.com
 Do not put `loop.thexplorers.xyz`.
 
 **Video**
-YouTube, ≤3 min. Record from the shot list in [demo.md](demo.md). Film https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz (hosted Luna PASS, still paused). Replace the 4s Vimeo placeholder. Say fixtures out loud. Do not click Approve until after the take.
+YouTube, ≤3 min. File in repo: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4) (93s, Safari on Sequoia wallpaper, hosted Luna PASS, conversational cedar voiceover, fixtures said out loud, pause not clicked). Upload that to YouTube. Replace the 4s Vimeo placeholder.
 
 **Blog**
 https://saurabh4269.github.io/blog/trueforge-harness/

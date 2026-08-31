@@ -8,3 +8,6 @@ coverage/
 .DS_Store
 .trueforge/
 tmp/
+apps/loop-demo/out/
+apps/loop-demo/public/
+apps/loop-demo/tmp/
