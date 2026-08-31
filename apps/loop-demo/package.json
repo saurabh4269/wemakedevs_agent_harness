@@ -1,0 +1,31 @@
+{
+  "name": "loop-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "LOOP judge demo — Remotion composition, Mac wallpaper, floating browser",
+  "scripts": {
+    "voiceover": "tsx scripts/generate-voiceover.ts",
+    "prepare:assets": "tsx scripts/prepare-assets.ts",
+    "studio": "npx remotion studio",
+    "render": "tsx scripts/prepare-assets.ts && npx remotion render src/index.ts LoopDemo out/loop-judge-demo.mp4 --log=verbose",
+    "still": "npx remotion still src/index.ts LoopDemo out/loop-judge-demo-poster.png --frame=90"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.355",
+    "@remotion/google-fonts": "^4.0.355",
+    "@remotion/media-utils": "^4.0.355",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "remotion": "^4.0.355"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  }
+}

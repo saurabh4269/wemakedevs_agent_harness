@@ -50,4 +50,17 @@ Pick agent `loop`. Send this and nothing else:
 5. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
 6. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
 
-PR #1–#3 and #5–#7 merged. Living state: [status.md](status.md).
+## Remotion take (Screen Studio vibe)
+
+Composition lives in `apps/loop-demo`. It frames the hosted Luna PASS as a floating Safari window on Sequoia-style golden-hour wallpaper (padding, rounded chrome, drop shadow, traffic lights). Voiceover is `tts-1-hd` / `fable`. Duration **93s**.
+
+```bash
+# wallpaper + voiceover + cropped screen (gitignored public/)
+npx tsx apps/loop-demo/scripts/generate-voiceover.ts
+npx tsx apps/loop-demo/scripts/prepare-assets.ts
+npm run render -w loop-demo
+```
+
+Do not commit `apps/loop-demo/public/` (wallpaper, mp3, mp4). Rendered YouTube file is an artifact, not git. Upload that MP4 to **YouTube** for the form. Do not Approve the film session.
+
+PR #1–#3 and #5–#9 merged. Living state: [status.md](status.md).

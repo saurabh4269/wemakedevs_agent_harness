@@ -26,7 +26,7 @@ Fallback: https://loop-trueforge.onrender.com
 Do not put `loop.thexplorers.xyz`.
 
 **Video**
-YouTube, ≤3 min. Record from the shot list in [demo.md](demo.md). Film https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz (hosted Luna PASS, still paused). Replace the 4s Vimeo placeholder. Say fixtures out loud. Do not click Approve until after the take.
+YouTube, ≤3 min. A 93s Remotion take already exists: Safari window on Sequoia wallpaper, hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`, Fable voiceover, fixtures said out loud, pause not clicked. Upload that file. Replace the 4s Vimeo placeholder. Do not click Approve until after the take if you re-film.
 
 **Blog**
 https://saurabh4269.github.io/blog/trueforge-harness/

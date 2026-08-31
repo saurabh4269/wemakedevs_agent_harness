@@ -98,6 +98,8 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 38. **Qodo Nemotron rule is stale.** User required hosted GPT-5.6 Luna after OpenRouter `:free` 503/429. Do not switch the judge host back to Nemotron to satisfy rule 3011881. Judge-host import now also fails if `OPENAI_API_KEY` is missing.
 
+39. **Judge demo is Screen Studio, not fullscreen Chrome.** Floating Safari chrome on Sequoia wallpaper. Crop the Linux Chrome toolbar (the green Finish update badge) before Remotion. `apps/loop-demo/public/` is gitignored (wallpaper, voiceover, screen). Remotion `interpolate` input ranges must be strictly increasing — short zoom windows cannot use `start+0.7` / `end-0.5` if those invert.
+
 ## Organizers (short)
 
 Kunal: small fully working TrueForge agent, ~3 min, no login, MCP + sandbox + human pause before irreversible (not a prompt), agent steps visible. Sai: stock TrueForge UI is enough. Extra credit: generative UI, code mode, Daytona, parallel subagents, real-world use case. Qualify = judge **sees** those three. Hero card = Incident responder. Details: [organizers.md](organizers.md).

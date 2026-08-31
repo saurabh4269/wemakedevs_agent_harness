@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~11:25 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~12:45 IST**.
 
 ## PRs
 
@@ -15,8 +15,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `feat/render-host` | Hosted TrueForge + live URL + audit | **Merged** (`25fd7a0`). |
 | [#8](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/8) | `docs/living-handoff-autodeploy` | Living handoff + `render.yaml` auto-deploy on `main` | **Merged** (`93882ac`). |
 | [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | **Merged** (`a9200b2`). |
+| this PR | `cursor/judge-demo-remotion-7d0f` | Remotion judge demo: Safari on Sequoia wallpaper | **Open**. |
 
-`origin/main` tip at last rewrite: `a9200b2`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. New work from `origin/main`.
+`origin/main` tip at last rewrite: `062f7e9`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. Demo composition does not change the hosted agent.
 
 ## Live TrueForge
 
@@ -87,7 +88,7 @@ Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness
 - Deployed: https://loop.heisenbug.in — live. Fallback https://loop-trueforge.onrender.com.
-- Video field is **YouTube**, ≤3 min. Shot list: [demo.md](demo.md). Film https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz. Placeholder https://vimeo.com/1222508816 is the **wrong host** — replace.
+- Video field is **YouTube**, ≤3 min. Shot list: [demo.md](demo.md). 93s Remotion take is ready to upload (Safari on Sequoia wallpaper of https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz). Placeholder https://vimeo.com/1222508816 is the **wrong host** — replace.
 - Blog draft: [blog.md](blog.md). Live URL https://saurabh4269.github.io/blog/trueforge-harness/ is still 404 until the MDX is published to `saurabh4269.github.io`.
 - Form answers: [form.md](form.md). Not submitted.
 
