@@ -4,7 +4,7 @@ Render free is exhausted for this month. Judge URL stays **https://loop.heisenbu
 
 Secrets stay in `heroku config`. Never commit `.env`. Do not paste keys into the repo.
 
-Image deploy does **not** re-import the agent. After the dyno is up, run `import-loop.ts` against the judge URL with Luna env vars (same as Render).
+Image deploy does **not** re-import the agent by itself. Prefer **porting Render Postgres** (section 6) so the LOOP agent, connectors, Daytona, and sessions come with you. Skip Redis. Fallback if the dump fails: empty Heroku Postgres + `import-loop.ts`.
 
 ## What you are standing up
 
@@ -22,12 +22,16 @@ Use **Basic** (or Standard-1X), not Eco. Eco sleeps like Render free. Credits co
 
 ## 1. CLI (once)
 
+You need **both** CLIs if you are porting Render Postgres: Heroku for the new host, Render for the external DB URL.
+
 ```bash
 # macOS
 brew tap heroku/brew && brew install heroku
+# Render CLI: https://render.com/docs/cli (already installed is fine)
 
 heroku login
 heroku container:login
+render login   # if not already
 ```
 
 ## 2. App + addons
@@ -40,11 +44,11 @@ heroku create "$APP" --region us
 heroku stack:set container -a "$APP"
 heroku dyno:resize web=basic -a "$APP"
 
-heroku addons:create heroku-postgresql:essential-0 -a "$APP"
+heroku addons:create heroku-postgresql:essential-0 --version 17 -a "$APP"
 heroku addons:create heroku-redis:mini -a "$APP"
 ```
 
-Essential-0 / mini are the cheap credit-friendly plans. Do not attach a production-tier database for this demo.
+Essential-0 / mini are the cheap credit-friendly plans. Do not attach a production-tier database for this demo. **`--version 17`** matches Render (`render.yaml` `postgresMajorVersion: "17"`). A 17→16 restore often fails.
 
 ## 3. Config (no secrets in git)
 
@@ -112,11 +116,75 @@ Wait until TLS is ready (`heroku certs -a "$APP"`). Then:
 curl -sS https://loop.heisenbug.in/healthz
 ```
 
-Leave the old Render `onrender.com` hostname alone until this curl is 200. Then you can stop the Render web service so it stops burning a dead free quota. Do not Apply `render.yaml`.
+Leave the old Render `onrender.com` hostname alone until this curl is 200. Then you can stop the Render **web** service so it stops burning a dead free quota. Keep Render **Postgres** until you have verified the Heroku restore. Do not Apply `render.yaml`.
 
-## 6. Re-import LOOP
+## 6. Port Render Postgres (do this; skip Redis)
 
-Postgres is empty. The Render agent does not copy over. From the box, with secrets **sourced not echoed**:
+TrueForge keeps the product in **Postgres**: agent `loop`, model providers (API keys), MCP connectors, skills, Daytona sandbox providers, sessions. **Redis is only executor peering** — leave it empty on Heroku.
+
+The dump **contains secrets**. Put it in `/tmp`, mode 600. Never `git add` it. Never upload it to a public S3 URL. Never paste connection strings into the repo or chat.
+
+Dump **first**, while Render Postgres is still up (the free **web** quota can be exhausted and the database still accepts external connections).
+
+### 6a. Connection strings (assign, do not echo)
+
+Use Render’s **external** URL. The internal URL (`*.internal`) is unreachable from a laptop. Database name is `trueforge`. Append `sslmode=require` if missing.
+
+Dashboard: Postgres **`loop-postgres`** (`dpg-daaa7k4s728c73fr0feg-a`) → Connect → **External Database URL**.
+
+CLI (do not paste the output into chat or git):
+
+```bash
+# Assign, do not echo. Prefer the externalConnectionString field.
+render pg get dpg-daaa7k4s728c73fr0feg-a --include-sensitive-connection-info
+```
+
+```bash
+# Do not print these.
+export RENDER_DATABASE_URL='postgresql://USER:PASS@HOST:PORT/trueforge?sslmode=require'
+export APP=loop-trueforge   # your Heroku app
+export HEROKU_DATABASE_URL="$(heroku config:get DATABASE_URL -a "$APP")"
+```
+
+Match **Postgres major version**. Render is 17. Heroku addon create in section 2 already passes `--version 17`.
+
+### 6b. Preferred: `heroku pg:push` (no dump file)
+
+Destroys whatever is already on Heroku Postgres (empty is fine). Laptop must reach Render's **external** URL.
+
+```bash
+heroku pg:push "$RENDER_DATABASE_URL" DATABASE_URL -a "$APP"
+```
+
+### 6c. Fallback: local custom dump → `pg_restore`
+
+Do **not** use `-n public` only. Dump the whole database (TrueForge may use more than `public`).
+
+```bash
+DUMP=/tmp/loop-trueforge.dump
+rm -f "$DUMP"
+pg_dump --format=custom --no-owner --no-acl --dbname="$RENDER_DATABASE_URL" -f "$DUMP"
+chmod 600 "$DUMP"
+
+pg_restore --verbose --no-owner --no-acl --clean --if-exists \
+  --dbname="$HEROKU_DATABASE_URL" \
+  "$DUMP"
+
+shred -u "$DUMP" 2>/dev/null || rm -f "$DUMP"
+```
+
+Do **not** `heroku pg:backups:restore` from a public HTTP URL. That dump has provider keys.
+
+### 6d. After restore
+
+1. Boot / restart the web dyno so TrueForge can `migrateToLatest` on the copied schema.
+2. Optional: run `import-loop.ts` against https://loop.heisenbug.in with Luna env vars. That **upserts** agent `loop` and skills from git (good). It does not replace the whole database.
+3. In Settings: Daytona still **ready**; warehouse/github still `http://127.0.0.1:8788/warehouse` and `.../github`.
+4. Hosted session IDs (including Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`) can survive **if** this restore worked and DNS still points at a host with that Postgres. Do not Approve/Deny listed film sessions.
+
+If `pg_dump` cannot reach Render (DB suspended with the free web), fall back to empty Heroku Postgres + section 7.
+
+## 7. Fallback only — empty Postgres + re-import
 
 ```bash
 export TRUEFORGE_BASE_URL=https://loop.heisenbug.in
@@ -133,9 +201,9 @@ npx tsx scripts/import-loop.ts
 
 Then in TrueForge Settings, confirm Daytona is **ready** and MCP warehouse/github point at in-container `127.0.0.1:8788`.
 
-## 7. Qualifying after the move
+## 8. Qualifying after the move
 
-Old Render session URLs die with the old Postgres. Film/qualify again on the new host if you need a sitting pause. Do not Approve/Deny the listed local film session.
+If section 6 restore worked, hosted session IDs can still exist on the new Postgres. Do not Approve/Deny listed film sessions. If restore failed and you used empty import, film/qualify again on Heroku.
 
 ## Do not
 
@@ -144,3 +212,5 @@ Old Render session URLs die with the old Postgres. Film/qualify again on the new
 - Touch Cloudflare `@` / `www`.
 - Use Eco dynos if you can avoid sleep before a judge demo.
 - Echo `/home/box/.secrets/loop-trueforge.env`.
+- Commit `/tmp/loop-trueforge.dump` or any `*.dump`.
+- Restore via a public HTTP URL (`heroku pg:backups:restore` from S3).

@@ -100,6 +100,8 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 39. **Judge demo is Screen Studio, not fullscreen Chrome.** Floating Safari chrome on Sequoia wallpaper. Crop the Linux Chrome toolbar (the green Finish update badge) before Remotion. `apps/loop-demo/public/` is gitignored (wallpaper, working media). The ship MP4 is `docs/demo/loop-judge-demo.mp4`. Voiceover is `gpt-4o-mini-tts` / `cedar` in one continuous take — concatenating clips restarts the energy. Remotion `interpolate` input ranges must be strictly increasing.
 
+40. **Port Render Postgres, skip Redis.** TrueForge state lives in Postgres (agent `loop`, provider keys, MCP connectors, skills, Daytona, sessions). Redis is executor peering only — a new Heroku Redis is empty and that is fine. Prefer `heroku pg:push` from Render’s **external** URL, else `pg_dump --format=custom` of the whole database (not `-n public` only) → `pg_restore --clean --if-exists`. Match Postgres 17. Dump goes in `/tmp` mode 600; never `git add`; never `heroku pg:backups:restore` from a public HTTP URL (the dump has API keys). Keep Render Postgres until Heroku `/healthz` is 200 and the restore is verified. Stop only the Render **web** after that. Empty Heroku Postgres + `import-loop.ts` is the fallback if dump/push cannot reach Render.
+
 ## Organizers (short)
 
 Kunal: small fully working TrueForge agent, ~3 min, no login, MCP + sandbox + human pause before irreversible (not a prompt), agent steps visible. Sai: stock TrueForge UI is enough. Extra credit: generative UI, code mode, Daytona, parallel subagents, real-world use case. Qualify = judge **sees** those three. Hero card = Incident responder. Details: [organizers.md](organizers.md).

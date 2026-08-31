@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~23:15 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~19:50 UTC**.
 
 ## PRs
 
@@ -19,7 +19,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
 | [#12](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/12) | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Merged** (`b92908a`). |
 
-`origin/main` tip at last rewrite: `b92908a`. Heroku stand-up is CLI in a local clone of `main`. Do not store `HEROKU_API_KEY` in git. Re-import LOOP after the new Postgres exists.
+`origin/main` tip at last rewrite: `1579210`. Heroku stand-up is CLI in a local clone of `main`. **Port Render Postgres** ([heroku.md](heroku.md) §6); skip Redis. `import-loop.ts` is the empty-DB fallback. Do not store `HEROKU_API_KEY` or dumps in git.
 
 ## Live TrueForge
 
@@ -28,9 +28,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 - **Judge URL:** https://loop.heisenbug.in — keep this. TLS stays on Cloudflare once CNAME `loop` points at Heroku ACM.
 - **Live host is moving to Heroku.** Render free quota is exhausted. Stand-up: [heroku.md](heroku.md). Do not Apply `render.yaml`.
 - Fallback while DNS catches up: `https://<app>.herokuapp.com` (app name must contain `loop`).
-- Previous Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`). Stop it after Heroku `/healthz` is 200.
+- Previous Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`). Stop the **web** after Heroku `/healthz` is 200. Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until the Heroku restore is verified.
 - `GET /healthz` → 200 `OK!`.
-- Hosted LOOP agent on Render Postgres (`01m1aaemb86czjax2v232nxygf`) will **not** copy. Re-import Luna after Heroku Postgres exists.
+- Hosted LOOP agent on Render Postgres (`01m1aaemb86czjax2v232nxygf`) **does copy** if you `heroku pg:push` / `pg_dump`+`pg_restore` the whole database. Redis does **not** copy (peering only — leave Heroku Redis empty). Session IDs including Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz` can survive a successful restore. Empty import is only if dump/push cannot reach Render.
 - `PUBLIC_BASE_URL` stays `https://loop.heisenbug.in`.
 - **Do not Apply `render.yaml` Blueprint** on workspace `tea-ctoktrjtq21c73cufog0`.
 - Hosted TrueForge does **not** re-import LOOP on boot. See [runbook.md](runbook.md) and [heroku.md](heroku.md).
