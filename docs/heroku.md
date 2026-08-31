@@ -76,19 +76,31 @@ OIDC stays unset (no-login judges). Anyone who can reach the host is admin — s
 
 ## 4. Deploy this repo
 
-From a clone of `main` (or this branch until it merges):
+`heroku.yml` builds `Dockerfile` at the **repo root** (Heroku sets the Docker build context to the Dockerfile’s directory). Keep root `Dockerfile` identical to `deploy/trueforge.Dockerfile` (Render still uses the `deploy/` path). The image installs `ca-certificates` for Postgres TLS.
+
+Heroku Redis mini TLS still fails Node’s default verify. Set once:
 
 ```bash
-heroku git:remote -a "$APP"
-heroku container:push web -a "$APP"
-heroku container:release web -a "$APP"
-heroku ps:scale web=1 -a "$APP"
-heroku logs --tail -a "$APP"
+heroku config:set NODE_TLS_REJECT_UNAUTHORIZED=0 -a "$APP"
 ```
 
-Or in the Heroku dashboard: Deploy → GitHub → `saurabh4269/wemakedevs_agent_harness` → enable automatic deploys from `main`. Container stack reads `heroku.yml`.
+From a clone of `main` (Docker Desktop / buildx often rejects plain `docker push` to `registry.heroku.com` with `unsupported` — use Docker media types):
 
-Wake check (Heroku injects `PORT`):
+```bash
+heroku container:login
+docker buildx build \
+  --platform linux/amd64 \
+  --provenance=false --sbom=false \
+  --output "type=image,name=registry.heroku.com/$APP/web:latest,push=true,oci-mediatypes=false,compression=gzip,force-compression=true" \
+  -f Dockerfile .
+heroku container:release web -a "$APP"
+heroku ps:scale web=1 -a "$APP"
+heroku dyno:resize web=basic -a "$APP"
+```
+
+`git push heroku main` also works once root `Dockerfile` is on `main`. Or dashboard: Deploy → GitHub → `saurabh4269/wemakedevs_agent_harness` → auto-deploy `main`.
+
+Wake check (Heroku injects `PORT`; use the Web URL from `heroku apps:info` if the short `*.herokuapp.com` name does not resolve):
 
 ```bash
 curl -sS "https://$APP.herokuapp.com/healthz"
