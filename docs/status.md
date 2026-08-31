@@ -33,7 +33,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 - Hosted TrueForge does **not** re-import LOOP on boot. Image deploy ≠ live agent instructions. See [runbook.md](runbook.md).
 - Free web sleeps when idle. Ping `/healthz` first (~25–30s white "Loading application…") before a judge demo.
 - OIDC unset: anyone who can reach the server is **admin** (intended no-login judge path).
-- Fixture MCP is colocated in that image on `127.0.0.1:8788`. Image still tracks **main** until PR #9 merges.
+- Fixture MCP is colocated in that image on `127.0.0.1:8788`. Image tracks **main** (`a9200b2`); Render auto-deploys this merge.
 - Secrets stay in the Render dashboard (`sync: false`). Never commit keys.
 - Daytona sandbox providers on hosted: **Connected / `status: ready`**.
 

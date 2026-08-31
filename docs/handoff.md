@@ -32,4 +32,4 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Priority
 
-See [next.md](next.md). Short: land PR #9 after Qodo Highs 0, human-merge, re-import Luna with `LOOP_SKILL_REF=main`, film the hosted pause, publish the Field Report, then form. CodeRabbit is noise.
+See [next.md](next.md). Short: PR #9 is on `main`. Film the hosted pause, publish the Field Report, then form. CodeRabbit is noise.
