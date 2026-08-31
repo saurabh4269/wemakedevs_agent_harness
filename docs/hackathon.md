@@ -20,7 +20,7 @@ Also required:
 - Keys and personal data out of the repo **and** the video.
 - AI coding assistants allowed; **must be disclosed**. Participants must understand the code.
 
-Official page: tools should be **connected, not mocked**. LOOP's warehouse MCP is `mode:fixture` for the conversion-drop story — honest Best Use risk. Live GitHub write can stay gated. Do not claim fixtures are production.
+Official page: tools should be **connected, not mocked**. LOOP's warehouse MCP is `mode:fixture` for the conversion-drop story — honest Best Use risk. Live GitHub write can stay gated. Do not claim fixtures are production. README has a runnable **LOOP vs chat baseline** table (`npm run benchmark`) so a stranger can see the independence / freshness / never-merge gates without watching a session.
 
 ## Six equal criteria
 

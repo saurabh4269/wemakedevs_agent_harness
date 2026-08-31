@@ -27,3 +27,5 @@
 17. **Hosted import cannot replace Luna.** `hostedModelGuard` refuses a judge-host import unless `LOOP_MODEL_FQN` is `openai/gpt-5-6-luna` and the OpenAI provider id/name match.
 
 18. **Stale brief does not write.** Deploys payload includes `still_true`. If it is false, refuse a root cause and do not open a PR. Pattern stolen from Lethe ("still true?"), implemented with LOOP warehouse fields, not a fifth agent.
+
+19. **Benchmark is gates vs a chat baseline, not recovered conversion.** `npm run benchmark` / `src/benchmark.ts`. Collapsed story, stale `still_true`, merge, and prod-deploy are the comparison. Warehouse 19% stays fixture. Do not add a fake Grafana panel.

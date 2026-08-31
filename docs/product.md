@@ -8,6 +8,8 @@ Signal → three independent sources (analytics, logs, deploys) → refuse if co
 
 Independence is **code** (`src/independence.ts`) plus skill, not prompt-only. Fixture warehouse ships two stories: `independent` (conversion-drop with distinct evidence ids) and `collapsed` (same claim three times). Root must spawn subagents; it must not self-query all three warehouse tools.
 
+A chat baseline that copies one query into three labels would still open a PR. LOOP's comparison is `npm run benchmark` ([benchmark.md](benchmark.md)). It measures gates, not Grafana. Do not claim the fixture 19% as recovered production conversion.
+
 ## Tenant bug (Type A)
 
 `fixtures/tenant`: catalog rename to `*-v3`. `src/checkout.ts` still aliases `enterprise` → `enterprise-annual`, which is gone from `src/plans.ts`. Starter and pro succeed; enterprise throws `InvalidPlanId`. Sandbox patch is that one alias → `enterprise-annual-v3`.

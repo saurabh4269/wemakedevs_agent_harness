@@ -1,13 +1,52 @@
 # LOOP
 
-One TrueForge product-investigation agent for the WeMakeDevs Agent Harness Hackathon.
+One TrueForge **incident responder** for the WeMakeDevs Agent Harness Hackathon. Chat is the UI. TypeScript only.
 
-The first action of an investigation is always to spawn three named one-level subagents (analytics, logs, deploys). The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query.
-Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
-
-TrueForge chat is the UI (themed TrueForgeUI embed in apps/loop-ui). This repo is TypeScript only.
+Paste a conversion-drop. The root does not investigate itself. The first action is always to spawn three named one-level subagents — **analytics**, **logs**, **deploys**. The root does not call warehouse tools itself. Never spawn a fourth or write-capable subagent (`patcher`). LOOP refuses a root cause if those three are restatements of one query. Type A is a break (the root patches in the Daytona sandbox, or skips if there is no sandbox). Type B is an opportunity (proposal only). Only the root may call `open_draft_pr` / `flag_incident` after the independence check; those pause for a human. `request_prod_deploy` remains refuse. LOOP never merges and never prod-deploys the tenant.
 
 - **Handoff** — next agent: [docs/README.md](docs/README.md)
+- **How a judge should audit** — [docs/audit.md](docs/audit.md)
+- **Benchmark method** — [docs/benchmark.md](docs/benchmark.md)
+
+## Qualify (what a judge has to see)
+
+If it would work as a chatbot, it does not qualify. A judge has to see TrueForge:
+
+1. **MCP** — three named subagents hit `query_analytics` / `query_logs` / `query_deploys`. The root does not call `query_*`.
+2. **Sandbox** — Type A clones this public repo (the Daytona snapshot is empty) and patches `fixtures/tenant/src/checkout.ts` so `enterprise` aliases `enterprise-annual-v3`.
+3. **Pause** — root `open_draft_pr` (`merge: false`) sits on Allow/Deny.
+
+**Judge URL:** https://loop.heisenbug.in — no login. Fallback https://loop-trueforge.onrender.com. Free web sleeps; ping `/healthz` first (~30s wake). Stock TrueForge chat is enough. `apps/loop-ui` is an optional Doing / Waiting / Did rail on the same incident.
+
+Warehouse answers and the draft PR URL are **fixtures** (`mode:fixture`, not Grafana, not GitHub.com). The pause, the sandbox, and the three looks are real TrueForge. Official page wants tools connected, not mocked — that is an honest Best Use risk. We say it in the video.
+
+## Prompt
+
+In TrueForge chat, pick agent `loop` and send:
+
+> Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
+
+## Benchmark (vs a chat baseline)
+
+A chatbot that restates one query three times would still open a PR. LOOP's gates are TypeScript (`src/independence.ts`, `src/freshness.ts`, `src/write-policy.ts`). This table is policy + tenant gates, not production conversion. Warehouse answers are `mode:fixture` (not Grafana). `open_draft_pr` returns a fake URL and never talks to GitHub.com.
+
+```bash
+npm test
+npm run benchmark
+```
+
+| Scenario | Chat baseline | LOOP |
+| --- | --- | --- |
+| Three copies of one query (`LOOP_STORY=collapsed`) | Treats it as investigated; would open a PR | Refuse a root cause; no draft PR |
+| Independent conversion-drop + `deploys.still_true` | Skips warehouse tools; would still write | Independent; draft PR allowed (TrueForge pauses) |
+| Stale `deploys.still_true` (false / unknown) | Would write | Refuse the write |
+| `open_draft_pr` without `still_true: true` as a tool argument | Would write | Refuse: still_true must be true |
+| `startCheckout("enterprise")` on the shipped tenant | Throws InvalidPlanId | Throws InvalidPlanId |
+| After Type A alias `enterprise` → `enterprise-annual-v3` | Never patches; still InvalidPlanId | ok (enterprise-annual-v3) |
+| `open_draft_pr` with `merge: true` | Might merge | Refuse; merged: false |
+| `request_prod_deploy` | Would try to ship | Always refuse |
+
+Method: [docs/benchmark.md](docs/benchmark.md).
 
 ## What you need
 
@@ -218,11 +257,21 @@ Open http://localhost:8791. Set TRUEFORGE_BASE_URL=http://localhost:8791 before 
 
 ## Qodo Code Review Evidence
 
-**PR #1 is MERGED** (`f1651fa`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
+Trail on every substantive PR: branch → PR → `/agentic_review` → fix Highs (or dismiss **in the Qodo thread** with a reason) → follow-up → human merge. Direct pushes to `main` do not count. **Screenshots ≠ proof.** Public PR links are the evidence. CodeRabbit comments are not.
 
-Qodo-code-review is installed on the account. `/agentic_review` on that PR produced the review thread.
+Qodo-code-review is installed. Comment `/agentic_review` to re-run.
 
-Qodo findings and status:
+| PR | Merged | What | Qodo |
+| --- | --- | --- | --- |
+| [#1](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1) | `f1651fa` | Agent spec, fixture MCP, skills, import | Highs fixed (URL logging redacted; engines `>=22.14.0`; MCP `attach()` 500; FQN exactly `provider/name`). Follow-up **Bugs (0)**. |
+| [#2](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2) | `e221fb05` | LOOP TrueForgeUI shell | Highs fixed (workspaces install `loop-ui`; unauthenticated client, URL only). Follow-up **Bugs (0)**. |
+| [#5](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/5) | `42734a2` | Empty-cwd clone + MUST `open_draft_pr` | `/agentic_review`. Rules noted; product kept three named subagents. |
+| [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `8b6b043` | Organizer extras + previous-winners | `/agentic_review` (docs). |
+| [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `25fd7a0` | Hosted TrueForge on Render | `/agentic_review`. |
+| [#8](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/8) | `93882ac` | Living handoff + auto-deploy on `main` | `/agentic_review` (docs). |
+| [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `a9200b2` | Hosted Luna + Type A harden + `still_true` | First pass **Bugs (6)**. Fixed: missing look fails closed; no duplicate named child; judge-host import errors without `OPENAI_API_KEY`. Dismissed in-thread: “autonomous subagents” (that is the product — three one-level looks) and “forbidden Luna” (stale Nemotron `:free` rule; OpenRouter free models 503’d then hit the daily cap). |
+
+**PR #1 detail** (first meaningful hackathon code): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/1
 
 | Finding | Severity | Status |
 | --- | --- | --- |
@@ -230,11 +279,9 @@ Qodo findings and status:
 | Node engines below TrueForge SDK (`>=20.19` vs SDK `>=22`) | Medium | Fixed (`package.json` `engines.node` is `>=22.14.0`) |
 | Uncaught MCP `attach()` rejections on fixture POST routes | Medium | Fixed (catch and 500 if headers not sent) |
 | Loose model FQN check (any string with `/`) | Medium | Fixed (exactly `provider/name`, two non-empty ResourceName segments) |
-| Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed in this commit (root lockfile metadata now `>=22.14.0`) |
+| Lockfile retains old engine (`package-lock.json` still `>=20.19.0`) | Medium | Fixed (root lockfile metadata now `>=22.14.0`) |
 
-**PR #2 is MERGED** (`e221fb05`): https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2
-
-Qodo follow-up on head `8c96416`: **Bugs (0)**.
+**PR #2 detail:** https://github.com/saurabh4269/wemakedevs_agent_harness/pull/2 — follow-up on `8c96416` **Bugs (0)**.
 
 | Finding | Severity | Status |
 | --- | --- | --- |
@@ -243,23 +290,16 @@ Qodo follow-up on head `8c96416`: **Bugs (0)**.
 | `trueForgeServer` merges config (object spread) | Rule | Fixed (explicit `{ type, baseUrl }` object) |
 | `deriveLoopStatus` spreads state | Rule | Fixed (explicit field copy from `EMPTY_STATUS`) |
 
-To re-run the review, comment:
-
-```text
-/agentic_review
-```
-
-The `/agentic_review` comments plus the review threads on PR #1 and PR #2 are the hackathon evidence.
-
 ## Layout
 
 ```text
 agents/loop.json          TrueForge agent { name, manifest }
 scripts/import-loop.ts    SDK import
+scripts/benchmark.ts      LOOP vs chat baseline table
 skills/*/SKILL.md         git-backed skills
 fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
-src/                      independence, write policy, spec checks
+src/                      independence, freshness, write policy, benchmark, spec
 tests/
 docs/                     agent handoff (start at docs/README.md)
 apps/loop-ui/             Vite TrueForgeUI embed (agent loop)
