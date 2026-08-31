@@ -50,6 +50,17 @@ Pick agent `loop`. Send this and nothing else:
 5. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
 6. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
 
+## Spoken voiceover
+
+Screen-share English. Not a pitch. Point at the picture.
+
+1. Okay so — checkout conversion dropped about nineteen percent since Friday afternoon, desktop Chrome. That's what we're looking at. LOOP is one TrueForge agent. You just talk to it in chat.
+2. I paste that in. It doesn't go query everything itself. It kicks off three threads — analytics, logs, and deploys. You can see them under Agent Steps. Analytics is the funnel, desktop Chrome, since Friday. Logs are what's actually erroring, in which file. Deploys are what shipped that afternoon. So you're not getting the same sentence three times.
+3. The warehouse numbers — those are fixtures. I want to be straight about that. The pause you're about to see, the sandbox, these three threads — that's real.
+4. What broke is pretty small. They renamed the catalog and the enterprise alias was still pointing at the old plan id. Sandbox starts empty, so it clones the repo, opens checkout.ts, and points enterprise at enterprise-annual-v-three.
+5. Then it tries to open a draft PR. Merge is off. And it just stops. Allow and Deny are sitting there. I'm not clicking them. Someone has to hit Allow. It never merges. It never deploys prod.
+6. If I refresh... still there. Same pause. So that's the whole thing — three threads, a patch in the sandbox, and a human on the PR.
+
 ## Remotion take (Screen Studio vibe)
 
 Composition lives in `apps/loop-demo`. It frames the hosted Luna PASS as a floating Safari window on Sequoia-style golden-hour wallpaper (padding, rounded chrome, drop shadow, traffic lights). Voiceover is `gpt-4o-mini-tts` / `cedar`, conversational founder walkthrough (not a trailer voice). Duration **93s**. MP4 in git: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4).

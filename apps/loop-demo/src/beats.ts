@@ -10,79 +10,80 @@ export type Caption = {
 };
 
 /**
- * Spoken beats. Written like a person walking a friend through the product —
- * not a trailer voice. Timestamps come from generate-voiceover.ts.
+ * Spoken beats. Screen-share English, not pitch-deck English.
+ * Point at what's on screen. No slogans. No internal skill names.
  */
 export const VOICEOVER_BEATS: { id: string; text: string }[] = [
   {
     id: "open",
-    text: "Hey — so checkout conversion dropped about nineteen percent since Friday afternoon, desktop Chrome. LOOP is our incident responder. One TrueForge agent. Chat is the UI.",
+    text: "Okay so — checkout conversion dropped about nineteen percent since Friday afternoon, desktop Chrome. That's what we're looking at. LOOP is one TrueForge agent. You just talk to it in chat.",
   },
   {
     id: "looks",
-    text: "You just paste that signal. LOOP doesn't go hunting by itself. It spins up three looks — analytics, logs, and deploys — each with a different question. Watch Agent Steps. Analytics gives you the metric, the funnel step, the segment. Logs give you the error, the file, the timestamp, the count. Deploys pin the service, the time it shipped, that catalog v-three rollout Friday afternoon.",
+    text: "I paste that in. It doesn't go query everything itself. It kicks off three threads — analytics, logs, and deploys. You can see them under Agent Steps. Analytics is the funnel, desktop Chrome, since Friday. Logs are what's actually erroring, in which file. Deploys are what shipped that afternoon. So you're not getting the same sentence three times.",
   },
   {
     id: "fixtures",
-    text: "Quick honest bit. Those warehouse answers are fixtures. We say that out loud. The pause, the Daytona sandbox, and the three named looks are real.",
+    text: "The warehouse numbers — those are fixtures. I want to be straight about that. The pause you're about to see, the sandbox, these three threads — that's real.",
   },
   {
     id: "sandbox",
-    text: "Independence holds, so this is a Type A break. Catalog got renamed, and the enterprise alias was still pointing at a plan that doesn't exist anymore. Daytona snapshot is empty — that's normal. LOOP clones the public harness, then patches checkout so enterprise aliases enterprise-annual-v-three.",
+    text: "What broke is pretty small. They renamed the catalog and the enterprise alias was still pointing at the old plan id. Sandbox starts empty, so it clones the repo, opens checkout.ts, and points enterprise at enterprise-annual-v-three.",
   },
   {
     id: "pause",
-    text: "Then the write. LOOP opens a draft PR, merge off. Allow and Deny just sit there in Agent Steps. We don't click. Writes wait for a person. LOOP never merges. LOOP never deploys prod.",
+    text: "Then it tries to open a draft PR. Merge is off. And it just stops. Allow and Deny are sitting there. I'm not clicking them. Someone has to hit Allow. It never merges. It never deploys prod.",
   },
   {
     id: "lesson",
-    text: "Refresh... and the pause is still there. A human owns the write. Three looks, a sandbox patch, a person on the PR. That's LOOP.",
+    text: "If I refresh... still there. Same pause. So that's the whole thing — three threads, a patch in the sandbox, and a human on the PR.",
   },
 ];
 
-/** Steering for gpt-4o-mini-tts. Keep this in git so the VO is reproducible. */
-export const VOICEOVER_INSTRUCTIONS = `Voice: young adult male founder, warm, close-mic, like a Loom walkthrough to a friend.
-Accent: natural international English with a light Indian cadence. Do not put on a British narrator or American radio announcer.
-Delivery: conversational, slightly smiling, thinking out loud. Short breaths between thoughts. Not a movie trailer. Not a documentary.
-Pace: unhurried, everyday talking speed. Emphasize product words the way a person would, not in all-caps.
-If this clip is one section of a longer demo, continue the same energy — don't restart like a new take.`;
+/** Steering for gpt-4o-mini-tts. */
+export const VOICEOVER_INSTRUCTIONS = `You are a young male founder screen-sharing with a teammate, not presenting on a stage.
+Accent: natural Indian English. Relaxed. Do not sound American-radio or British-narrator.
+Delivery: like a Loom. Think out loud. Shrink the ends of sentences. Tiny pauses where a person would breathe.
+Do NOT sound like marketing copy. Do NOT punch every noun. Do NOT smile-voice or movie-trailer.
+Pace: talking speed, a little messy is good. Contractions. "gonna" energy even if the text says "going to".
+This is one continuous take. Don't restart energy between paragraphs.`;
 
 export const CAPTIONS: Caption[] = [
   {
     startSec: 0.2,
-    endSec: 10.9,
-    kicker: "INCIDENT",
-    line: "Checkout conversion dropped ~19% on desktop Chrome",
+    endSec: 11.1,
+    kicker: "THE DROP",
+    line: "Checkout conversion, Friday, desktop Chrome",
   },
   {
-    startSec: 10.9,
-    endSec: 35.5,
-    kicker: "THREE LOOKS",
-    line: "analytics · logs · deploys — root does not self-investigate",
+    startSec: 11.1,
+    endSec: 31.4,
+    kicker: "AGENT STEPS",
+    line: "analytics, logs, deploys — three different questions",
   },
   {
-    startSec: 35.5,
-    endSec: 44.7,
-    kicker: "HONEST",
-    line: "Warehouse + GitHub are fixtures. Pause, sandbox, looks are real.",
+    startSec: 31.4,
+    endSec: 40.5,
+    kicker: "NOTE",
+    line: "Warehouse numbers are fixtures. Pause and sandbox are real.",
   },
   {
-    startSec: 44.7,
-    endSec: 63.5,
-    kicker: "TYPE A",
-    line: "Clone the harness. Patch enterprise → enterprise-annual-v3",
+    startSec: 40.5,
+    endSec: 53.9,
+    kicker: "THE FIX",
+    line: "Clone the repo. Point enterprise at enterprise-annual-v3",
   },
   {
-    startSec: 63.5,
-    endSec: 75.1,
-    kicker: "WRITES WAIT",
-    line: "open_draft_pr · merge false · do not click Approve",
+    startSec: 53.9,
+    endSec: 64.9,
+    kicker: "IT STOPS",
+    line: "Draft PR, merge off. Not clicking Allow.",
   },
   {
-    startSec: 75.1,
-    endSec: 83.0,
-    kicker: "LESSON",
-    line: "Three looks. A sandbox patch. A person on the PR.",
+    startSec: 64.9,
+    endSec: 72.3,
+    kicker: "STILL THERE",
+    line: "Refresh. Same pause. A person owns the write.",
   },
 ];
 
@@ -96,12 +97,12 @@ export type Zoom = {
 };
 
 export const ZOOMS: Zoom[] = [
-  { startSec: 0, endSec: 10.9, scale: 1, x: 0, y: 0 },
-  { startSec: 10.9, endSec: 35.5, scale: 1.08, x: 16, y: -8 },
-  { startSec: 35.5, endSec: 44.7, scale: 1.04, x: 0, y: 4 },
-  { startSec: 44.7, endSec: 63.5, scale: 1.1, x: -10, y: 12 },
-  { startSec: 63.5, endSec: 75.1, scale: 1.12, x: 8, y: 16 },
-  { startSec: 75.1, endSec: 83.0, scale: 1.02, x: 0, y: 0 },
+  { startSec: 0, endSec: 11.1, scale: 1, x: 0, y: 0 },
+  { startSec: 11.1, endSec: 31.4, scale: 1.08, x: 16, y: -8 },
+  { startSec: 31.4, endSec: 40.5, scale: 1.04, x: 0, y: 4 },
+  { startSec: 40.5, endSec: 53.9, scale: 1.1, x: -10, y: 12 },
+  { startSec: 53.9, endSec: 64.9, scale: 1.12, x: 8, y: 16 },
+  { startSec: 64.9, endSec: 83.0, scale: 1.02, x: 0, y: 0 },
 ];
 
 export const TITLE_SECONDS = 4.5;
