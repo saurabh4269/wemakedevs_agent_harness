@@ -76,7 +76,9 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 30. **Subagents must not call `get_current_datetime` or `exec`.** Hosted session `01m1b2226f575dw2j3z0bwc3gx` retried analytics/logs correctly and never asked the user, but each subagent burned a datetime (and analytics burned an exec) before the warehouse tool. NVIDIA `:free` then 503'd deploys (`Upstream error from Nvidia: Service temporarily overloaded`) and the turn died. One-tool briefs only.
 
-31. **How to talk to hosted TrueForge** (no login):
+31. **After the alias patch, do not run `npx`.** Hosted session `01m1b281j4khan5aqjnf8xy9nq` spawned all three in one message, retried analytics, cloned, and patched `enterprise` → `enterprise-annual-v3`. Then it burned the rest of the turn looking for Node/`npx` (the snapshot has neither) and NVIDIA 503'd before `open_draft_pr`. Next tool after the v3 alias is the write.
+
+32. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
     - `POST /sessions` body `{"agent":{"name":"loop"}}`
     - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`

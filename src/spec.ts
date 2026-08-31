@@ -133,8 +133,13 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
   },
   {
     id: "must-open-draft-pr",
-    re: /MUST call the MCP tool open_draft_pr with merge false/,
+    re: /MUST be the MCP tool open_draft_pr with merge false/,
     message: "Type A must call open_draft_pr, not write next steps",
+  },
+  {
+    id: "no-npx-after-patch",
+    re: /Do not run npx, node, or a tenant check/,
+    message: "after the alias patch, do not run npx",
   },
   {
     id: "sandbox-created-exists",

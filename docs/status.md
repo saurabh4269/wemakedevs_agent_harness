@@ -78,7 +78,9 @@ Gen UI and Code Mode did **not** appear on the passing run. Spark extras, not qu
 
 This PR turns `ask_user_questions` **off** so Nemotron cannot bail that way.
 
-Hosted retry `01m1b2226f575dw2j3z0bwc3gx` / turn `01m1b226wcx97fymfrf49sk49n.xswmv9` (2026-08-31 ~04:43 UTC): did **not** call `ask_user_question`. Retried `analytics` and `logs` after NVIDIA overload; both then called `query_*` and finished. `deploys` hit `Upstream error from Nvidia: Service temporarily overloaded` and the turn died before a second deploys retry. Subagents had wasted tokens on `get_current_datetime` / `exec`. **Do not Approve/Deny.** Follow-up commit locks subagent briefs to one warehouse tool. Local 4.1-mini remains the proven film source.
+Hosted retry `01m1b2226f575dw2j3z0bwc3gx` (2026-08-31 ~04:43 UTC): no `ask_user_question`; retried analytics/logs; deploys 503'd. **Do not Approve/Deny.**
+
+Hosted retry `01m1b281j4khan5aqjnf8xy9nq` / turn `01m1b281mjk2s2w504qbqyceb5.xswmv9` (2026-08-31 ~04:46 UTC): three `create_sub_agent` in one message; each thread called only its `query_*`; analytics retried once; clone + **patched** `enterprise` → `enterprise-annual-v3`. Then wasted execs on `npx` (snapshot has no Node) and NVIDIA 503'd before `open_draft_pr`. **Do not Approve/Deny.** Follow-up: next tool after the v3 alias is the write. Local 4.1-mini remains the proven film source.
 
 Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](learnings.md).
 

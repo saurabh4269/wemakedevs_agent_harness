@@ -42,8 +42,8 @@ enterprise: "enterprise-annual-v3",
 
 Do not rewrite starter/pro aliases that already point at `*-v3`. Do not treat a failed `cp` as a missing sandbox.
 
-4. Re-run the tiny tenant check if the sandbox allows it (`npx --yes tsx src/checkout.ts` from `wemakedevs_agent_harness/fixtures/tenant`). Enterprise must succeed with `enterprise-annual-v3`.
-5. Then the **root** calls `open_draft_pr` (license-to-write). That call **pauses**. Do not claim "no sandbox" and skip the pause after a failed `cp`.
+4. Do **not** run `npx`, `node`, or `tsx`. The Daytona snapshot often has no Node. Skip the tenant check.
+5. The **next** tool call is the **root** `open_draft_pr` (license-to-write), `merge: false`. That call **pauses**. Do not keep `exec`'ing. Do not claim "no sandbox" and skip the pause after a failed `cp`.
 6. Measure: what signal should recover (checkout conversion, InvalidPlanId count).
 7. Lesson: one short paragraph — what we believed, what the three sources showed, what we changed.
 
