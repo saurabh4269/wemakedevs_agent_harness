@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~20:25 UTC**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~20:50 UTC**.
 
 ## PRs
 
@@ -27,8 +27,8 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 
 ### Judge host
 
-- **Judge URL:** https://loop.heisenbug.in — keep this.
-- **Live host is Heroku app `loop-trueforge`.** Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com. `GET /healthz` → 200 `OK!` on the herokuapp URL.
+- **Judge URL:** https://loop.heisenbug.in — keep this. `GET /healthz` → 200 `OK!` (Heroku ACM issued).
+- **Live host is Heroku app `loop-trueforge`.** Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com.
 - Stack: container, Basic web dyno (not Eco), Postgres `essential-0` **17**, Redis `mini` (empty peering; not ported).
 - **Render Postgres was ported** into Heroku `DATABASE_URL` (agent `loop`, skills, MCP connectors, Daytona provider, sessions including Luna PASS). Skip Redis.
 - Previous Render web `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is **suspended** (billing). Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until you no longer need a re-dump.
@@ -43,8 +43,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 
 - `thexplorers.xyz` is **expired**. Do not rely on `loop.thexplorers.xyz`.
 - `heisenbug.in` is Cloudflare. Apex and `www` stay on Vercel — **never touch `@` or `www`**.
-- Heroku domain added: CNAME target **`developmental-anteater-y5490gf0d9oxp62bi3yra5aa.herokudns.com`**.
-- **Blocker:** Cloudflare CNAME `loop` still points at `loop-trueforge.onrender.com`. No Cloudflare API token in this environment. Edit CNAME `loop` only → Heroku DNS target above, **DNS only (grey cloud)**. Then confirm `https://loop.heisenbug.in/healthz` is 200.
+- Cloudflare CNAME `loop` → **`developmental-anteater-y5490gf0d9oxp62bi3yra5aa.herokudns.com`** (DNS only / grey cloud). ACM **Cert issued**. Never touch `@` or `www`.
 
 ### Local (keep running)
 
@@ -88,7 +87,7 @@ Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](
 ## Form / demo URLs (draft)
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness
-- Deployed: https://loop.heisenbug.in (DNS cutover pending). Heroku fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com. Cutover notes: [heroku.md](heroku.md).
+- Deployed: https://loop.heisenbug.in (Heroku). Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com. Cutover notes: [heroku.md](heroku.md).
 - Video field is **YouTube**, ≤3 min. File in git: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4). Shot list: [demo.md](demo.md). Placeholder https://vimeo.com/1222508816 is the **wrong host** — replace.
 - Blog draft: [blog.md](blog.md). Live URL https://saurabh4269.github.io/blog/trueforge-harness/ is still 404 until the MDX is published to `saurabh4269.github.io`.
 - Form answers: [form.md](form.md). Not submitted.
