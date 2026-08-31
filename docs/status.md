@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~21:05 UTC**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~21:10 UTC**.
 
 ## PRs
 
@@ -31,6 +31,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 - **Judge URL:** https://loop.heisenbug.in — keep this. `GET /healthz` → 200 `OK!` (Heroku ACM issued).
 - **Live host is Heroku app `loop-trueforge`.** Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com.
 - Stack: container, Basic web dyno (not Eco), Postgres `essential-0` **17**, **in-image** Redis on `127.0.0.1:6379` (Heroku Redis mini destroyed — saves ~$3/mo).
+- **CI/CD:** push to `main` → GitHub Actions `.github/workflows/deploy-heroku.yml` builds/pushes/releases. Secret `HEROKU_API_KEY` lives in GitHub Actions secrets only.
 - **Cost:** ~$12/mo list (fits GitHub Education Heroku credit). Eco would sleep — do not switch for the judge URL.
 - **Render Postgres was ported** into Heroku `DATABASE_URL` (agent `loop`, skills, MCP connectors, Daytona provider, sessions including Luna PASS).
 - Previous Render web `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is **suspended** (billing). Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until you no longer need a re-dump.
