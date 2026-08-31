@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~20:50 UTC**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~21:05 UTC**.
 
 ## PRs
 
@@ -20,8 +20,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#12](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/12) | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Merged** (`b92908a`). |
 | [#13](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/13) | `cursor/heroku-pg-port-7d0f` | Port Render Postgres onto Heroku (skip Redis) | **Merged** (`50846b7`). |
 | [#14](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/14) | `cursor/record-pr-13-7d0f` | Record PR #13 on `main` | **Merged** (`df21a40`). |
+| [#15](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/15) | `cursor/heroku-standup-7d0f` | Heroku stand-up docs + root Dockerfile TLS | **Merged** (`ddc9651`). |
 
-`origin/main` tip at last rewrite: `df21a40`. Heroku app **`loop-trueforge`** is live. Render Postgres was **ported** onto Heroku Postgres 17 (`pg_dump`/`pg_restore`; Redis skipped). Do not store `HEROKU_API_KEY` or dumps in git.
+`origin/main` tip at last rewrite: see latest merge. Heroku app **`loop-trueforge`** is live. Render Postgres was **ported**. Peering Redis is **colocated** in the web image (no `heroku-redis:mini`). Bill ≈ Basic $7 + essential-0 $5 ≈ **$12/mo**. Do not store `HEROKU_API_KEY` or dumps in git.
 
 ## Live TrueForge
 
@@ -29,12 +30,13 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 
 - **Judge URL:** https://loop.heisenbug.in — keep this. `GET /healthz` → 200 `OK!` (Heroku ACM issued).
 - **Live host is Heroku app `loop-trueforge`.** Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com.
-- Stack: container, Basic web dyno (not Eco), Postgres `essential-0` **17**, Redis `mini` (empty peering; not ported).
-- **Render Postgres was ported** into Heroku `DATABASE_URL` (agent `loop`, skills, MCP connectors, Daytona provider, sessions including Luna PASS). Skip Redis.
+- Stack: container, Basic web dyno (not Eco), Postgres `essential-0` **17**, **in-image** Redis on `127.0.0.1:6379` (Heroku Redis mini destroyed — saves ~$3/mo).
+- **Cost:** ~$12/mo list (fits GitHub Education Heroku credit). Eco would sleep — do not switch for the judge URL.
+- **Render Postgres was ported** into Heroku `DATABASE_URL` (agent `loop`, skills, MCP connectors, Daytona provider, sessions including Luna PASS).
 - Previous Render web `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is **suspended** (billing). Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until you no longer need a re-dump.
 - `PUBLIC_BASE_URL` stays `https://loop.heisenbug.in`. OIDC unset.
 - Hosted model: OpenAI GPT-5.6 Luna. Secrets in `heroku config` only. Never commit keys.
-- Dyno needs system CAs in the image plus `NODE_TLS_REJECT_UNAUTHORIZED=0` for Heroku Redis TLS.
+- `NODE_TLS_REJECT_UNAUTHORIZED=0` remains for Heroku Postgres TLS verify (Node does not use system CAs by default).
 - **Do not Apply `render.yaml` Blueprint** on workspace `tea-ctoktrjtq21c73cufog0`.
 - Fixture MCP colocated on `127.0.0.1:8788`.
 - Hosted session IDs (including Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`) survived the restore. Do not Approve/Deny listed film sessions.

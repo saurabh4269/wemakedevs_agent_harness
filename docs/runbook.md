@@ -9,5 +9,6 @@ Full commands live in the root [README.md](../README.md) (local install, fixture
 - Render web `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is suspended (billing). Do not Apply the Blueprint on workspace `tea-ctoktrjtq21c73cufog0`. Render Postgres was ported; keep it until you no longer need a re-dump.
 - Wake: `GET /healthz` → `OK!`.
 - Image deploy does not re-import LOOP. Postgres was ported ([heroku.md](heroku.md) §6); Redis skipped. After `agents/loop.json` or skills change, optional import against the judge URL with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_ID` / `OPENAI_MODEL_NAME`. `import-loop.ts` refuses a judge-host import that is not that FQN.
-- Secrets: `/home/box/.secrets/loop-trueforge.env`. Never echo. Never commit. Heroku: `heroku config` only (`NODE_TLS_REJECT_UNAUTHORIZED=0` for Redis TLS).
+- Secrets: `/home/box/.secrets/loop-trueforge.env`. Never echo. Never commit. Heroku: `heroku config` only (`NODE_TLS_REJECT_UNAUTHORIZED=0` for Postgres TLS; `REDIS_URL=redis://127.0.0.1:6379` colocated).
 - DNS: CNAME `loop` → `developmental-anteater-y5490gf0d9oxp62bi3yra5aa.herokudns.com` (grey cloud). ACM issued. Never touch apex or `www`.
+- Cost: Basic + essential-0 ≈ $12/mo. No `heroku-redis:mini`.

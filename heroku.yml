@@ -6,8 +6,8 @@
 setup:
   addons:
     # Create with --version 17 on the CLI so restore from Render Postgres 17 works.
+    # Redis is colocated in the web image (redis://127.0.0.1:6379) — skip heroku-redis:mini (~$3/mo).
     - plan: heroku-postgresql:essential-0
-    - plan: heroku-redis:mini
 build:
   docker:
     web: Dockerfile

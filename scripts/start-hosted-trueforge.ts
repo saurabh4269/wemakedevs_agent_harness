@@ -1,8 +1,9 @@
 import { spawn, type ChildProcess } from "node:child_process";
+import net from "node:net";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { colocatedFixtureEnv, fixtureListenBind } from "../fixtures/mcp/listen.js";
-import { applyHostedPlatformEnv } from "../src/hosted-env.js";
+import { applyHostedPlatformEnv, usesColocatedRedis } from "../src/hosted-env.js";
 
 applyHostedPlatformEnv(process.env);
 
@@ -24,6 +25,32 @@ function spawnFixture(): ChildProcess {
   return spawn("npx", ["tsx", fixtureEntry], { env: fixtureEnv, stdio: "inherit", cwd: root });
 }
 
+function spawnColocatedRedis(): ChildProcess {
+  // Ephemeral peering only — no RDB/AOF on the dyno filesystem.
+  return spawn(
+    "redis-server",
+    ["--bind", "127.0.0.1", "--port", "6379", "--save", "", "--appendonly", "no", "--protected-mode", "yes"],
+    { stdio: "inherit" },
+  );
+}
+
+async function waitForTcp(host: string, port: number, attempts = 40): Promise<void> {
+  for (let i = 0; i < attempts; i += 1) {
+    const ok = await new Promise<boolean>((resolve) => {
+      const socket = net.connect({ host, port }, () => {
+        socket.end();
+        resolve(true);
+      });
+      socket.on("error", () => resolve(false));
+    });
+    if (ok) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error(`Colocated Redis did not accept connections on ${host}:${port}`);
+}
+
 async function waitForHealth(url: string, attempts = 40): Promise<void> {
   for (let i = 0; i < attempts; i += 1) {
     try {
@@ -39,27 +66,44 @@ async function waitForHealth(url: string, attempts = 40): Promise<void> {
   throw new Error(`Fixture MCP did not become healthy at ${url}`);
 }
 
+const children: ChildProcess[] = [];
+let redis: ChildProcess | undefined;
+if (usesColocatedRedis(process.env)) {
+  redis = spawnColocatedRedis();
+  children.push(redis);
+  await waitForTcp("127.0.0.1", 6379);
+}
+
 const fixture = spawnFixture();
+children.push(fixture);
 let trueforge: ChildProcess | undefined;
 let shuttingDown = false;
+
+function killChildren(signal: NodeJS.Signals = "SIGTERM"): void {
+  for (const child of children) {
+    child.kill(signal);
+  }
+  trueforge?.kill(signal);
+}
 
 function shutdown(exitCode = 1): void {
   if (shuttingDown) {
     return;
   }
   shuttingDown = true;
-  fixture.kill("SIGTERM");
-  trueforge?.kill("SIGTERM");
+  killChildren("SIGTERM");
   process.exit(exitCode);
 }
 
-fixture.on("exit", (code, signal) => {
-  if (shuttingDown) {
-    return;
-  }
-  process.stderr.write(`Fixture MCP exited unexpectedly code=${code} signal=${signal}\n`);
-  shutdown(code && code > 0 ? code : 1);
-});
+for (const child of children) {
+  child.on("exit", (code, signal) => {
+    if (shuttingDown) {
+      return;
+    }
+    process.stderr.write(`Sidecar exited unexpectedly code=${code} signal=${signal}\n`);
+    shutdown(code && code > 0 ? code : 1);
+  });
+}
 
 await waitForHealth(healthUrl);
 
@@ -67,8 +111,7 @@ trueforge = spawn("trueforge", [], { stdio: "inherit", env: process.env });
 
 function forward(signal: NodeJS.Signals): void {
   shuttingDown = true;
-  fixture.kill(signal);
-  trueforge?.kill(signal);
+  killChildren(signal);
 }
 
 process.on("SIGTERM", () => forward("SIGTERM"));
@@ -80,6 +123,6 @@ trueforge.on("exit", (code) => {
     return;
   }
   shuttingDown = true;
-  fixture.kill("SIGTERM");
+  killChildren("SIGTERM");
   process.exit(code ?? 1);
 });
