@@ -16,7 +16,7 @@ If it would work as a chatbot, it does not qualify. A judge has to see TrueForge
 2. **Sandbox** — Type A clones this public repo (the Daytona snapshot is empty) and patches `fixtures/tenant/src/checkout.ts` so `enterprise` aliases `enterprise-annual-v3`.
 3. **Pause** — root `open_draft_pr` (`merge: false`) sits on Allow/Deny.
 
-**Judge URL:** https://loop.heisenbug.in — no login. Stock TrueForge chat is enough. `apps/loop-ui` is an optional Doing / Waiting / Did rail on the same incident. Render free is exhausted; Heroku stand-up: [docs/heroku.md](docs/heroku.md).
+**Judge URL:** https://loop.heisenbug.in — no login. Stock TrueForge chat is enough. `apps/loop-ui` is an optional Doing / Waiting / Did rail on the same incident. Live host is **Heroku** (`loop-trueforge`): [docs/heroku.md](docs/heroku.md).
 
 Warehouse answers and the draft PR URL are **fixtures** (`mode:fixture`, not Grafana, not GitHub.com). The pause, the sandbox, and the three looks are real TrueForge. Official page wants tools connected, not mocked — that is an honest Best Use risk. We say it in the video.
 

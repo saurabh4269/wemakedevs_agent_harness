@@ -8,7 +8,7 @@ Start here: root [AGENTS.md](../AGENTS.md), then this index, then [learnings.md]
 | --- | --- |
 | [learnings.md](learnings.md) | Pitfalls and the fix for each. Read after AGENTS.md. |
 | [runbook.md](runbook.md) | How to run locally, deploy, import, wake, DNS. Commands. No secrets. |
-| [heroku.md](heroku.md) | Move the judge host off exhausted Render free onto Heroku credits. |
+| [heroku.md](heroku.md) | Live judge host on Heroku. Postgres port, colocated Redis, Actions deploy. |
 | [status.md](status.md) | **Living.** PRs, live host, sessions, blockers. Rewrite, do not append. |
 | [next.md](next.md) | Ordered remaining work. |
 | [hackathon.md](hackathon.md) | Official rules, tracks, Qodo trail, qualify trio |
