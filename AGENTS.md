@@ -41,7 +41,7 @@ Spawn exactly three **one-level** subagents. Distinct questions. Subagents do no
 
 If independent, skill `type-a-vs-b`:
 
-- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo). Empty cwd with no `wemakedevs_agent_harness/` is the **normal case and still clones**. If that dir exists without `checkout.ts`, `rm -rf` then clone. Clone at most twice. If still missing, skip and say clone failed — do not loop, do not fabricate tenant sources. Patch `fixtures/tenant/src/checkout.ts` (`enterprise` alias `enterprise-annual` → `enterprise-annual-v3`). Then the root **MUST** call MCP `open_draft_pr` with `merge: false`. A written next-steps list is not a substitute. Skipping the write because the cwd looked empty is forbidden.
+- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo). Empty cwd with no `wemakedevs_agent_harness/` is the **normal case and still clones**. If that dir exists without `checkout.ts`, `rm -rf` then clone. Clone at most twice. If still missing, skip and say clone failed — do not loop, do not fabricate tenant sources. Patch `fixtures/tenant/src/checkout.ts` (`enterprise` alias `enterprise-annual` → `enterprise-annual-v3`). Then the root **MUST** call native MCP `open_draft_pr` with `merge: false` and `still_true: true` (not `call_tool`). A written next-steps list is not a substitute. Skipping the write because the cwd looked empty is forbidden.
 - **Type B** (opportunity): proposal only. Do not patch production.
 
 Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.
@@ -77,7 +77,7 @@ Full commands: [docs/runbook.md](docs/runbook.md).
 - **Judge host:** https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Render web `loop-trueforge` tracks **`main`** with **`autoDeployTrigger: commit`**. Merge to main deploys the image. **Do not Apply the Blueprint.**
 - **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
 - TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
-- Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
+- Prefer OpenAI GPT-5.6 Luna on the judge host. Local film may stay OpenRouter 4.1-mini. NVIDIA NIM is backup locally. Daytona required for skills/sandbox.
 
 ## What NOT to build
 

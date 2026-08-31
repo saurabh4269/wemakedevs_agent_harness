@@ -43,7 +43,7 @@ enterprise: "enterprise-annual-v3",
 Do not rewrite starter/pro aliases that already point at `*-v3`. Do not treat a failed `cp` as a missing sandbox.
 
 4. Do **not** run `npx`, `node`, or `tsx`. The Daytona snapshot often has no Node. Skip the tenant check.
-5. The **next** tool call is the **root** `open_draft_pr` (license-to-write), `merge: false`, `still_true: true`. That call **pauses**. Do not keep `exec`'ing. Do not claim "no sandbox" and skip the pause after a failed `cp`.
+5. The **next** tool call is the **root** native `open_draft_pr` (license-to-write), `merge: false`, `still_true: true` as a tool argument. That call **pauses**. Do not wrap it in `call_tool`. Do not call `list_tools` or `get_tool_info`. Do not keep `exec`'ing. Do not claim "no sandbox" and skip the pause after a failed `cp`.
 6. Measure: what signal should recover (checkout conversion, InvalidPlanId count).
 7. Lesson: one short paragraph — what we believed, what the three sources showed, what we changed.
 

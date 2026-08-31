@@ -82,11 +82,17 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 33. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
-    - `POST /sessions` body `{"agent":{"name":"loop"}}`
-    - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`
-    - `GET /sessions/{id}/events?limit=100` newest first
+    - `POST /sessions` body `{"agent":{"name":"loop"}}` — session id is `data.id`
+    - `POST /sessions/{id}/turns` body `{"input":[{"type":"user.message","content":"..."}]}`. `message.parts` is ignored and yields `Invalid prompt: messages must not be empty`.
+    - `GET /sessions/{id}/events?limit=100` newest first. Max limit is **100**. Payload is `{data:[{turn_id, event}]}`.
     - MAY allow non-github pauses (sandbox `exec`) so the run can reach the write
-    - NEVER allow `open_draft_pr` / `flag_incident` / `request_prod_deploy` on film sessions
+    - NEVER allow `open_draft_pr` / `flag_incident` / `request_prod_deploy` on film sessions. Treat `call_tool` wrapping `loop-github` / `open_draft_pr` as a write — leave it sitting.
+
+34. **Native MCP, not `call_tool`.** Hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz` spawned the three looks, cloned, patched v3, emitted OpenUI, then paused on system `call_tool` → `loop-github` / `open_draft_pr` (`merge: false`). The pause is real, but Agent Steps show `call_tool`. Instructions and skills now require native `open_draft_pr` with `still_true: true` as a **tool argument**, and forbid `list_tools` / `get_tool_info`.
+
+35. **Do not Approve hosted Luna PASS** `01m1b50dbbh3vgy6brbaw5vsaz`. Film it. Same rule as the local 4.1-mini PASS.
+
+36. **OpenAI key in chat.** Rotate if the transcript is shared. Keep it in gitignored `.env` / Render `sync: false`. Never commit it.
 
 ## Organizers (short)
 

@@ -33,11 +33,19 @@ export function freshnessFromUnknown(value: unknown): DeployFreshness | undefine
 export function mayOpenDraftPr(input: {
   storyFreshness: unknown;
   claimedStillTrue?: boolean;
+  requestedStory?: string;
+  envStory?: string;
 }): { ok: boolean; error?: string } {
   if (input.claimedStillTrue !== true) {
     return {
       ok: false,
       error: "still_true must be true to open a draft PR.",
+    };
+  }
+  if (input.requestedStory === "collapsed" || input.envStory === "collapsed") {
+    return {
+      ok: false,
+      error: "collapsed story refuses a write.",
     };
   }
   const freshness = freshnessFromUnknown(input.storyFreshness);

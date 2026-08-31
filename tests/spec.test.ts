@@ -11,6 +11,7 @@ import {
   REQUIRED_SUBAGENTS,
   TRUEFORGE_HAS_PER_SUBAGENT_TOOLS,
   hostedModelGuard,
+  shouldRegisterBackupProviders,
   validateLoopAgent,
   type SavedAgent,
 } from "../src/spec.js";
@@ -69,6 +70,9 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/retry that exact name once/);
     expect(instructions).toMatch(/still_true is false/);
     expect(instructions).toMatch(/Do not call get_current_datetime, exec, or any other tool/);
+    expect(instructions).toMatch(/Never wrap query_analytics, query_logs, query_deploys, or open_draft_pr in call_tool/);
+    expect(instructions).toMatch(/Pass still_true: true as a tool argument/);
+    expect(instructions).toMatch(/Do not call list_tools or get_tool_info/);
   });
 
   it("refuses a hosted import that is not OpenAI GPT-5.6 Luna", () => {
@@ -89,6 +93,9 @@ describe("LOOP agent spec shape", () => {
       }),
     ).toMatch(/OpenAI/);
     expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
+    expect(shouldRegisterBackupProviders("https://loop.heisenbug.in")).toBe(false);
+    expect(shouldRegisterBackupProviders("https://loop-trueforge.onrender.com")).toBe(false);
+    expect(shouldRegisterBackupProviders("http://localhost:8790")).toBe(true);
   });
 
   it("rejects a spec that turns ask_user_questions back on", () => {
@@ -123,6 +130,8 @@ describe("LOOP agent spec shape", () => {
     expect(typeA).toMatch(/rm -rf/);
     expect(typeA).toMatch(/At most two clone attempts/);
     expect(typeA).toMatch(/fabricated tenant sources/);
+    expect(typeA).toMatch(/Do not wrap it in `call_tool`/);
+    expect(typeA).toMatch(/still_true: true` as a tool argument/);
     expect(typeA).not.toMatch(/Keep trying until that file exists/);
     expect(typeA).not.toMatch(/write the known tenant sources/);
   });

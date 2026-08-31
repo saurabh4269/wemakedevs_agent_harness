@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TrueForge } from "@truefoundry/trueforge-sdk";
 import type { SavedAgent } from "../src/spec.js";
-import { hostedModelGuard, validateLoopAgent } from "../src/spec.js";
+import { hostedModelGuard, shouldRegisterBackupProviders, validateLoopAgent } from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -87,6 +87,10 @@ async function registerOpenAI(baseUrl: string): Promise<void> {
 }
 
 async function registerOpenRouter(baseUrl: string): Promise<void> {
+  if (!shouldRegisterBackupProviders(baseUrl)) {
+    process.stdout.write("OpenRouter provider: skipped on judge host (LOOP uses openai/gpt-5-6-luna)\n");
+    return;
+  }
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     process.stdout.write("OpenRouter provider: skipped (OPENROUTER_API_KEY unset)\n");
@@ -113,6 +117,10 @@ async function registerOpenRouter(baseUrl: string): Promise<void> {
 }
 
 async function registerNvidia(baseUrl: string): Promise<void> {
+  if (!shouldRegisterBackupProviders(baseUrl)) {
+    process.stdout.write("NVIDIA NIM provider: skipped on judge host (LOOP uses openai/gpt-5-6-luna)\n");
+    return;
+  }
   const apiKey = process.env.NVIDIA_API_KEY;
   const modelId = process.env.NVIDIA_MODEL_ID;
   const modelName = process.env.NVIDIA_MODEL_NAME;

@@ -34,9 +34,8 @@ Dynamic subagents share the root tool set. There is no per-subagent `enable_tool
 ## Hosted vs local
 
 - **Judges:** https://loop.heisenbug.in — LOOP agent `01m1aaemb86czjax2v232nxygf`, OpenAI GPT-5.6 Luna (`openai/gpt-5-6-luna`).
-- **Film source (do not click):** local session `01m1a87xjewncn310ymqy3yz01` on `[::1]:8790` (4.1-mini). Qualify PASS. Never Approve/Deny that session.
+- **Film source (do not click):** hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz` at https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz. Backup: local session `01m1a87xjewncn310ymqy3yz01` on `[::1]:8790` (4.1-mini). Never Approve/Deny those sessions.
 
+- **Hosted FAIL, do not retry:** `01m1advv5np7mqwse1xf2hdpyc` (empty-cwd skip); `01m1ayqn9563da3mgerw6nwpq5` (asked the user); ignore empty `01m1ayra0m7tdj5rphtnsqevyw`. `ask_user_questions` stays off.
 
-- **Hosted FAIL, do not retry:** `01m1advv5np7mqwse1xf2hdpyc` (empty-cwd skip, no `open_draft_pr`); `01m1ayqn9563da3mgerw6nwpq5` (asked the user about subagent overload; no clone, no pause). Ignore empty `01m1ayra0m7tdj5rphtnsqevyw`. `ask_user_questions` is now off so a new hosted session cannot bail that way.
-
-Free OpenRouter: do not use Luna or paid 4.1-mini on the hosted agent.
+Hosted model is OpenAI GPT-5.6 Luna. Local film may stay 4.1-mini.

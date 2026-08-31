@@ -8,8 +8,24 @@ describe("deploy brief freshness", () => {
     expect(fresh.still_true).toBe(true);
     expect(briefStillTrue(freshnessFromUnknown(fresh))).toBe(true);
     expect(payloadFor("deploys", "independent").still_true).toBe(true);
-    expect(mayOpenDraftPr({ storyFreshness: fresh }).ok).toBe(false);
-    expect(mayOpenDraftPr({ storyFreshness: fresh, claimedStillTrue: true }).ok).toBe(true);
+    expect(mayOpenDraftPr({ storyFreshness: deployFreshness("independent") }).ok).toBe(false);
+    expect(mayOpenDraftPr({ storyFreshness: deployFreshness("independent"), claimedStillTrue: true }).ok).toBe(true);
+    expect(
+      mayOpenDraftPr({
+        storyFreshness: deployFreshness("independent"),
+        claimedStillTrue: true,
+        requestedStory: "collapsed",
+        envStory: "independent",
+      }).ok,
+    ).toBe(false);
+    expect(
+      mayOpenDraftPr({
+        storyFreshness: deployFreshness("independent"),
+        claimedStillTrue: true,
+        requestedStory: "independent",
+        envStory: "collapsed",
+      }).ok,
+    ).toBe(false);
   });
 
   it("blocks a stale or missing brief", () => {

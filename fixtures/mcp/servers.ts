@@ -89,8 +89,7 @@ export function createGithubServer(): McpServer {
         merge: z.boolean().optional().describe("Must stay false. LOOP never merges."),
         still_true: z
           .boolean()
-          .optional()
-          .describe("Must be true. Stale deploys.still_true refuses a write."),
+          .describe("Must be true as a tool argument. Stale deploys.still_true refuses a write."),
         scenario: z
           .enum(["independent", "collapsed"])
           .optional()
@@ -110,9 +109,13 @@ export function createGithubServer(): McpServer {
           true,
         );
       }
+      const envStory = defaultStory();
+      const requestedStory = resolveStory(scenario);
       const freshnessGate = mayOpenDraftPr({
-        storyFreshness: deployFreshness(resolveStory(scenario)),
+        storyFreshness: deployFreshness(envStory),
         claimedStillTrue: still_true,
+        requestedStory,
+        envStory,
       });
       if (!freshnessGate.ok) {
         return jsonResult(

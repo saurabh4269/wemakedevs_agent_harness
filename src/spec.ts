@@ -28,6 +28,14 @@ export function isJudgeHost(hostname: string): boolean {
   return host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
 }
 
+export function shouldRegisterBackupProviders(baseUrl: string): boolean {
+  try {
+    return !isJudgeHost(new URL(baseUrl).hostname);
+  } catch {
+    return true;
+  }
+}
+
 export function hostedModelGuard(
   baseUrl: string,
   modelFqn: string | undefined,
@@ -158,6 +166,21 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     id: "no-npx-after-patch",
     re: /Do not run npx, node, or a tenant check/,
     message: "after the alias patch, do not run npx",
+  },
+  {
+    id: "native-mcp-not-call-tool",
+    re: /Never wrap query_analytics, query_logs, query_deploys, or open_draft_pr in call_tool/,
+    message: "warehouse and github tools must be native MCP calls, not call_tool",
+  },
+  {
+    id: "still-true-tool-arg",
+    re: /Pass still_true: true as a tool argument/,
+    message: "open_draft_pr must pass still_true as a tool argument",
+  },
+  {
+    id: "no-list-tools",
+    re: /Do not call list_tools or get_tool_info/,
+    message: "after the three looks, do not list_tools",
   },
   {
     id: "sandbox-created-exists",

@@ -60,9 +60,9 @@ The first local run spawned `type-a-vs-b` as a fourth subagent. That is a skill,
 
 The first hosted conversion-drop saw `sandbox.created`, then skipped the patch because the Daytona cwd was empty. Empty is normal. The snapshot has no repo. We taught the root to clone even when `wemakedevs_agent_harness/` is missing, at most twice, and then it **must** call `open_draft_pr`. A written next-steps list is not a substitute.
 
-The second hosted run actually got analytics, logs, and deploys. Then Nemotron Super `:free` called `ask_user_question` about "service overload" and stopped. No clone. No pause. We turned `ask_user_questions` off. If a named subagent fails, retry that exact name once, then continue. Never ask the user during an investigation.
+Hosted now runs OpenAI GPT-5.6 Luna. `import-loop.ts` refuses a judge-host import that is not `openai/gpt-5-6-luna`. The hosted conversion-drop on Luna cloned the tenant, patched the alias, and sat on a draft-PR pause.
 
-Hosted import defaults to `gpt-4.1-mini` unless you pass the Nemotron env vars. Our OpenRouter account has no credits. `import-loop.ts` now refuses a judge-host import that would replace the free model.
+The second hosted run actually got analytics, logs, and deploys. Then Nemotron Super `:free` called `ask_user_question` about "service overload" and stopped. No clone. No pause. We turned `ask_user_questions` off. If a named subagent fails, retry that exact name once, then continue. Never ask the user during an investigation.
 
 ## What we did not build
 
