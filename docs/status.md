@@ -17,7 +17,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | **Merged** (`a9200b2`). |
 | [#10](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/10) | `cursor/judge-demo-remotion-7d0f` | Remotion judge demo: Safari on Sequoia wallpaper + conversational cedar VO | **Merged** (`7020bd6`). |
 | [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
-| this branch | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Open**. |
+| [#12](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/12) | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Open**. |
 
 `origin/main` tip at last rewrite: `b2d9c87`. Heroku deploy is CLI/dashboard; do not store `HEROKU_API_KEY` in git. Re-import LOOP after the new Postgres exists.
 
