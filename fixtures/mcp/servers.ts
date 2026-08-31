@@ -91,10 +91,14 @@ export function createGithubServer(): McpServer {
           .boolean()
           .optional()
           .describe("Must be true. Stale deploys.still_true refuses a write."),
+        scenario: z
+          .enum(["independent", "collapsed"])
+          .optional()
+          .describe("Must match the warehouse story. collapsed refuses a write."),
       },
       annotations: GITHUB_TOOLS[0].annotations,
     },
-    async ({ title, body, branch, merge, still_true }) => {
+    async ({ title, body, branch, merge, still_true, scenario }) => {
       if (merge) {
         return jsonResult(
           {
@@ -107,7 +111,7 @@ export function createGithubServer(): McpServer {
         );
       }
       const freshnessGate = mayOpenDraftPr({
-        storyFreshness: deployFreshness(defaultStory()),
+        storyFreshness: deployFreshness(resolveStory(scenario)),
         claimedStillTrue: still_true,
       });
       if (!freshnessGate.ok) {

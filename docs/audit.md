@@ -33,7 +33,7 @@ Dynamic subagents share the root tool set. There is no per-subagent `enable_tool
 
 ## Hosted vs local
 
-- **Judges:** https://loop.heisenbug.in — LOOP agent `01m1aaemb86czjax2v232nxygf`, OpenRouter Nemotron Super `:free` (`openrouter/nemotron-3-super-120b-a12b-free`).
+- **Judges:** https://loop.heisenbug.in — LOOP agent `01m1aaemb86czjax2v232nxygf`, OpenAI GPT-5.6 Luna (`openai/gpt-5-6-luna`).
 - **Film source (do not click):** local session `01m1a87xjewncn310ymqy3yz01` on `[::1]:8790` (4.1-mini). Qualify PASS. Never Approve/Deny that session.
 
 

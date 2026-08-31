@@ -26,7 +26,7 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 - Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`), Oregon free. Dashboard: https://dashboard.render.com/web/srv-daaaa65g1s2s73cjsq0g
 - Fallback: https://loop-trueforge.onrender.com — keep it. Do not disable the onrender subdomain.
 - `GET /healthz` → 200 `OK!` (checked 2026-08-31).
-- Hosted LOOP agent `01m1aaemb86czjax2v232nxygf`, model `openrouter/nemotron-3-super-120b-a12b-free`. Re-import after this PR merges (or against this branch with `LOOP_SKILL_REF`). `import-loop.ts` now refuses a judge-host upsert that is not that FQN. `agents/loop.json` sets `max_tokens: 8192` and `ask_user_questions.enabled: false`.
+- Hosted LOOP agent `01m1aaemb86czjax2v232nxygf`, model `openai/gpt-5-6-luna` (`reasoning_effort: none`). `import-loop.ts` refuses a judge-host upsert that is not that FQN. `agents/loop.json` sets `max_tokens: 4096`, `ask_user_questions.enabled: false`, `iteration_limit: 40`.
 - `PUBLIC_BASE_URL` is `https://loop.heisenbug.in`.
 - Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`) available, free, Oregon. Redis `loop-redis` (`red-daaa7ohsrm7s73ed64mg`) available. Project `loop` `prj-daaa8g5g1s2s73cjo950`, env production `evm-daaa8g5g1s2s73cjo95g`. Workspace `tea-ctoktrjtq21c73cufog0`.
 - **CI/CD:** live service tracks branch **`main`**, `autoDeploy: yes`, `autoDeployTrigger: commit`. **Do not Apply `render.yaml` Blueprint** on this workspace.

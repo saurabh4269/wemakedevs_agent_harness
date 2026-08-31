@@ -1,10 +1,10 @@
 # Next
 
-Ordered remaining work. Rewrite when the top item changes. Last rewrite: **2026-08-31 ~10:55 IST**.
+Ordered remaining work. Rewrite when the top item changes. Last rewrite: **2026-08-31 ~11:00 IST**.
 
-1. **Land PR #9** (`cursor/hosted-qualify-harden-7d0f`). Wait for Qodo `/agentic_review` Highs 0, then merge. Merge auto-deploys the image. Re-import LOOP against https://loop.heisenbug.in with the Nemotron `:free` env only after the OpenRouter free-per-day cap resets (session `01m1b2hank3g4jyxqxqysdappp` hit 429). Do not put paid `gpt-4.1-mini` on hosted.
-2. **YouTube ≤3 min** from the **local** PASS (`01m1a87xjewncn310ymqy3yz01` on `[::1]:8790`). Prompt → three named looks → Daytona clone/patch → sitting Approve. Stock TrueForge UI. Say fixtures out loud. Do not click Approve until after the take. Hosted is the same product; today's free-model cap blocked a fresh hosted pause.
-3. **Publish the Field Report.** Copy [blog.md](blog.md) to `saurabh4269.github.io` as `content/trueforge-harness.mdx` (this environment cannot push that repo). URL: https://saurabh4269.github.io/blog/trueforge-harness/
-4. **Form** when repo + Qodo trail + video exist. Answers: [form.md](form.md). Live URL https://loop.heisenbug.in.
+1. **Land PR #9** after Qodo Highs 0. Human merge (Qodo trail). Merge auto-deploys the image. Hosted agent is already imported as `openai/gpt-5-6-luna` against this branch's skills — re-import after merge with `LOOP_SKILL_REF=main`.
+2. **YouTube ≤3 min.** Prefer a fresh hosted pause on https://loop.heisenbug.in if the Luna qualify run is sitting. Else film the local PASS (`01m1a87xjewncn310ymqy3yz01`). Do not click Approve until after the take.
+3. **Publish the Field Report** to `saurabh4269.github.io` as `content/trueforge-harness.mdx`.
+4. **Form** when video exists. Answers: [form.md](form.md).
 
-Do not reuse hosted FAIL / rate-limit sessions. Do not Approve/Deny the local film pause until after the take. TypeScript only. Qodo on every substantive PR.
+Do not Approve/Deny listed FAIL / film sessions. TypeScript only. Qodo on every substantive PR.

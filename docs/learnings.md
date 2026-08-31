@@ -26,9 +26,9 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 10. **`main` auto-deploys.** Live service tracks branch `main`, `autoDeployTrigger: commit` (PATCHed 2026-08-31; previously `feat/render-host` + autoDeploy off). Env-only PUT does not restart a process. Merge to main deploys the **image**. Do not add a GitHub Action that stores `RENDER_API_KEY` in git.
 
-11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change, run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with the Nemotron `:free` env (see [runbook.md](runbook.md)). Dockerfile-only changes do not need re-import.
+11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change, run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. Dockerfile-only changes do not need re-import.
 
-12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Hosted must pass `OPENROUTER_MODEL_ID=nvidia/nemotron-3-super-120b-a12b:free`, `OPENROUTER_MODEL_NAME=nemotron-3-super-120b-a12b-free`, `LOOP_MODEL_FQN=openrouter/nemotron-3-super-120b-a12b-free`. Without those it replaces the free provider. Last import also dropped `model.params.max_tokens: 8192` because `agents/loop.json` only has `temperature: 0.2`.
+12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Judge host must pass `LOOP_MODEL_FQN=openai/gpt-5-6-luna`, `OPENAI_MODEL_ID=gpt-5.6-luna`, `OPENAI_MODEL_NAME=gpt-5-6-luna`. `hostedModelGuard` refuses anything else on `loop.heisenbug.in` / `loop-trueforge.onrender.com`.
 
 13. **Free instance sleeps.** Ping `GET /healthz` first (~25–30s white "Loading application…") before a judge or a demo.
 
@@ -40,7 +40,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 ## Models / keys
 
-17. **User OpenRouter is FREE ($0 credits).** Hosted model is Nemotron Super `:free`. Do not use `openai/gpt-5.6-luna`. Do not put paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini until that sitting pause is no longer the film source.
+17. **Hosted is OpenAI GPT-5.6 Luna** (cost-tier of the family, `$0.20 / $1.20` per MTok, `reasoning_effort: none`). OpenRouter `:free` Nemotron 503'd then hit `free-models-per-day`. Do not put Sol/Terra or paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini.
 
 18. **Do not kill local TrueForge on `[::1]:8790`.** IPv6. `127.0.0.1:8790` may miss it. SQLite path `/home/box/.local/trueforge/db.sqlite`. Sitting pause `01m1a87xjewncn310ymqy3yz01` lives there.
 
@@ -70,7 +70,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 27. **`ask_user_question` is not a pause.** Hosted Nemotron called it after the three looks and stopped. That is not the qualify beat. `ask_user_questions.enabled` is **false**. Instructions: do not call it; retry a failed named subagent once; then continue. Do not turn it back on to "be helpful."
 
-28. **Hosted import can clobber the free model.** `import-loop.ts` defaults OpenRouter to `gpt-4.1-mini`. Judge host must pass the Nemotron `:free` FQN. `hostedModelGuard` now throws if the base URL is `loop.heisenbug.in` / `loop-trueforge.onrender.com` and the FQN is anything else.
+28. **Hosted import can clobber the judge model.** Judge host must pass the Luna FQN + OpenAI model id/name. `hostedModelGuard` throws otherwise.
 
 29. **Stale brief.** `deploys.still_true === false` means the SHA / plan catalog in the brief no longer matches. Refuse a root cause. Do not open a PR.
 
@@ -78,7 +78,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 31. **After the alias patch, do not run `npx`.** Hosted session `01m1b281j4khan5aqjnf8xy9nq` spawned all three in one message, retried analytics, cloned, and patched `enterprise` → `enterprise-annual-v3`. Then it burned the rest of the turn looking for Node/`npx` (the snapshot has neither) and NVIDIA 503'd before `open_draft_pr`. Next tool after the v3 alias is the write.
 
-32. **OpenRouter `:free` has a daily request cap.** Hosted session `01m1b2hank3g4jyxqxqysdappp` died immediately: `429 Rate limit exceeded: free-models-per-day`. Do not buy credits to "fix" this during the demo. Film the local 4.1-mini PASS. Do not put paid `gpt-4.1-mini` on hosted.
+32. **OpenRouter `:free` has a daily request cap.** Hosted session `01m1b2hank3g4jyxqxqysdappp` died immediately: `429 Rate limit exceeded: free-models-per-day`. Hosted now uses OpenAI GPT-5.6 Luna. Film the local 4.1-mini PASS if you still need that sitting still.
 
 33. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`

@@ -62,6 +62,30 @@ function redacted(ok: boolean): string {
   return ok ? "present (not printed)" : "missing";
 }
 
+async function registerOpenAI(baseUrl: string): Promise<void> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    process.stdout.write("OpenAI provider: skipped (OPENAI_API_KEY unset)\n");
+    return;
+  }
+  const modelId = process.env.OPENAI_MODEL_ID ?? "gpt-5.6-luna";
+  const modelName = process.env.OPENAI_MODEL_NAME ?? "gpt-5-6-luna";
+  await putSettings(baseUrl, "/api/v1/settings/model-providers", {
+    manifest: {
+      type: "openai",
+      auth: { api_key: apiKey },
+      models: [
+        {
+          model_id: modelId,
+          name: modelName,
+          properties: { context_length: 400000, max_output_tokens: 16384 },
+        },
+      ],
+    },
+  });
+  process.stdout.write(`OpenAI provider: upserted as openai/${modelName} (key ${redacted(true)})\n`);
+}
+
 async function registerOpenRouter(baseUrl: string): Promise<void> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -198,8 +222,8 @@ async function main(): Promise<void> {
   }
 
   const hostedGuard = hostedModelGuard(baseUrl, raw.manifest.model.name, {
-    modelId: process.env.OPENROUTER_MODEL_ID,
-    modelName: process.env.OPENROUTER_MODEL_NAME,
+    modelId: process.env.OPENAI_MODEL_ID,
+    modelName: process.env.OPENAI_MODEL_NAME,
   });
   if (hostedGuard) {
     throw new Error(hostedGuard);
@@ -217,6 +241,7 @@ async function main(): Promise<void> {
   });
 
   process.stdout.write(`TrueForge: ${baseUrl}\n`);
+  await registerOpenAI(baseUrl);
   await registerOpenRouter(baseUrl);
   await registerNvidia(baseUrl);
   await registerDaytona(baseUrl);

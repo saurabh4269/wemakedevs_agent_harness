@@ -34,17 +34,17 @@ export function mayOpenDraftPr(input: {
   storyFreshness: unknown;
   claimedStillTrue?: boolean;
 }): { ok: boolean; error?: string } {
+  if (input.claimedStillTrue !== true) {
+    return {
+      ok: false,
+      error: "still_true must be true to open a draft PR.",
+    };
+  }
   const freshness = freshnessFromUnknown(input.storyFreshness);
   if (!briefStillTrue(freshness)) {
     return {
       ok: false,
       error: "stale brief: deploys.still_true is false. Refuse a write.",
-    };
-  }
-  if (input.claimedStillTrue === false) {
-    return {
-      ok: false,
-      error: "stale brief: still_true was false. Refuse a write.",
     };
   }
   return { ok: true };

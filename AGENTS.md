@@ -21,7 +21,7 @@ Hackathon hero card is **Incident responder**. That is this product.
 5. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
 6. **Do not Apply `render.yaml`** on workspace `tea-ctoktrjtq21c73cufog0`. It would duplicate Postgres/Redis. The live web service already exists.
 7. **Do not Approve/Deny** film/qualify sessions listed in [docs/status.md](docs/status.md).
-8. **Hosted model stays OpenRouter `:free` Nemotron.** User OpenRouter account has $0 credits. Do not use `openai/gpt-5.6-luna` or paid `gpt-4.1-mini` on the hosted agent.
+8. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier. `reasoning_effort: none`. Do not use Sol/Terra on hosted. Local film agent may stay on 4.1-mini.
 9. **Do not touch** `heisenbug.in` apex or `www` (Vercel). Only the `loop` CNAME is ours.
 10. **Do not mention** prior control-plane work, Goodman, or Bhoonaksha in README, form, or judge-facing copy.
 
@@ -75,7 +75,7 @@ Full commands: [docs/runbook.md](docs/runbook.md).
 
 - **Local film host:** `npx @truefoundry/trueforge@latest` on `[::1]:8790` (SQLite). **Do not kill it.** Local agent `loop` is `openrouter/gpt-4.1-mini`. Do not PUT that model off 4.1-mini while the sitting pause is the film source.
 - **Judge host:** https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Render web `loop-trueforge` tracks **`main`** with **`autoDeployTrigger: commit`**. Merge to main deploys the image. **Do not Apply the Blueprint.**
-- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with the Nemotron `:free` env vars in the runbook. `import-loop.ts` defaults OpenRouter upsert to `openai/gpt-4.1-mini` — without those env vars it replaces the free hosted model.
+- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
 - TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
 - Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 

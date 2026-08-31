@@ -16,9 +16,12 @@ export const REQUIRED_SUBAGENTS = ["analytics", "logs", "deploys"] as const;
 /** TrueForge AgentSpec has no per-subagent MCP enable/disable. DynamicSubAgentsConfig is only `{ enabled }`. */
 export const TRUEFORGE_HAS_PER_SUBAGENT_TOOLS = false;
 
-export const HOSTED_FREE_MODEL_FQN = "openrouter/nemotron-3-super-120b-a12b-free";
-export const HOSTED_FREE_OPENROUTER_MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free";
-export const HOSTED_FREE_OPENROUTER_MODEL_NAME = "nemotron-3-super-120b-a12b-free";
+export const HOSTED_MODEL_FQN = "openai/gpt-5-6-luna";
+export const HOSTED_OPENAI_MODEL_ID = "gpt-5.6-luna";
+export const HOSTED_OPENAI_MODEL_NAME = "gpt-5-6-luna";
+
+/** @deprecated Use HOSTED_MODEL_FQN. Kept so older tests/docs grep still resolve. */
+export const HOSTED_FREE_MODEL_FQN = HOSTED_MODEL_FQN;
 
 export function isJudgeHost(hostname: string): boolean {
   const host = hostname.replace(/\.+$/, "").toLowerCase();
@@ -39,13 +42,13 @@ export function hostedModelGuard(
   if (!isJudgeHost(host)) {
     return undefined;
   }
-  if (modelFqn !== HOSTED_FREE_MODEL_FQN) {
-    return `hosted TrueForge must keep ${HOSTED_FREE_MODEL_FQN}`;
+  if (modelFqn !== HOSTED_MODEL_FQN) {
+    return `hosted TrueForge must keep ${HOSTED_MODEL_FQN}`;
   }
   const modelId = provider?.modelId ?? "";
   const modelName = provider?.modelName ?? "";
-  if (modelId !== HOSTED_FREE_OPENROUTER_MODEL_ID || modelName !== HOSTED_FREE_OPENROUTER_MODEL_NAME) {
-    return `hosted OpenRouter provider must be ${HOSTED_FREE_OPENROUTER_MODEL_ID} named ${HOSTED_FREE_OPENROUTER_MODEL_NAME}`;
+  if (modelId !== HOSTED_OPENAI_MODEL_ID || modelName !== HOSTED_OPENAI_MODEL_NAME) {
+    return `hosted OpenAI provider must be ${HOSTED_OPENAI_MODEL_ID} named ${HOSTED_OPENAI_MODEL_NAME}`;
   }
   return undefined;
 }
@@ -148,7 +151,7 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
   },
   {
     id: "must-open-draft-pr",
-    re: /MUST be the MCP tool open_draft_pr with merge false/,
+    re: /MUST be the MCP tool open_draft_pr with merge false and still_true true/,
     message: "Type A must call open_draft_pr, not write next steps",
   },
   {

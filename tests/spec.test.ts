@@ -37,7 +37,9 @@ describe("LOOP agent spec shape", () => {
     expect(agent.manifest.config?.dynamic_sub_agents?.enabled).toBe(true);
     expect(agent.manifest.config?.generative_ui?.enabled).toBe(true);
     expect(agent.manifest.config?.ask_user_questions?.enabled).toBe(false);
-    expect(agent.manifest.model.params?.max_tokens).toBe(8192);
+    expect(agent.manifest.model.params?.max_tokens).toBe(4096);
+    expect(agent.manifest.model.params?.reasoning_effort).toBe("none");
+    expect(agent.manifest.config?.iteration_limit).toBe(40);
     expect(agent.manifest.skills?.map((skill) => skill.name)).toEqual([...LOOP_SKILL_NAMES]);
     const parts = agent.manifest.model.name.split("/");
     expect(parts).toHaveLength(2);
@@ -69,27 +71,23 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/Do not call get_current_datetime, exec, or any other tool/);
   });
 
-  it("refuses a hosted import that would replace the free Nemotron model", () => {
-    const freeProvider = {
-      modelId: "nvidia/nemotron-3-super-120b-a12b:free",
-      modelName: "nemotron-3-super-120b-a12b-free",
+  it("refuses a hosted import that is not OpenAI GPT-5.6 Luna", () => {
+    const luna = {
+      modelId: "gpt-5.6-luna",
+      modelName: "gpt-5-6-luna",
     };
-    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, freeProvider)).toBeUndefined();
-    expect(
-      hostedModelGuard("https://loop.heisenbug.in.", HOSTED_FREE_MODEL_FQN, freeProvider),
-    ).toBeUndefined();
-    expect(
-      hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN, freeProvider),
-    ).toBeUndefined();
-    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini", freeProvider)).toMatch(
-      /nemotron/,
+    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in.", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini", luna)).toMatch(
+      /gpt-5-6-luna/,
     );
     expect(
       hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, {
         modelId: "openai/gpt-4.1-mini",
         modelName: "gpt-4.1-mini",
       }),
-    ).toMatch(/OpenRouter/);
+    ).toMatch(/OpenAI/);
     expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
   });
 
@@ -115,7 +113,7 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/do not write fabricated tenant sources/);
     expect(instructions).not.toMatch(/Keep trying until that file exists/);
     expect(instructions).toMatch(/empty cwd with no wemakedevs_agent_harness/);
-    expect(instructions).toMatch(/MUST be the MCP tool open_draft_pr with merge false/);
+    expect(instructions).toMatch(/MUST be the MCP tool open_draft_pr with merge false and still_true true/);
     expect(instructions).toMatch(/Do not run npx, node, or a tenant check/);
     const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
     expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
