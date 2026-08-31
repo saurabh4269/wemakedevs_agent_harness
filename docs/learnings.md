@@ -78,7 +78,9 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 31. **After the alias patch, do not run `npx`.** Hosted session `01m1b281j4khan5aqjnf8xy9nq` spawned all three in one message, retried analytics, cloned, and patched `enterprise` → `enterprise-annual-v3`. Then it burned the rest of the turn looking for Node/`npx` (the snapshot has neither) and NVIDIA 503'd before `open_draft_pr`. Next tool after the v3 alias is the write.
 
-32. **How to talk to hosted TrueForge** (no login):
+32. **OpenRouter `:free` has a daily request cap.** Hosted session `01m1b2hank3g4jyxqxqysdappp` died immediately: `429 Rate limit exceeded: free-models-per-day`. Do not buy credits to "fix" this during the demo. Film the local 4.1-mini PASS. Do not put paid `gpt-4.1-mini` on hosted.
+
+33. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
     - `POST /sessions` body `{"agent":{"name":"loop"}}`
     - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`
