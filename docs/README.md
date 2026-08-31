@@ -16,7 +16,7 @@ Start here: root [AGENTS.md](../AGENTS.md), then this index, then [learnings.md]
 | [product.md](product.md) | LOOP decisions and honest limits |
 | [handoff.md](handoff.md) | Team, secrets *path*, form URLs |
 | [decisions.md](decisions.md) | Numbered ADRs |
-| [demo.md](demo.md) | Judge-facing 3-min shot list + Remotion take |
+| [demo.md](demo.md) | Judge-facing 3-min shot list + Remotion take. MP4: [demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4) |
 | [audit.md](audit.md) | Real vs fixture; qualify beats; how a judge should audit |
 | [form.md](form.md) | Submission form constraints + human draft answers |
 | [blog.md](blog.md) | Field report (publish to github.io `/blog/trueforge-harness/`) |
