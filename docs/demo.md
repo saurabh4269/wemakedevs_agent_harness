@@ -49,4 +49,4 @@ Pick agent `loop`. Send this and nothing else:
 4. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
 5. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
 
-PR #1–#3 merged. Living state: [status.md](status.md).
+PR #1–#3 and #5–#7 merged. Living state: [status.md](status.md).

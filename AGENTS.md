@@ -1,8 +1,8 @@
 # AGENTS.md
 
-Operating system for any coding agent in this repo. Read this first. Then [docs/README.md](docs/README.md). Live state: [docs/status.md](docs/status.md).
+Operating system for any coding agent in this repo. Read this first. Then [docs/README.md](docs/README.md). Live state: [docs/status.md](docs/status.md). Pitfalls: [docs/learnings.md](docs/learnings.md). How to run/deploy: [docs/runbook.md](docs/runbook.md). Remaining work: [docs/next.md](docs/next.md).
 
-Keep `docs/` current. Rewrite [docs/status.md](docs/status.md) when PRs, blockers, or URLs change. Do not append chat dumps.
+Keep `docs/` current. Rewrite [docs/status.md](docs/status.md) when PRs, blockers, or URLs change. Do not append chat dumps. Do not commit secrets.
 
 ## What LOOP is
 
@@ -16,15 +16,20 @@ Hackathon hero card is **Incident responder**. That is this product.
 
 1. **TypeScript only.** `.ts` / `.tsx`. `"type": "module"`. Strict `tsconfig`. No Python product code. No untyped JS.
 2. **No Cursor CloudAgent** unless Saurabh explicitly asks. Work in this repo with `gh` as `saurabh4269`.
-3. **No secrets in git.** Never commit `.env`, `node_modules`, keys. `.env.example` keeps empty slots. Box secrets path: `/home/box/.secrets/loop-trueforge.env`. Do not echo that file.
+3. **No secrets in git.** Never commit `.env`, `node_modules`, keys. `.env.example` keeps empty slots. Box secrets path: `/home/box/.secrets/loop-trueforge.env`. Do not echo that file. Render keys stay `sync: false` in the dashboard.
 4. **Qodo PR trail.** Branch → PR → `/agentic_review` → fix Highs → follow-up review. Direct pushes to `main` do not count as the Qodo evidence trail.
 5. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
+6. **Do not Apply `render.yaml`** on workspace `tea-ctoktrjtq21c73cufog0`. It would duplicate Postgres/Redis. The live web service already exists.
+7. **Do not Approve/Deny** film/qualify sessions listed in [docs/status.md](docs/status.md).
+8. **Hosted model stays OpenRouter `:free` Nemotron.** User OpenRouter account has $0 credits. Do not use `openai/gpt-5.6-luna` or paid `gpt-4.1-mini` on the hosted agent.
+9. **Do not touch** `heisenbug.in` apex or `www` (Vercel). Only the `loop` CNAME is ours.
+10. **Do not mention** prior control-plane work, Goodman, or Bhoonaksha in README, form, or judge-facing copy.
 
 ## Architecture
 
 Root coordinates. Root does **not** investigate itself. Root does **not** call `query_*` as direct tools. After the three subagents return: OpenUI (chart + table + Type A/B card) and Code Mode aggregations (`mcp_client`, no `open_draft_pr` in the script).
 
-Spawn exactly three **one-level** subagents. Distinct questions. Subagents do not ask the user.
+Spawn exactly three **one-level** subagents. Distinct questions. Subagents do not ask the user. **Never spawn skill names as subagents** (`type-a-vs-b`, `three-source-independence`, `license-to-write`). Loading a skill is not `create_sub_agent`.
 
 | Subagent | Tool | Must contribute |
 | --- | --- | --- |
@@ -36,16 +41,16 @@ Spawn exactly three **one-level** subagents. Distinct questions. Subagents do no
 
 If independent, skill `type-a-vs-b`:
 
-- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo), patch `fixtures/tenant/src/checkout.ts`, call `open_draft_pr` (pauses). A failed `cp fixtures/tenant` is not "no sandbox". Measure, write a lesson.
+- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo). Empty cwd with no `wemakedevs_agent_harness/` is the **normal case and still clones**. If that dir exists without `checkout.ts`, `rm -rf` then clone. Clone at most twice. If still missing, skip and say clone failed — do not loop, do not fabricate tenant sources. Patch `fixtures/tenant/src/checkout.ts` (`enterprise` alias `enterprise-annual` → `enterprise-annual-v3`). Then the root **MUST** call MCP `open_draft_pr` with `merge: false`. A written next-steps list is not a substitute. Skipping the write because the cwd looked empty is forbidden.
 - **Type B** (opportunity): proposal only. Do not patch production.
 
 Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.
 
-**Fixture MCP** is `mode:fixture`. Warehouse `@read-only`. GitHub connector is fake. Official page wants tools **connected, not mocked** — fixture warehouse is an honest Best Use risk. Conversion-drop story stays on fixtures; live GitHub write can stay gated. Do not pretend fixtures are production.
+**Fixture MCP** is `mode:fixture`. Warehouse `@read-only`. GitHub connector is fake (`html_url` is `https://github.example.invalid/loop-tenant/pull/42`). Official page wants tools **connected, not mocked** — fixture warehouse is an honest Best Use risk. Say this out loud in the video. Do not pretend fixtures are production.
 
-**Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. Root spec still splits servers (`loop-warehouse` `@read-only`; `loop-github` named writes + `require_approval_for_tools`). That is not isolation. A subagent can see `open_draft_pr`. Writes still pause. Demo: deny the extra **patcher** write; approve the **root**. Fixture never talks to live GitHub.
+**Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. A subagent can see `open_draft_pr`. Demo: deny the extra **patcher** write; approve the **root**.
 
-Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`. If sandbox-providers is not ready, skills will not load — fix that; do not silently drop the three-subagent path.
+Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`.
 
 ## Layout
 
@@ -56,18 +61,23 @@ fixtures/tenant/          patchable checkout (enterprise alias still enterprise-
 skills/*/SKILL.md         git-backed skills
 src/                      independence, write-policy, spec
 scripts/import-loop.ts    SDK import
+scripts/start-hosted-trueforge.ts  colocated fixture + TrueForge
+deploy/trueforge.Dockerfile
 tests/
-apps/loop-ui/             optional TrueForgeUI embed — on feat/loop-ui if present. Do not clobber.
+apps/loop-ui/             optional TrueForgeUI embed
 docs/                     curated handoff. status.md is the living file.
+render.yaml               Blueprint for a *greenfield* workspace only
 ```
 
-## How to run
+## How to run / deploy
 
-Root [README.md](README.md). Local: `npx @truefoundry/trueforge@latest` → http://localhost:8790 (SQLite, no login). **Do not kill local :8790.** Hosted: Render web `loop-trueforge` (`STANDALONE=false`, Postgres + Redis) at https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Fixture MCP colocated at `127.0.0.1:8788` inside that image. Compose :8791 remains optional locally.
+Full commands: [docs/runbook.md](docs/runbook.md).
 
-TrueForge wants Node **22.14+**. Kickoff blog says Node 22+. This package `engines.node` is `>=22.14.0` (PR #1). Tests can still run on Node 20.
-
-Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
+- **Local film host:** `npx @truefoundry/trueforge@latest` on `[::1]:8790` (SQLite). **Do not kill it.** Local agent `loop` is `openrouter/gpt-4.1-mini`. Do not PUT that model off 4.1-mini while the sitting pause is the film source.
+- **Judge host:** https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Render web `loop-trueforge` tracks **`main`** with **`autoDeployTrigger: commit`**. Merge to main deploys the image. **Do not Apply the Blueprint.**
+- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with the Nemotron `:free` env vars in the runbook. `import-loop.ts` defaults OpenRouter upsert to `openai/gpt-4.1-mini` — without those env vars it replaces the free hosted model.
+- TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
+- Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 
 ## What NOT to build
 
@@ -76,6 +86,8 @@ Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
 - Prior internal control-plane work, Goodman, or Bhoonaksha. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
 - Auth for judges. Login ON only if live GitHub writes require it.
 - Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Sai: stock TrueForge UI unless the product needs another.
+- A GitHub Action that stores `RENDER_API_KEY` in git. Native Render auto-deploy on `main` is the CI/CD.
+- A second product for generative UI / Code Mode. Those extras stay inside the same LOOP incident.
 
 ## Demo prompt
 
@@ -83,10 +95,10 @@ TrueForge chat, agent `loop`:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. Extra patcher write: deny. Root write: approve. Collapsed story (`LOOP_STORY=collapsed`) must refuse a root cause.
+Expect three subagent threads, Type A patch on `fixtures/tenant/src/checkout.ts` (enterprise alias still `enterprise-annual` after `*-v3`), pause on `open_draft_pr`. Extra patcher write: deny. Root write: approve (only after filming). Collapsed story (`LOOP_STORY=collapsed`) must refuse a root cause.
 
 ## Docs
 
 Keep `docs/` current as the work changes. Curate. No transcript dumps. No secrets.
 
-[docs/README.md](docs/README.md) index. Living state: [docs/status.md](docs/status.md). Judge shot list: [docs/demo.md](docs/demo.md). Organizer extras: [docs/organizers.md](docs/organizers.md). Previous WeMakeDevs winners / TrueForge examples: [docs/previous-winners.md](docs/previous-winners.md).
+[docs/README.md](docs/README.md) index. Living state: [docs/status.md](docs/status.md). Pitfalls: [docs/learnings.md](docs/learnings.md). Run/deploy: [docs/runbook.md](docs/runbook.md). Remaining work: [docs/next.md](docs/next.md). Judge shot list: [docs/demo.md](docs/demo.md). Organizer extras: [docs/organizers.md](docs/organizers.md). Previous WeMakeDevs winners / TrueForge examples: [docs/previous-winners.md](docs/previous-winners.md). Honest real vs fixture: [docs/audit.md](docs/audit.md).
