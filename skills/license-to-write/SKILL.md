@@ -21,7 +21,7 @@ TrueForge pauses on `@write` / `@destructive` (`require_approval_for_tools`). Wa
 
 Only the root agent may call `open_draft_pr` or `flag_incident`, and only after the three-source independence check passes.
 
-If the deploys brief has `still_true` false (SHA or plan catalog no longer matches live), **do not** open a PR. The brief is stale. Say so and stop.
+If the deploys brief has `still_true` false (SHA or plan catalog no longer matches live), **do not** open a PR. The brief is stale. Say so and stop. The fixture `open_draft_pr` handler also refuses when the current story's `still_true` is false (collapsed) or when the caller passes `still_true: false`.
 
 Do not call `ask_user_question` instead of writing. A written next-steps list is not a substitute for `open_draft_pr`.
 
