@@ -17,20 +17,35 @@ export const REQUIRED_SUBAGENTS = ["analytics", "logs", "deploys"] as const;
 export const TRUEFORGE_HAS_PER_SUBAGENT_TOOLS = false;
 
 export const HOSTED_FREE_MODEL_FQN = "openrouter/nemotron-3-super-120b-a12b-free";
+export const HOSTED_FREE_OPENROUTER_MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free";
+export const HOSTED_FREE_OPENROUTER_MODEL_NAME = "nemotron-3-super-120b-a12b-free";
 
-export function hostedModelGuard(baseUrl: string, modelFqn: string | undefined): string | undefined {
+export function isJudgeHost(hostname: string): boolean {
+  const host = hostname.replace(/\.+$/, "").toLowerCase();
+  return host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
+}
+
+export function hostedModelGuard(
+  baseUrl: string,
+  modelFqn: string | undefined,
+  provider?: { modelId?: string; modelName?: string },
+): string | undefined {
   let host = "";
   try {
     host = new URL(baseUrl).hostname;
   } catch {
     return undefined;
   }
-  const judge = host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
-  if (!judge) {
+  if (!isJudgeHost(host)) {
     return undefined;
   }
   if (modelFqn !== HOSTED_FREE_MODEL_FQN) {
     return `hosted TrueForge must keep ${HOSTED_FREE_MODEL_FQN}`;
+  }
+  const modelId = provider?.modelId ?? "";
+  const modelName = provider?.modelName ?? "";
+  if (modelId !== HOSTED_FREE_OPENROUTER_MODEL_ID || modelName !== HOSTED_FREE_OPENROUTER_MODEL_NAME) {
+    return `hosted OpenRouter provider must be ${HOSTED_FREE_OPENROUTER_MODEL_ID} named ${HOSTED_FREE_OPENROUTER_MODEL_NAME}`;
   }
   return undefined;
 }

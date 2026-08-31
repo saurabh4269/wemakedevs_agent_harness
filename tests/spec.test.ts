@@ -70,9 +70,26 @@ describe("LOOP agent spec shape", () => {
   });
 
   it("refuses a hosted import that would replace the free Nemotron model", () => {
-    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN)).toBeUndefined();
-    expect(hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN)).toBeUndefined();
-    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini")).toMatch(/nemotron/);
+    const freeProvider = {
+      modelId: "nvidia/nemotron-3-super-120b-a12b:free",
+      modelName: "nemotron-3-super-120b-a12b-free",
+    };
+    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, freeProvider)).toBeUndefined();
+    expect(
+      hostedModelGuard("https://loop.heisenbug.in.", HOSTED_FREE_MODEL_FQN, freeProvider),
+    ).toBeUndefined();
+    expect(
+      hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN, freeProvider),
+    ).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini", freeProvider)).toMatch(
+      /nemotron/,
+    );
+    expect(
+      hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, {
+        modelId: "openai/gpt-4.1-mini",
+        modelName: "gpt-4.1-mini",
+      }),
+    ).toMatch(/OpenRouter/);
     expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
   });
 

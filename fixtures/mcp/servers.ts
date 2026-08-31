@@ -1,8 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { GITHUB_TOOLS, WAREHOUSE_TOOLS } from "./catalog.js";
+import { mayOpenDraftPr } from "../../src/freshness.js";
 import {
   FIXTURE_MODE,
+  deployFreshness,
   isStoryName,
   payloadFor,
   type StoryName,
@@ -85,10 +87,14 @@ export function createGithubServer(): McpServer {
         body: z.string().min(1),
         branch: z.string().min(1).default("fix/plan-id-alias"),
         merge: z.boolean().optional().describe("Must stay false. LOOP never merges."),
+        still_true: z
+          .boolean()
+          .optional()
+          .describe("Must be true. Stale deploys.still_true refuses a write."),
       },
       annotations: GITHUB_TOOLS[0].annotations,
     },
-    async ({ title, body, branch, merge }) => {
+    async ({ title, body, branch, merge, still_true }) => {
       if (merge) {
         return jsonResult(
           {
@@ -96,6 +102,21 @@ export function createGithubServer(): McpServer {
             live_github: false,
             merged: false,
             error: "LOOP never merges. Draft PRs only.",
+          },
+          true,
+        );
+      }
+      const freshnessGate = mayOpenDraftPr({
+        storyFreshness: deployFreshness(defaultStory()),
+        claimedStillTrue: still_true,
+      });
+      if (!freshnessGate.ok) {
+        return jsonResult(
+          {
+            mode: FIXTURE_MODE,
+            live_github: false,
+            merged: false,
+            error: freshnessGate.error,
           },
           true,
         );

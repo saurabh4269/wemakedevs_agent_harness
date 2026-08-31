@@ -197,7 +197,10 @@ async function main(): Promise<void> {
     raw.manifest.model.name = modelFqn;
   }
 
-  const hostedGuard = hostedModelGuard(baseUrl, raw.manifest.model.name);
+  const hostedGuard = hostedModelGuard(baseUrl, raw.manifest.model.name, {
+    modelId: process.env.OPENROUTER_MODEL_ID,
+    modelName: process.env.OPENROUTER_MODEL_NAME,
+  });
   if (hostedGuard) {
     throw new Error(hostedGuard);
   }
