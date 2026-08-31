@@ -94,6 +94,10 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 36. **OpenAI key in chat.** Rotate if the transcript is shared. Keep it in gitignored `.env` / Render `sync: false`. Never commit it.
 
+37. **Missing look fails closed.** Retry `create_sub_agent` only when that name has no thread yet. Do not spawn a duplicate named child. If analytics, logs, or deploys is still missing after that one create-retry, refuse a root cause — do not patch, do not open a PR. Qodo High on PR #9 (`continue with whatever returned`).
+
+38. **Qodo Nemotron rule is stale.** User required hosted GPT-5.6 Luna after OpenRouter `:free` 503/429. Do not switch the judge host back to Nemotron to satisfy rule 3011881. Judge-host import now also fails if `OPENAI_API_KEY` is missing.
+
 ## Organizers (short)
 
 Kunal: small fully working TrueForge agent, ~3 min, no login, MCP + sandbox + human pause before irreversible (not a prompt), agent steps visible. Sai: stock TrueForge UI is enough. Extra credit: generative UI, code mode, Daytona, parallel subagents, real-world use case. Qualify = judge **sees** those three. Hero card = Incident responder. Details: [organizers.md](organizers.md).

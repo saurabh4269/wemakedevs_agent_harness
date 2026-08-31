@@ -11,6 +11,7 @@ import {
   REQUIRED_SUBAGENTS,
   TRUEFORGE_HAS_PER_SUBAGENT_TOOLS,
   hostedModelGuard,
+  hostedOpenAiKeyGuard,
   shouldRegisterBackupProviders,
   validateLoopAgent,
   type SavedAgent,
@@ -73,6 +74,9 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/Never wrap query_analytics, query_logs, query_deploys, or open_draft_pr in call_tool/);
     expect(instructions).toMatch(/Pass still_true: true as a tool argument/);
     expect(instructions).toMatch(/Do not call list_tools or get_tool_info/);
+    expect(instructions).toMatch(/If any of those three reports is missing, refuse a root cause/);
+    expect(instructions).toMatch(/Do not spawn a name a second time if that thread already exists/);
+    expect(instructions).not.toMatch(/continue with whatever returned/);
   });
 
   it("refuses a hosted import that is not OpenAI GPT-5.6 Luna", () => {
@@ -96,6 +100,10 @@ describe("LOOP agent spec shape", () => {
     expect(shouldRegisterBackupProviders("https://loop.heisenbug.in")).toBe(false);
     expect(shouldRegisterBackupProviders("https://loop-trueforge.onrender.com")).toBe(false);
     expect(shouldRegisterBackupProviders("http://localhost:8790")).toBe(true);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", undefined)).toMatch(/OPENAI_API_KEY/);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "")).toMatch(/OPENAI_API_KEY/);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "sk-present")).toBeUndefined();
+    expect(hostedOpenAiKeyGuard("http://localhost:8790", undefined)).toBeUndefined();
   });
 
   it("rejects a spec that turns ask_user_questions back on", () => {
@@ -122,6 +130,9 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/empty cwd with no wemakedevs_agent_harness/);
     expect(instructions).toMatch(/MUST be the MCP tool open_draft_pr with merge false and still_true true/);
     expect(instructions).toMatch(/Do not run npx, node, or a tenant check/);
+    const independence = readFileSync(join(root, "skills/three-source-independence/SKILL.md"), "utf8");
+    expect(independence).toMatch(/If any of analytics, logs, or deploys is \*\*missing\*\*/);
+    expect(independence).toMatch(/Partial evidence is not enough/);
     const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
     expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
     expect(typeA).toMatch(/sandbox\.created means a sandbox exists/);

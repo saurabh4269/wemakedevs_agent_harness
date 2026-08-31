@@ -33,6 +33,8 @@ Independent evidence means each source adds facts the others do not:
 
 Collapsed means the three summaries could be swapped without losing information (same claim, same evidence id, high overlap). Example: "checkout is broken so conversion dropped" in all three.
 
+If any of analytics, logs, or deploys is **missing** after the one create-retry, refuse a root cause. Do not patch. Do not open a PR. Partial evidence is not enough.
+
 If `deploys.still_true` is **false**, the brief is stale (SHA or plan catalog no longer matches). Refuse a root cause. Do not patch. Do not open a PR.
 
 ## If they collapse

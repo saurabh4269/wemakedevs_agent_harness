@@ -36,6 +36,22 @@ export function shouldRegisterBackupProviders(baseUrl: string): boolean {
   }
 }
 
+export function hostedOpenAiKeyGuard(baseUrl: string, apiKey: string | undefined): string | undefined {
+  let host = "";
+  try {
+    host = new URL(baseUrl).hostname;
+  } catch {
+    return undefined;
+  }
+  if (!isJudgeHost(host)) {
+    return undefined;
+  }
+  if (!apiKey) {
+    return "judge-host import requires OPENAI_API_KEY";
+  }
+  return undefined;
+}
+
 export function hostedModelGuard(
   baseUrl: string,
   modelFqn: string | undefined,
@@ -76,6 +92,16 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     id: "retry-named-once",
     re: /retry that exact name once/,
     message: "failed subagent spawn retries that name once",
+  },
+  {
+    id: "no-duplicate-named-child",
+    re: /Do not spawn a name a second time if that thread already exists/,
+    message: "do not spawn a duplicate named subagent",
+  },
+  {
+    id: "missing-report-fail-closed",
+    re: /If any of those three reports is missing, refuse a root cause/,
+    message: "missing analytics, logs, or deploys must refuse a root cause",
   },
   {
     id: "subagent-one-tool",

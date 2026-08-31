@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TrueForge } from "@truefoundry/trueforge-sdk";
 import type { SavedAgent } from "../src/spec.js";
-import { hostedModelGuard, shouldRegisterBackupProviders, validateLoopAgent } from "../src/spec.js";
+import { hostedModelGuard, hostedOpenAiKeyGuard, shouldRegisterBackupProviders, validateLoopAgent } from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -64,6 +64,10 @@ function redacted(ok: boolean): string {
 
 async function registerOpenAI(baseUrl: string): Promise<void> {
   const apiKey = process.env.OPENAI_API_KEY;
+  const missingKey = hostedOpenAiKeyGuard(baseUrl, apiKey);
+  if (missingKey) {
+    throw new Error(missingKey);
+  }
   if (!apiKey) {
     process.stdout.write("OpenAI provider: skipped (OPENAI_API_KEY unset)\n");
     return;
@@ -235,6 +239,10 @@ async function main(): Promise<void> {
   });
   if (hostedGuard) {
     throw new Error(hostedGuard);
+  }
+  const hostedKey = hostedOpenAiKeyGuard(baseUrl, process.env.OPENAI_API_KEY);
+  if (hostedKey) {
+    throw new Error(hostedKey);
   }
 
   const issues = validateLoopAgent(raw);
