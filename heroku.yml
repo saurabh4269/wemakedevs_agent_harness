@@ -1,4 +1,6 @@
 # heroku.yml — container stack for LOOP TrueForge
+# Dockerfile must live at repo root: Heroku sets build context to the Dockerfile dir.
+# Keep deploy/trueforge.Dockerfile in sync (Render dockerfilePath).
 # Usage: heroku stack:set container -a <app>
 # Secrets stay in `heroku config`. Do not put keys here.
 setup:
@@ -8,6 +10,6 @@ setup:
     - plan: heroku-redis:mini
 build:
   docker:
-    web: deploy/trueforge.Dockerfile
+    web: Dockerfile
 run:
   web: node dist/scripts/start-hosted-trueforge.js

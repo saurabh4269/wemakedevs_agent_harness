@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~19:56 UTC**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~20:25 UTC**.
 
 ## PRs
 
@@ -19,31 +19,32 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
 | [#12](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/12) | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Merged** (`b92908a`). |
 | [#13](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/13) | `cursor/heroku-pg-port-7d0f` | Port Render Postgres onto Heroku (skip Redis) | **Merged** (`50846b7`). |
+| [#14](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/14) | `cursor/record-pr-13-7d0f` | Record PR #13 on `main` | **Merged** (`df21a40`). |
 
-`origin/main` tip at last rewrite: `50846b7`. Heroku stand-up is CLI in a local clone of **`main`**. **Port Render Postgres** ([heroku.md](heroku.md) §6); skip Redis. `import-loop.ts` is the empty-DB fallback. Do not store `HEROKU_API_KEY` or dumps in git.
+`origin/main` tip at last rewrite: `df21a40`. Heroku app **`loop-trueforge`** is live. Render Postgres was **ported** onto Heroku Postgres 17 (`pg_dump`/`pg_restore`; Redis skipped). Do not store `HEROKU_API_KEY` or dumps in git.
 
 ## Live TrueForge
 
 ### Judge host
 
-- **Judge URL:** https://loop.heisenbug.in — keep this. TLS stays on Cloudflare once CNAME `loop` points at Heroku ACM.
-- **Live host is moving to Heroku.** Render free quota is exhausted. Stand-up: [heroku.md](heroku.md). Do not Apply `render.yaml`.
-- Fallback while DNS catches up: `https://<app>.herokuapp.com` (app name must contain `loop`).
-- Previous Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`). Stop the **web** after Heroku `/healthz` is 200. Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until the Heroku restore is verified.
-- `GET /healthz` → 200 `OK!`.
-- Hosted LOOP agent on Render Postgres (`01m1aaemb86czjax2v232nxygf`) **does copy** if you `heroku pg:push` / `pg_dump`+`pg_restore` the whole database. Redis does **not** copy (peering only — leave Heroku Redis empty). Session IDs including Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz` can survive a successful restore. Empty import is only if dump/push cannot reach Render.
-- `PUBLIC_BASE_URL` stays `https://loop.heisenbug.in`.
+- **Judge URL:** https://loop.heisenbug.in — keep this.
+- **Live host is Heroku app `loop-trueforge`.** Fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com. `GET /healthz` → 200 `OK!` on the herokuapp URL.
+- Stack: container, Basic web dyno (not Eco), Postgres `essential-0` **17**, Redis `mini` (empty peering; not ported).
+- **Render Postgres was ported** into Heroku `DATABASE_URL` (agent `loop`, skills, MCP connectors, Daytona provider, sessions including Luna PASS). Skip Redis.
+- Previous Render web `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is **suspended** (billing). Keep Render Postgres (`loop-postgres` / `dpg-daaa7k4s728c73fr0feg-a`) until you no longer need a re-dump.
+- `PUBLIC_BASE_URL` stays `https://loop.heisenbug.in`. OIDC unset.
+- Hosted model: OpenAI GPT-5.6 Luna. Secrets in `heroku config` only. Never commit keys.
+- Dyno needs system CAs in the image plus `NODE_TLS_REJECT_UNAUTHORIZED=0` for Heroku Redis TLS.
 - **Do not Apply `render.yaml` Blueprint** on workspace `tea-ctoktrjtq21c73cufog0`.
-- Hosted TrueForge does **not** re-import LOOP on boot. See [runbook.md](runbook.md) and [heroku.md](heroku.md).
-- OIDC unset: anyone who can reach the server is **admin** (intended no-login judge path).
-- Fixture MCP is colocated in the image on `127.0.0.1:8788`.
-- Secrets stay in `heroku config` (and the old Render dashboard until you stop it). Never commit keys.
+- Fixture MCP colocated on `127.0.0.1:8788`.
+- Hosted session IDs (including Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`) survived the restore. Do not Approve/Deny listed film sessions.
 
 ### DNS
 
 - `thexplorers.xyz` is **expired**. Do not rely on `loop.thexplorers.xyz`.
 - `heisenbug.in` is Cloudflare. Apex and `www` stay on Vercel — **never touch `@` or `www`**.
-- Only subdomain: CNAME `loop` → Heroku DNS target from `heroku domains` (was `loop-trueforge.onrender.com`). DNS only (grey cloud). Never touch `@` or `www`.
+- Heroku domain added: CNAME target **`developmental-anteater-y5490gf0d9oxp62bi3yra5aa.herokudns.com`**.
+- **Blocker:** Cloudflare CNAME `loop` still points at `loop-trueforge.onrender.com`. No Cloudflare API token in this environment. Edit CNAME `loop` only → Heroku DNS target above, **DNS only (grey cloud)**. Then confirm `https://loop.heisenbug.in/healthz` is 200.
 
 ### Local (keep running)
 
@@ -64,7 +65,7 @@ Clock 2026-08-31 05:34–05:35 UTC, session **`01m1b50dbbh3vgy6brbaw5vsaz`** / t
 - **OpenUI PASS:** chart + table + Type A card in the thread.
 - **Pause PASS:** Approve sitting on **root** write. Inner tool is `open_draft_pr` (`merge: false`) via system `call_tool` (`loop-github`). **Not clicked.** This PR teaches native `open_draft_pr` + `still_true` as a tool argument so the next run does not wrap.
 
-**Do not Approve/Deny this session.** Prefer it for the YouTube take.
+**Do not Approve/Deny this session.** Prefer it for the YouTube take. Session row is on Heroku Postgres after the port; URL works once DNS points at Heroku.
 
 ### Local — PASS (attempt 2) — backup film source
 
@@ -87,7 +88,7 @@ Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](
 ## Form / demo URLs (draft)
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness
-- Deployed: https://loop.heisenbug.in. Render free exhausted; Heroku cutover: [heroku.md](heroku.md).
+- Deployed: https://loop.heisenbug.in (DNS cutover pending). Heroku fallback: https://loop-trueforge-17da5f0d6aa2.herokuapp.com. Cutover notes: [heroku.md](heroku.md).
 - Video field is **YouTube**, ≤3 min. File in git: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4). Shot list: [demo.md](demo.md). Placeholder https://vimeo.com/1222508816 is the **wrong host** — replace.
 - Blog draft: [blog.md](blog.md). Live URL https://saurabh4269.github.io/blog/trueforge-harness/ is still 404 until the MDX is published to `saurabh4269.github.io`.
 - Form answers: [form.md](form.md). Not submitted.
