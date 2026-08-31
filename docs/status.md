@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~16:55 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~17:45 IST**.
 
 ## PRs
 
@@ -16,9 +16,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#8](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/8) | `docs/living-handoff-autodeploy` | Living handoff + `render.yaml` auto-deploy on `main` | **Merged** (`93882ac`). |
 | [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | **Merged** (`a9200b2`). |
 | [#10](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/10) | `cursor/judge-demo-remotion-7d0f` | Remotion judge demo (Safari / Sequoia + cedar VO) | **Open** (other branch). |
-| [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Open**. |
+| [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
 
-`origin/main` tip at last rewrite: `a9200b2`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. Benchmark and README copy do not change the hosted agent.
+`origin/main` tip at last rewrite: `a63d1b1`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. Benchmark and README copy do not change the hosted agent.
 
 ## Live TrueForge
 
