@@ -108,6 +108,22 @@ curl -sS "https://$APP.herokuapp.com/healthz"
 # expect: OK!
 ```
 
+## 4b. CI/CD — auto-deploy `main`
+
+GitHub Actions workflow [`.github/workflows/deploy-heroku.yml`](../.github/workflows/deploy-heroku.yml) builds the root `Dockerfile`, pushes to `registry.heroku.com`, and releases `web` on every push to `main` (and `workflow_dispatch`).
+
+1. Create a Heroku authorization (do not paste into chat or git):
+
+```bash
+heroku authorizations:create --description "github-actions-loop-trueforge-deploy" --short
+```
+
+2. In the GitHub repo → **Settings → Secrets and variables → Actions**:
+   - Secret **`HEROKU_API_KEY`** = that token (already set for this repo if stand-up did it).
+   - Optional variable **`HEROKU_APP_NAME`** = `loop-trueforge`.
+
+Never commit `HEROKU_API_KEY`. Image deploy still does **not** re-import LOOP — Postgres holds the agent.
+
 ## 5. Point `loop.heisenbug.in` at Heroku
 
 ```bash
@@ -220,7 +236,7 @@ If section 6 restore worked, hosted session IDs can still exist on the new Postg
 
 ## Do not
 
-- Put `HEROKU_API_KEY` in git or a GitHub Action.
+- Put `HEROKU_API_KEY` in **git**. GitHub Actions may read it from a **repository secret** only ([heroku.md](heroku.md) §4b).
 - Apply `render.yaml` on workspace `tea-ctoktrjtq21c73cufog0`.
 - Touch Cloudflare `@` / `www`.
 - Use Eco dynos if you can avoid sleep before a judge demo.

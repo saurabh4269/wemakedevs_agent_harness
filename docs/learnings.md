@@ -24,7 +24,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 9. **Do not Apply `render.yaml` on the existing workspace** (`tea-ctoktrjtq21c73cufog0`). It would duplicate `loop-postgres` / `loop-redis`. Render free is exhausted; the live host is moving to Heroku ([heroku.md](heroku.md)).
 
-10. **Do not store `RENDER_API_KEY` or `HEROKU_API_KEY` in git.** Deploy Heroku from the CLI/dashboard. Image deploy does not re-import LOOP.
+10. **Do not store `RENDER_API_KEY` or `HEROKU_API_KEY` in git.** Heroku deploys via CLI/dashboard or GitHub Actions reading **`HEROKU_API_KEY` from a repository secret** (see [heroku.md](heroku.md) §4b). Image deploy does not re-import LOOP.
 
 11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change — or a new Heroku database — run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. Dockerfile-only changes do not need re-import.
 

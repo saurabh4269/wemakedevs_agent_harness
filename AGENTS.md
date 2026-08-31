@@ -88,7 +88,7 @@ Full commands: [docs/runbook.md](docs/runbook.md).
 - Prior internal control-plane work, Goodman, or Bhoonaksha. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
 - Auth for judges. Login ON only if live GitHub writes require it.
 - Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Sai: stock TrueForge UI unless the product needs another.
-- A GitHub Action that stores `RENDER_API_KEY` or `HEROKU_API_KEY` in git. Deploy from the Heroku dashboard/CLI.
+- A GitHub Action that commits `RENDER_API_KEY` or `HEROKU_API_KEY` into the repo. Actions may use a **repository secret**. Prefer [docs/heroku.md](docs/heroku.md) §4b.
 - A second product for generative UI / Code Mode. Those extras stay inside the same LOOP incident.
 
 ## Demo prompt
