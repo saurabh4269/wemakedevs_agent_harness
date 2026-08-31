@@ -40,7 +40,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 ## Models / keys
 
-17. **Hosted is OpenAI GPT-5.6 Luna** (cost-tier of the family, `$0.20 / $1.20` per MTok, `reasoning_effort: none`). OpenRouter `:free` Nemotron 503'd then hit `free-models-per-day`. Do not put Sol/Terra or paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini.
+17. **Hosted is OpenAI GPT-5.6 Luna** (cost-tier of the family, `$0.20 / $1.20` per MTok). TrueForge 422'd `reasoning_effort` on this model — omit it. OpenRouter `:free` Nemotron 503'd then hit `free-models-per-day`. Do not put Sol/Terra or paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini.
 
 18. **Do not kill local TrueForge on `[::1]:8790`.** IPv6. `127.0.0.1:8790` may miss it. SQLite path `/home/box/.local/trueforge/db.sqlite`. Sitting pause `01m1a87xjewncn310ymqy3yz01` lives there.
 

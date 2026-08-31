@@ -202,7 +202,7 @@ Hosted LOOP agent `01m1aaemb86czjax2v232nxygf` is imported. Point LOOP MCP wareh
 - `http://127.0.0.1:8788/warehouse`
 - `http://127.0.0.1:8788/github`
 
-Hosted model is OpenAI GPT-5.6 Luna (FQN `openai/gpt-5-6-luna`, `reasoning_effort: none`). Local film agent may stay on 4.1-mini. Do not put keys in git.
+Hosted model is OpenAI GPT-5.6 Luna (FQN `openai/gpt-5-6-luna`). Local film agent may stay on 4.1-mini. Do not put keys in git.
 
 ### Local Compose (optional)
 

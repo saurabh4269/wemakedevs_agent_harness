@@ -38,7 +38,7 @@ describe("LOOP agent spec shape", () => {
     expect(agent.manifest.config?.generative_ui?.enabled).toBe(true);
     expect(agent.manifest.config?.ask_user_questions?.enabled).toBe(false);
     expect(agent.manifest.model.params?.max_tokens).toBe(4096);
-    expect(agent.manifest.model.params?.reasoning_effort).toBe("none");
+    expect(agent.manifest.model.params?.parallel_tool_calls).toBe(true);
     expect(agent.manifest.config?.iteration_limit).toBe(40);
     expect(agent.manifest.skills?.map((skill) => skill.name)).toEqual([...LOOP_SKILL_NAMES]);
     const parts = agent.manifest.model.name.split("/");

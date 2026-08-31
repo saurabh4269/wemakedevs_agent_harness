@@ -16,7 +16,7 @@
 
 12. **Auto-deploy on `main`.** Live Render service `loop-trueforge` tracks branch `main` with `autoDeployTrigger: commit`. Merge (after Qodo Highs 0) deploys the image. Do not Apply the Blueprint on workspace `tea-ctoktrjtq21c73cufog0` (duplicates DBs). Do not store `RENDER_API_KEY` in git. Image deploy does not re-import LOOP; Postgres holds the agent.
 
-13. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier of the GPT-5.6 family (`openai/gpt-5-6-luna`, `reasoning_effort: none`, `parallel_tool_calls: true`, `max_tokens: 4096`, `iteration_limit: 40`). OpenRouter `:free` Nemotron 503'd and then hit the daily cap. Local film agent may stay on 4.1-mini until that sitting pause is no longer the film source. `import-loop.ts` must be passed the Luna env vars on the judge host.
+13. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier of the GPT-5.6 family (`openai/gpt-5-6-luna`, `parallel_tool_calls: true`, `max_tokens: 4096`, `iteration_limit: 40`). TrueForge 422'd `reasoning_effort` on this model — omit it. OpenRouter `:free` Nemotron 503'd and then hit the daily cap. Local film agent may stay on 4.1-mini. `import-loop.ts` must be passed the Luna env vars on the judge host.
 
 14. **Fixture MCP is labeled on purpose.** Warehouse is a canned story. `open_draft_pr` returns `mode:fixture` and a fake `html_url`. Say that out loud. Do not hide it from Kunal/Sai. Qualify still uses real TrueForge MCP, Daytona, and the write-approval pause.
 

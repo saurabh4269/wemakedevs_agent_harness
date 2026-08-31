@@ -21,7 +21,7 @@ Hackathon hero card is **Incident responder**. That is this product.
 5. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
 6. **Do not Apply `render.yaml`** on workspace `tea-ctoktrjtq21c73cufog0`. It would duplicate Postgres/Redis. The live web service already exists.
 7. **Do not Approve/Deny** film/qualify sessions listed in [docs/status.md](docs/status.md).
-8. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier. `reasoning_effort: none`. Do not use Sol/Terra on hosted. Local film agent may stay on 4.1-mini.
+8. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier. Do not use Sol/Terra on hosted. Local film agent may stay on 4.1-mini.
 9. **Do not touch** `heisenbug.in` apex or `www` (Vercel). Only the `loop` CNAME is ours.
 10. **Do not mention** prior control-plane work, Goodman, or Bhoonaksha in README, form, or judge-facing copy.
 
