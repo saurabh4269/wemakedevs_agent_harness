@@ -50,6 +50,8 @@ TrueForge is real. Daytona is real. The write-approval pause is real. Three name
 
 The warehouse answers are not Grafana. They are a canned story in `fixtures/mcp/stories.ts`. The draft PR URL is `https://github.example.invalid/loop-tenant/pull/42`. Every write tool returns `mode:fixture` and `live_github: false`.
 
+What we *do* measure is the gates a chatbot would skip. `npm run benchmark` compares LOOP to a baseline that treats three copies of one query as an investigation and would still open a PR. Collapsed story refuses. Stale `still_true` refuses. `request_prod_deploy` always refuses. The tenant `enterprise` alias is a real TypeScript bug until Type A points it at `enterprise-annual-v3`. Method: the repo README and `docs/benchmark.md`. Do not read that table as recovered production conversion.
+
 The official page wants tools **connected, not mocked**. That is an honest Best Use risk. We did not hide it. A judge needs no login and no tenant GitHub token. The harness still does the three things the page asks for.
 
 Dynamic subagents share the root tool set. TrueForge has no per-subagent `enable_tools`. A `patcher` thread can still see `open_draft_pr`. Demo rule: deny that extra write, approve only the root.

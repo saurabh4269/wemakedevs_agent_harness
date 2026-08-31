@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ALL_FIXTURE_TOOLS, GITHUB_TOOLS, WAREHOUSE_TOOLS } from "../fixtures/mcp/catalog.js";
-import { READ_SERVER, WRITE_SERVER, writeToolsOnlyOnWriteMcp } from "../src/write-policy.js";
+import { READ_SERVER, WRITE_SERVER, refuseIfMergeRequested, refuseProdDeploy, writeToolsOnlyOnWriteMcp } from "../src/write-policy.js";
 import { WRITE_TOOLS, type SavedAgent } from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -13,6 +13,18 @@ describe("write tools only on the write MCP", () => {
     const result = writeToolsOnlyOnWriteMcp(ALL_FIXTURE_TOOLS);
     expect(result.violations).toEqual([]);
     expect(result.ok).toBe(true);
+  });
+
+  it("refuses merge and always refuses prod deploy from one write-policy module", () => {
+    expect(refuseIfMergeRequested(true)).toEqual({
+      refuse: true,
+      error: "LOOP never merges. Draft PRs only.",
+    });
+    expect(refuseProdDeploy({ environment: "production", version: "web-checkout@patched" })).toMatchObject({
+      deployed: false,
+      live_github: false,
+      error: "LOOP never prod-deploys the tenant. Refused.",
+    });
   });
 
   it("annotates warehouse tools as readOnlyHint", () => {

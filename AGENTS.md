@@ -59,8 +59,9 @@ agents/loop.json          TrueForge agent { name, manifest }
 fixtures/mcp/             mode:fixture warehouse + github
 fixtures/tenant/          patchable checkout (enterprise alias still enterprise-annual after *-v3)
 skills/*/SKILL.md         git-backed skills
-src/                      independence, write-policy, spec
+src/                      independence, freshness, write-policy, spec, benchmark
 scripts/import-loop.ts    SDK import
+scripts/benchmark.ts      LOOP vs chat baseline (`npm run benchmark`)
 scripts/start-hosted-trueforge.ts  colocated fixture + TrueForge
 deploy/trueforge.Dockerfile
 tests/

@@ -18,6 +18,7 @@ Start here: root [AGENTS.md](../AGENTS.md), then this index, then [learnings.md]
 | [decisions.md](decisions.md) | Numbered ADRs |
 | [demo.md](demo.md) | Judge-facing 3-min shot list |
 | [audit.md](audit.md) | Real vs fixture; qualify beats; how a judge should audit |
+| [benchmark.md](benchmark.md) | LOOP vs a chat baseline (`npm run benchmark`). Gates, not Grafana. |
 | [form.md](form.md) | Submission form constraints + human draft answers |
 | [blog.md](blog.md) | Field report (publish to github.io `/blog/trueforge-harness/`) |
 
@@ -35,3 +36,4 @@ How to run is also the root [README.md](../README.md).
 8. Organizer quotes, extras they named, skip-list → [organizers.md](organizers.md).
 9. Prior WeMakeDevs winners / TrueForge example agents → [previous-winners.md](previous-winners.md). Curate. No transcript dumps.
 10. Never commit secrets. Never paste `.env`. Point at `/home/box/.secrets/loop-trueforge.env` and stop.
+11. Change of independence / write / tenant gates → [benchmark.md](benchmark.md) and root README table (`npm run benchmark` must still match).

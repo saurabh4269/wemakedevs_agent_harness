@@ -65,6 +65,8 @@ Sandbox-as-a-tool: spin up only when the agent needs to run code; secrets stay i
 
 Qualify trio from the live page: MCP tool, Daytona sandbox exec, pause before irreversible. LOOP already is the page's **Incident responder** hero card. Do not rebrand.
 
+Kunal: if it would work as a chatbot, change the project. README **Benchmark (vs a chat baseline)** (`npm run benchmark`) is that test in TypeScript — copy-three-times would write; LOOP refuses. Do not paper over the fixture warehouse with a fake 19% recovery chart.
+
 Extras Sai named, in order, **inside the same conversion-drop run** (ADR 8):
 
 1. Generative UI after the three looks (chart + table + Type A/B card). `config.generative_ui.enabled` is already true.
