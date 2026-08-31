@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~18:00 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~23:00 IST**.
 
 ## PRs
 
@@ -17,34 +17,32 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | **Merged** (`a9200b2`). |
 | [#10](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/10) | `cursor/judge-demo-remotion-7d0f` | Remotion judge demo: Safari on Sequoia wallpaper + conversational cedar VO | **Merged** (`7020bd6`). |
 | [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
+| this branch | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Open**. |
 
-`origin/main` tip at last rewrite: `7020bd6`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. Demo composition and benchmark README do not change the hosted agent.
+`origin/main` tip at last rewrite: `b2d9c87`. Heroku deploy is CLI/dashboard; do not store `HEROKU_API_KEY` in git. Re-import LOOP after the new Postgres exists.
 
 ## Live TrueForge
 
 ### Judge host
 
-- **Judge URL:** https://loop.heisenbug.in — custom domain verified. TLS Google Trust Services WE1, SAN `loop.heisenbug.in`. Domain id `cdm-daaajnon74is73abbuh0`.
-- Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`), Oregon free. Dashboard: https://dashboard.render.com/web/srv-daaaa65g1s2s73cjsq0g
-- Fallback: https://loop-trueforge.onrender.com — keep it. Do not disable the onrender subdomain.
+- **Judge URL:** https://loop.heisenbug.in — keep this. TLS stays on Cloudflare once CNAME `loop` points at Heroku ACM.
+- **Live host is moving to Heroku.** Render free quota is exhausted. Stand-up: [heroku.md](heroku.md). Do not Apply `render.yaml`.
+- Fallback while DNS catches up: `https://<app>.herokuapp.com` (app name must contain `loop`).
+- Previous Render web: `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`). Stop it after Heroku `/healthz` is 200.
 - `GET /healthz` → 200 `OK!`.
-- Hosted LOOP agent `01m1aaemb86czjax2v232nxygf`, model `openai/gpt-5-6-luna`. `import-loop.ts` refuses a judge-host upsert that is not that FQN. Judge-host import skips OpenRouter/NVIDIA provider upserts.
-- `PUBLIC_BASE_URL` is `https://loop.heisenbug.in`.
-- Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`) available, free, Oregon. Redis `loop-redis` (`red-daaa7ohsrm7s73ed64mg`) available. Project `loop` `prj-daaa8g5g1s2s73cjo950`, env production `evm-daaa8g5g1s2s73cjo95g`. Workspace `tea-ctoktrjtq21c73cufog0`.
-- **CI/CD:** live service tracks branch **`main`**, `autoDeploy: yes`, `autoDeployTrigger: commit`. **Do not Apply `render.yaml` Blueprint** on this workspace.
-- Hosted TrueForge does **not** re-import LOOP on boot. Image deploy ≠ live agent instructions. See [runbook.md](runbook.md).
-- Free web sleeps when idle. Ping `/healthz` first (~25–30s white "Loading application…") before a judge demo.
+- Hosted LOOP agent on Render Postgres (`01m1aaemb86czjax2v232nxygf`) will **not** copy. Re-import Luna after Heroku Postgres exists.
+- `PUBLIC_BASE_URL` stays `https://loop.heisenbug.in`.
+- **Do not Apply `render.yaml` Blueprint** on workspace `tea-ctoktrjtq21c73cufog0`.
+- Hosted TrueForge does **not** re-import LOOP on boot. See [runbook.md](runbook.md) and [heroku.md](heroku.md).
 - OIDC unset: anyone who can reach the server is **admin** (intended no-login judge path).
-- Fixture MCP is colocated in that image on `127.0.0.1:8788`. Image tracks **main** (`a9200b2`); Render auto-deploys this merge.
-- Secrets stay in the Render dashboard (`sync: false`). Never commit keys.
-- Daytona sandbox providers on hosted: **Connected / `status: ready`**.
+- Fixture MCP is colocated in the image on `127.0.0.1:8788`.
+- Secrets stay in `heroku config` (and the old Render dashboard until you stop it). Never commit keys.
 
 ### DNS
 
 - `thexplorers.xyz` is **expired**. Do not rely on `loop.thexplorers.xyz`.
 - `heisenbug.in` is Cloudflare. Apex and `www` stay on Vercel — **never touch `@` or `www`**.
-- Only subdomain: CNAME `loop` → `loop-trueforge.onrender.com`, DNS only (grey cloud). Cert issued.
-- Box DNS sometimes cannot resolve `loop.heisenbug.in` without `--resolve loop.heisenbug.in:443:216.24.57.7` (Render IPs `216.24.57.7` / `216.24.57.15`).
+- Only subdomain: CNAME `loop` → Heroku DNS target from `heroku domains` (was `loop-trueforge.onrender.com`). DNS only (grey cloud). Never touch `@` or `www`.
 
 ### Local (keep running)
 
@@ -88,7 +86,7 @@ Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](
 ## Form / demo URLs (draft)
 
 - Repo: https://github.com/saurabh4269/wemakedevs_agent_harness
-- Deployed: https://loop.heisenbug.in — live. Fallback https://loop-trueforge.onrender.com.
+- Deployed: https://loop.heisenbug.in. Render free exhausted; Heroku cutover: [heroku.md](heroku.md).
 - Video field is **YouTube**, ≤3 min. File in git: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4). Shot list: [demo.md](demo.md). Placeholder https://vimeo.com/1222508816 is the **wrong host** — replace.
 - Blog draft: [blog.md](blog.md). Live URL https://saurabh4269.github.io/blog/trueforge-harness/ is still 404 until the MDX is published to `saurabh4269.github.io`.
 - Form answers: [form.md](form.md). Not submitted.

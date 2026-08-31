@@ -27,7 +27,7 @@ export function fixtureListenBind(env: NodeJS.Dict<string> = process.env): Fixtu
 
 /**
  * Env for the colocated sidecar inside the TrueForge image.
- * TrueForge keeps Render PORT / HOST=0.0.0.0; the fixture must stay on loopback 8788.
+ * TrueForge keeps platform PORT / HOST=0.0.0.0; the fixture must stay on loopback 8788.
  */
 export function colocatedFixtureEnv(env: NodeJS.Dict<string> = process.env): NodeJS.ProcessEnv {
   const next: NodeJS.ProcessEnv = {};

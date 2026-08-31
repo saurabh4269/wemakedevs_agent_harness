@@ -20,23 +20,23 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 8. **Tenant bug is real TypeScript.** `fixtures/tenant/src/checkout.ts` maps `enterprise` → `enterprise-annual` after a `*-v3` catalog rename; `startCheckout("enterprise")` throws. Patch alias to `enterprise-annual-v3`. Do not `sed /opt/tf/tenant`.
 
-## Hosting / Render
+## Hosting / Render / Heroku
 
-9. **Do not Apply `render.yaml` on the existing workspace** (`tea-ctoktrjtq21c73cufog0`). It would duplicate `loop-postgres` / `loop-redis`. The live web service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) already exists. Greenfield Apply is only for a new empty workspace.
+9. **Do not Apply `render.yaml` on the existing workspace** (`tea-ctoktrjtq21c73cufog0`). It would duplicate `loop-postgres` / `loop-redis`. Render free is exhausted; the live host is moving to Heroku ([heroku.md](heroku.md)).
 
-10. **`main` auto-deploys.** Live service tracks branch `main`, `autoDeployTrigger: commit` (PATCHed 2026-08-31; previously `feat/render-host` + autoDeploy off). Env-only PUT does not restart a process. Merge to main deploys the **image**. Do not add a GitHub Action that stores `RENDER_API_KEY` in git.
+10. **Do not store `RENDER_API_KEY` or `HEROKU_API_KEY` in git.** Deploy Heroku from the CLI/dashboard. Image deploy does not re-import LOOP.
 
-11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change, run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. Dockerfile-only changes do not need re-import.
+11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change — or a new Heroku database — run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. Dockerfile-only changes do not need re-import.
 
-12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Judge host must pass `LOOP_MODEL_FQN=openai/gpt-5-6-luna`, `OPENAI_MODEL_ID=gpt-5.6-luna`, `OPENAI_MODEL_NAME=gpt-5-6-luna`. `hostedModelGuard` refuses anything else on `loop.heisenbug.in` / `loop-trueforge.onrender.com`.
+12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Judge host must pass `LOOP_MODEL_FQN=openai/gpt-5-6-luna`, `OPENAI_MODEL_ID=gpt-5.6-luna`, `OPENAI_MODEL_NAME=gpt-5-6-luna`. `hostedModelGuard` refuses anything else on `loop.heisenbug.in`, `loop-trueforge.onrender.com`, or a `*.herokuapp.com` host whose name contains `loop`.
 
-13. **Free instance sleeps.** Ping `GET /healthz` first (~25–30s white "Loading application…") before a judge or a demo.
+13. **Basic dyno, not Eco.** Eco sleeps like Render free. Ping `GET /healthz` before a judge or a demo.
 
 14. **No-login means everyone is admin.** OIDC unset on purpose. Anyone who reaches https://loop.heisenbug.in can edit the agent, skills, connectors, or Approve a write. Demo tradeoff, not a bug. Do not "fix" it with auth before the video.
 
-15. **DNS.** CNAME `loop` → `loop-trueforge.onrender.com` on Cloudflare zone `heisenbug.in`, grey cloud (DNS only). Never touch apex or `www` (Vercel). `thexplorers.xyz` is expired; do not use `loop.thexplorers.xyz`. Box DNS sometimes needs `--resolve loop.heisenbug.in:443:216.24.57.7`.
+15. **DNS.** CNAME `loop` on Cloudflare zone `heisenbug.in`, grey cloud (DNS only). Never touch apex or `www` (Vercel). After Heroku ACM, the CNAME target is the hostname from `heroku domains`. `thexplorers.xyz` is expired.
 
-16. **Colocated fixture, not a private service.** Fixture MCP listens on `127.0.0.1:8788` inside the TrueForge image. Render private services have no free plan.
+16. **Colocated fixture, not a private service.** Fixture MCP listens on `127.0.0.1:8788` inside the TrueForge image.
 
 ## Models / keys
 

@@ -88,6 +88,7 @@ describe("LOOP agent spec shape", () => {
     expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
     expect(hostedModelGuard("https://loop.heisenbug.in.", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
     expect(hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop-trueforge.herokuapp.com", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
     expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini", luna)).toMatch(
       /gpt-5-6-luna/,
     );
@@ -100,6 +101,7 @@ describe("LOOP agent spec shape", () => {
     expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
     expect(shouldRegisterBackupProviders("https://loop.heisenbug.in")).toBe(false);
     expect(shouldRegisterBackupProviders("https://loop-trueforge.onrender.com")).toBe(false);
+    expect(shouldRegisterBackupProviders("https://loop-trueforge.herokuapp.com")).toBe(false);
     expect(shouldRegisterBackupProviders("http://localhost:8790")).toBe(true);
     expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", undefined)).toMatch(/OPENAI_API_KEY/);
     expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "")).toMatch(/OPENAI_API_KEY/);

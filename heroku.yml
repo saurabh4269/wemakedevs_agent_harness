@@ -1,0 +1,12 @@
+# heroku.yml — container stack for LOOP TrueForge
+# Usage: heroku stack:set container -a <app>
+# Secrets stay in `heroku config`. Do not put keys here.
+setup:
+  addons:
+    - plan: heroku-postgresql:essential-0
+    - plan: heroku-redis:mini
+build:
+  docker:
+    web: deploy/trueforge.Dockerfile
+run:
+  web: node dist/scripts/start-hosted-trueforge.js

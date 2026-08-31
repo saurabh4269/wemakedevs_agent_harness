@@ -25,7 +25,11 @@ export const HOSTED_FREE_MODEL_FQN = HOSTED_MODEL_FQN;
 
 export function isJudgeHost(hostname: string): boolean {
   const host = hostname.replace(/\.+$/, "").toLowerCase();
-  return host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
+  if (host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com") {
+    return true;
+  }
+  // Heroku fallback while DNS still points at *.herokuapp.com
+  return host.endsWith(".herokuapp.com") && host.includes("loop");
 }
 
 export function shouldRegisterBackupProviders(baseUrl: string): boolean {
