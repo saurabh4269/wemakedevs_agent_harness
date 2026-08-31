@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~19:55 UTC**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~19:56 UTC**.
 
 ## PRs
 
@@ -18,9 +18,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#10](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/10) | `cursor/judge-demo-remotion-7d0f` | Remotion judge demo: Safari on Sequoia wallpaper + conversational cedar VO | **Merged** (`7020bd6`). |
 | [#11](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/11) | `cursor/loop-benchmark-7d0f` | Honest LOOP vs chat-baseline table + stranger README (qualify trio, fixture line, Qodo #5–#9) | **Merged** (`a63d1b1`). |
 | [#12](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/12) | `cursor/heroku-host-7d0f` | Shift judge host to Heroku (Render free exhausted) | **Merged** (`b92908a`). |
-| [#13](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/13) | `cursor/heroku-pg-port-7d0f` | Port Render Postgres onto Heroku (skip Redis) | **Open**. |
+| [#13](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/13) | `cursor/heroku-pg-port-7d0f` | Port Render Postgres onto Heroku (skip Redis) | **Merged** (`50846b7`). |
 
-`origin/main` tip at last rewrite: `1579210`. Heroku stand-up is CLI in a local clone of `main` (or this PR until it merges). **Port Render Postgres** ([heroku.md](heroku.md) §6); skip Redis. `import-loop.ts` is the empty-DB fallback. Do not store `HEROKU_API_KEY` or dumps in git.
+`origin/main` tip at last rewrite: `50846b7`. Heroku stand-up is CLI in a local clone of **`main`**. **Port Render Postgres** ([heroku.md](heroku.md) §6); skip Redis. `import-loop.ts` is the empty-DB fallback. Do not store `HEROKU_API_KEY` or dumps in git.
 
 ## Live TrueForge
 
