@@ -35,7 +35,7 @@ Collapsed means the three summaries could be swapped without losing information 
 
 If any of analytics, logs, or deploys is **missing** after the one create-retry, refuse a root cause. Do not patch. Do not open a PR. Partial evidence is not enough.
 
-If `deploys.still_true` is **false**, the brief is stale (SHA or plan catalog no longer matches). Refuse a root cause. Do not patch. Do not open a PR.
+Unless `deploys.still_true` is exactly **true**, refuse a root cause. Do not patch. Do not open a PR. Missing or malformed `still_true` is stale (same as `still_true` is false).
 
 ## If they collapse
 

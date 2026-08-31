@@ -46,7 +46,7 @@ export function hostedOpenAiKeyGuard(baseUrl: string, apiKey: string | undefined
   if (!isJudgeHost(host)) {
     return undefined;
   }
-  if (!apiKey) {
+  if (!apiKey || apiKey.trim() === "") {
     return "judge-host import requires OPENAI_API_KEY";
   }
   return undefined;
@@ -112,6 +112,11 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     id: "stale-brief-refuse",
     re: /still_true is false/,
     message: "stale deploys.still_true must refuse a write",
+  },
+  {
+    id: "still-true-exactly-true",
+    re: /Unless deploys\.still_true is exactly true/,
+    message: "missing or malformed still_true must refuse a write",
   },
   {
     id: "no-warehouse-on-root",

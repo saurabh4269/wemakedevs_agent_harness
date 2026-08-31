@@ -63,7 +63,7 @@ function redacted(ok: boolean): string {
 }
 
 async function registerOpenAI(baseUrl: string): Promise<void> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
   const missingKey = hostedOpenAiKeyGuard(baseUrl, apiKey);
   if (missingKey) {
     throw new Error(missingKey);
@@ -240,7 +240,7 @@ async function main(): Promise<void> {
   if (hostedGuard) {
     throw new Error(hostedGuard);
   }
-  const hostedKey = hostedOpenAiKeyGuard(baseUrl, process.env.OPENAI_API_KEY);
+  const hostedKey = hostedOpenAiKeyGuard(baseUrl, process.env.OPENAI_API_KEY?.trim());
   if (hostedKey) {
     throw new Error(hostedKey);
   }
