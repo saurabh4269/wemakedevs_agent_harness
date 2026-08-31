@@ -37,6 +37,6 @@ Dynamic subagents share the root tool set. There is no per-subagent `enable_tool
 - **Film source (do not click):** local session `01m1a87xjewncn310ymqy3yz01` on `[::1]:8790` (4.1-mini). Qualify PASS. Never Approve/Deny that session.
 
 
-- **Hosted FAIL, do not retry:** `01m1advv5np7mqwse1xf2hdpyc` (empty-cwd skip, no `open_draft_pr`); `01m1ayqn9563da3mgerw6nwpq5` (asked the user about subagent overload; no clone, no pause). Ignore empty `01m1ayra0m7tdj5rphtnsqevyw`.
+- **Hosted FAIL, do not retry:** `01m1advv5np7mqwse1xf2hdpyc` (empty-cwd skip, no `open_draft_pr`); `01m1ayqn9563da3mgerw6nwpq5` (asked the user about subagent overload; no clone, no pause). Ignore empty `01m1ayra0m7tdj5rphtnsqevyw`. `ask_user_questions` is now off so a new hosted session cannot bail that way.
 
 Free OpenRouter: do not use Luna or paid 4.1-mini on the hosted agent.

@@ -8,6 +8,6 @@ Full commands live in the root [README.md](../README.md) (local install, fixture
 - Judge host: https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com).
 - Render service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) tracks `main` with `autoDeployTrigger: commit`. Merge to main deploys the image. Do not Apply the Blueprint on workspace `tea-ctoktrjtq21c73cufog0`.
 - Wake: `GET /healthz` → `OK!`. Cold start about 30s.
-- Image deploy does not re-import LOOP. After `agents/loop.json` or skills change, import against the judge URL with the Nemotron `:free` model env vars listed in [learnings.md](learnings.md) item 12. `import-loop.ts` defaults to `gpt-4.1-mini` without them.
+- Image deploy does not re-import LOOP. After `agents/loop.json` or skills change, import against the judge URL with the Nemotron `:free` model env vars listed in [learnings.md](learnings.md) item 12. `import-loop.ts` defaults to `gpt-4.1-mini` without them, and now **refuses** a judge-host import that is not `openrouter/nemotron-3-super-120b-a12b-free`.
 - Secrets: `/home/box/.secrets/loop-trueforge.env`. Never echo. Never commit.
 - DNS: CNAME `loop` on `heisenbug.in` only. Never touch apex or `www`.

@@ -33,9 +33,11 @@ Independent evidence means each source adds facts the others do not:
 
 Collapsed means the three summaries could be swapped without losing information (same claim, same evidence id, high overlap). Example: "checkout is broken so conversion dropped" in all three.
 
+If `deploys.still_true` is **false**, the brief is stale (SHA or plan catalog no longer matches). Refuse a root cause. Do not patch. Do not open a PR.
+
 ## If they collapse
 
-Refuse a root cause. Say so plainly. Do not patch. Do not open a PR. Ask for better source access or stop.
+Refuse a root cause. Say so plainly. Do not patch. Do not open a PR. Do not call `ask_user_question`. Stop.
 
 ## If they are independent
 
@@ -43,14 +45,14 @@ Synthesize. Name the causal chain (deploy → log signature → funnel step).
 
 Then, on the **root** thread (still no direct `query_*`):
 
-1. Emit TrueForge generative UI (OpenUI). `config.generative_ui.enabled` is already true. One fenced `openui` block with **one chart**, **one table**, and **one Type A/B card** from this independence check. Example shape:
+1. Emit TrueForge generative UI (OpenUI). `config.generative_ui.enabled` is already true. One fenced `openui` block with **one chart**, **one table**, and **one Type A/B card** from this independence check. Cite each `evidence_id` on the card. Example shape:
 
 ````
 ```openui
 root = Stack([typeCard, chart, table])
-typeCard = Card([TextContent("Type A — break", "large-heavy"), TextContent("Independent sources. Patch the tenant.", "small")])
+typeCard = Card([TextContent("Type A — break", "large-heavy"), TextContent("Independent. Cite funnel-cta-desktop-chrome, invalid-plan-id-checkout-ts, catalog-v3-rollout.", "small")])
 chart = BarChart(["before", "after"], [Series("checkout_conversion %", [4.2, 3.4])], "grouped", "Window", "Rate")
-table = Table([Col("Source", ["analytics", "logs", "deploys"]), Col("Fact", ["metric + segment", "error + path", "service + version"])])
+table = Table([Col("Source", ["analytics", "logs", "deploys"]), Col("Fact", ["metric + segment", "error + path", "service + version"]), Col("Evidence", ["funnel-cta-desktop-chrome", "invalid-plan-id-checkout-ts", "catalog-v3-rollout"])])
 ```
 ````
 

@@ -5,7 +5,7 @@ description: After independent evidence, classify Type A (break → patch in san
 
 # Type A vs Type B
 
-Use this only after three-source independence passes.
+Use this only after three-source independence passes. Do not call `ask_user_question`. If a sandbox exec is slow, wait. If one named subagent failed, you already retried that exact name once — continue.
 
 ## Type A — break
 

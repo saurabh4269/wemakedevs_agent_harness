@@ -32,3 +32,5 @@ TrueForge chat is the product UI. Demo is stock TrueForge at :8790 (no login). O
 - Fixture MCP is fixture. Official "connected not mocked" is a Best Use risk — say it.
 - Skills need sandbox. Daytona provider is **ready** as of 2026-08-31 ~02:22 IST (exec proven). Remaining Type A hole is **tenant sources in the sandbox cwd**, not provider config. See [status.md](status.md).
 - Spark extras (ADR 8): generative UI + Code Mode inside this incident. Do not add a second product.
+- `ask_user_questions` is **off** (ADR 16). Hosted Nemotron used it to bail. Investigation is not a form.
+- Deploys payload includes `still_true` (ADR 18). Stale brief → no PR.

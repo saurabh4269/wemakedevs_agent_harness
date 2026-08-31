@@ -116,7 +116,7 @@ In TrueForge chat, pick agent loop and send:
 
 > Checkout conversion dropped about 19% since Friday afternoon on desktop Chrome. Find the root cause. If it is a break, patch the tenant in the sandbox and open a draft PR. Do not merge. Do not deploy prod.
 
-You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself (`query_*` as direct calls) or spawn a fourth / patcher subagent. After those three return, the root emits TrueForge generative UI (one OpenUI chart, one table, one Type A/B card) and may use Code Mode (`mcp_client` in the Daytona sandbox) to group error rates / deploys in Python; counts come from code. Do not put `open_draft_pr` in that script.
+You should see three subagent threads first (analytics, logs, deploys) — the root must not query warehouse tools itself (`query_*` as direct calls) or spawn a fourth / patcher subagent. The root does not call `ask_user_question`. After those three return, the root emits TrueForge generative UI (one OpenUI chart, one table, one Type A/B card with evidence ids) and may use Code Mode (`mcp_client` in the Daytona sandbox) to group error rates / deploys in Python; counts come from code. Do not put `open_draft_pr` in that script. If `deploys.still_true` is false, LOOP refuses a write.
 
 The Daytona snapshot does not include this git repo. `sandbox.created` means a sandbox exists; a failed `cp fixtures/tenant` is not "no sandbox". The root clones the public tenant, then patches:
 

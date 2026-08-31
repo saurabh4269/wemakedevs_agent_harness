@@ -68,7 +68,13 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 26. **Grok Bot Auto-review** (this box, not Qodo) blocked: PUT of hosted agent clone/write instructions; follow-up POST turn to `01m1advv5np7mqwse1xf2hdpyc`; a standing GitHub routine that would auto-merge + POST Render deploys. Do not retry those via a quieter reformulation. Safer path: merge to `main` (auto-deploy) + `import-loop.ts`. Long `python3 -c` and large runner scripts can fail with "executable content could not be bound". Workaround: explicit `curl` to the TrueForge API.
 
-27. **How to talk to hosted TrueForge** (no login):
+27. **`ask_user_question` is not a pause.** Hosted Nemotron called it after the three looks and stopped. That is not the qualify beat. `ask_user_questions.enabled` is **false**. Instructions: do not call it; retry a failed named subagent once; then continue. Do not turn it back on to "be helpful."
+
+28. **Hosted import can clobber the free model.** `import-loop.ts` defaults OpenRouter to `gpt-4.1-mini`. Judge host must pass the Nemotron `:free` FQN. `hostedModelGuard` now throws if the base URL is `loop.heisenbug.in` / `loop-trueforge.onrender.com` and the FQN is anything else.
+
+29. **Stale brief.** `deploys.still_true === false` means the SHA / plan catalog in the brief no longer matches. Refuse a root cause. Do not open a PR.
+
+30. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
     - `POST /sessions` body `{"agent":{"name":"loop"}}`
     - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`

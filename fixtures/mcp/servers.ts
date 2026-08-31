@@ -45,7 +45,7 @@ export function createWarehouseServer(): McpServer {
             default_story: defaultStory(),
             stories: ["independent", "collapsed"],
             tenant: "fixtures/tenant",
-            note: "Sources must stay independent. Collapsed story should refuse a root cause.",
+            note: "Sources must stay independent. Collapsed story should refuse a root cause. deploys.still_true false means the brief is stale — do not open a PR.",
           }),
       );
       continue;

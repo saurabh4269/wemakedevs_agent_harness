@@ -32,4 +32,4 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Priority
 
-See [next.md](next.md). Short: land this handoff plus auto-deploy, then a new hosted conversion-drop (or film the local PASS), then YouTube, then blog, then form. Qodo Highs 0 before every merge. CodeRabbit is noise.
+See [next.md](next.md). Short: land the hosted-qualify harden PR, re-import Nemotron, new hosted conversion-drop (or film the local PASS), then YouTube, publish the Field Report, then form. Qodo Highs 0 before every merge. CodeRabbit is noise.

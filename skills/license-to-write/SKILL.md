@@ -21,6 +21,10 @@ TrueForge pauses on `@write` / `@destructive` (`require_approval_for_tools`). Wa
 
 Only the root agent may call `open_draft_pr` or `flag_incident`, and only after the three-source independence check passes.
 
+If the deploys brief has `still_true` false (SHA or plan catalog no longer matches live), **do not** open a PR. The brief is stale. Say so and stop.
+
+Do not call `ask_user_question` instead of writing. A written next-steps list is not a substitute for `open_draft_pr`.
+
 Never spawn a fourth subagent to write (no `patcher`, no github writer). Type A patches stay in the Daytona sandbox on the root thread. **sandbox.created means a sandbox exists.** A failed `cp fixtures/tenant` is not "no sandbox" — clone the public repo, patch `checkout.ts`, then the root calls `open_draft_pr` (which pauses). If there is no sandbox, skip the patch and still do not hand writes to a subagent.
 
 Code Mode scripts may call `loop-warehouse` read-only tools via `mcp_client`. They must **not** call `open_draft_pr`, `flag_incident`, or `request_prod_deploy`. Those stay as root MCP tool calls after the patch, so the human pause still fires.

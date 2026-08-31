@@ -4,11 +4,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isResourceName } from "../src/resource-name.js";
 import {
+  HOSTED_FREE_MODEL_FQN,
   LOOP_AGENT_NAME,
   LOOP_INSTRUCTION_RULES,
   LOOP_SKILL_NAMES,
   REQUIRED_SUBAGENTS,
   TRUEFORGE_HAS_PER_SUBAGENT_TOOLS,
+  hostedModelGuard,
   validateLoopAgent,
   type SavedAgent,
 } from "../src/spec.js";
@@ -34,6 +36,8 @@ describe("LOOP agent spec shape", () => {
     expect(agent.manifest.config?.sandbox?.enabled).toBe(true);
     expect(agent.manifest.config?.dynamic_sub_agents?.enabled).toBe(true);
     expect(agent.manifest.config?.generative_ui?.enabled).toBe(true);
+    expect(agent.manifest.config?.ask_user_questions?.enabled).toBe(false);
+    expect(agent.manifest.model.params?.max_tokens).toBe(8192);
     expect(agent.manifest.skills?.map((skill) => skill.name)).toEqual([...LOOP_SKILL_NAMES]);
     const parts = agent.manifest.model.name.split("/");
     expect(parts).toHaveLength(2);
@@ -59,6 +63,24 @@ describe("LOOP agent spec shape", () => {
       expect(instructions, rule.id).toMatch(rule.re);
     }
     expect(instructions).not.toMatch(/until those three reports exist/);
+    expect(instructions).toMatch(/Do not call ask_user_question/);
+    expect(instructions).toMatch(/retry that exact name once/);
+    expect(instructions).toMatch(/still_true is false/);
+  });
+
+  it("refuses a hosted import that would replace the free Nemotron model", () => {
+    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN)).toBeUndefined();
+    expect(hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN)).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini")).toMatch(/nemotron/);
+    expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
+  });
+
+  it("rejects a spec that turns ask_user_questions back on", () => {
+    const clone = structuredClone(agent);
+    clone.manifest.config = { ...clone.manifest.config, ask_user_questions: { enabled: true } };
+    expect(
+      validateLoopAgent(clone).some((issue) => issue.path === "manifest.config.ask_user_questions.enabled"),
+    ).toBe(true);
   });
 
   it("teaches the root to clone the public tenant, keep the sandbox, emit OpenUI, and use Code Mode", () => {

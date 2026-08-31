@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TrueForge } from "@truefoundry/trueforge-sdk";
 import type { SavedAgent } from "../src/spec.js";
-import { validateLoopAgent } from "../src/spec.js";
+import { hostedModelGuard, validateLoopAgent } from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -195,6 +195,11 @@ async function main(): Promise<void> {
   const modelFqn = process.env.LOOP_MODEL_FQN;
   if (modelFqn) {
     raw.manifest.model.name = modelFqn;
+  }
+
+  const hostedGuard = hostedModelGuard(baseUrl, raw.manifest.model.name);
+  if (hostedGuard) {
+    throw new Error(hostedGuard);
   }
 
   const issues = validateLoopAgent(raw);

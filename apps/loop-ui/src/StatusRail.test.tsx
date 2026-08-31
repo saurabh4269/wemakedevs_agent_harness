@@ -14,6 +14,7 @@ describe("StatusRail", () => {
     expect(screen.getByText("Doing")).toBeInTheDocument();
     expect(screen.getByText("Waiting")).toBeInTheDocument();
     expect(screen.getByText("Did")).toBeInTheDocument();
+    expect(screen.getByText(/Warehouse and GitHub are fixtures/)).toBeInTheDocument();
   });
 
   it("shows an error label instead of idle copy", () => {

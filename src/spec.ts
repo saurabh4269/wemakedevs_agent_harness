@@ -16,11 +16,45 @@ export const REQUIRED_SUBAGENTS = ["analytics", "logs", "deploys"] as const;
 /** TrueForge AgentSpec has no per-subagent MCP enable/disable. DynamicSubAgentsConfig is only `{ enabled }`. */
 export const TRUEFORGE_HAS_PER_SUBAGENT_TOOLS = false;
 
+export const HOSTED_FREE_MODEL_FQN = "openrouter/nemotron-3-super-120b-a12b-free";
+
+export function hostedModelGuard(baseUrl: string, modelFqn: string | undefined): string | undefined {
+  let host = "";
+  try {
+    host = new URL(baseUrl).hostname;
+  } catch {
+    return undefined;
+  }
+  const judge = host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
+  if (!judge) {
+    return undefined;
+  }
+  if (modelFqn !== HOSTED_FREE_MODEL_FQN) {
+    return `hosted TrueForge must keep ${HOSTED_FREE_MODEL_FQN}`;
+  }
+  return undefined;
+}
+
 export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; message: string }> = [
   {
     id: "first-action-three",
     re: /FIRST ACTION[\s\S]*analytics, logs, deploys/,
     message: "first action must spawn analytics, logs, deploys",
+  },
+  {
+    id: "no-ask-user-question",
+    re: /Do not call ask_user_question/,
+    message: "root must not call ask_user_question",
+  },
+  {
+    id: "retry-named-once",
+    re: /retry that exact name once/,
+    message: "failed subagent spawn retries that name once",
+  },
+  {
+    id: "stale-brief-refuse",
+    re: /still_true is false/,
+    message: "stale deploys.still_true must refuse a write",
   },
   {
     id: "no-warehouse-on-root",
@@ -181,6 +215,12 @@ export function validateLoopAgent(agent: SavedAgent): SpecIssue[] {
   }
   if (!spec.config?.generative_ui?.enabled) {
     issues.push({ path: "manifest.config.generative_ui.enabled", message: "generative_ui must be on" });
+  }
+  if (spec.config?.ask_user_questions?.enabled) {
+    issues.push({
+      path: "manifest.config.ask_user_questions.enabled",
+      message: "ask_user_questions must stay off — hosted Nemotron used it to bail",
+    });
   }
 
   const skillNames = (spec.skills ?? []).map((skill) => skill.name);

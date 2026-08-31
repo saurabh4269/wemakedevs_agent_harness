@@ -50,7 +50,7 @@ Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `f
 
 **Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. A subagent can see `open_draft_pr`. Demo: deny the extra **patcher** write; approve the **root**.
 
-Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`.
+Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`. `ask_user_questions.enabled` is **false** — hosted Nemotron used it to bail.
 
 ## Layout
 

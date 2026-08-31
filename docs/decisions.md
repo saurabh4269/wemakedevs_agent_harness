@@ -21,3 +21,9 @@
 14. **Fixture MCP is labeled on purpose.** Warehouse is a canned story. `open_draft_pr` returns `mode:fixture` and a fake `html_url`. Say that out loud. Do not hide it from Kunal/Sai. Qualify still uses real TrueForge MCP, Daytona, and the write-approval pause.
 
 15. **Clock deadline passed; keep building.** Official close was Sun 30 Aug 2026 8:00pm London. Live page still said Submissions are open as of 2026-08-31 morning IST. No written late policy. Do not invent one.
+
+16. **`ask_user_questions` stays off.** Hosted Nemotron used `ask_user_question` to bail after the three looks ("service overload") and never reached clone / `open_draft_pr`. Investigation is not a form. If a named subagent fails, retry that exact name once, then continue.
+
+17. **Hosted import cannot replace the free model.** `hostedModelGuard` refuses a judge-host import unless `LOOP_MODEL_FQN` is `openrouter/nemotron-3-super-120b-a12b-free`. Default 4.1-mini would charge an account with $0 credits.
+
+18. **Stale brief does not write.** Deploys payload includes `still_true`. If it is false, refuse a root cause and do not open a PR. Pattern stolen from Lethe ("still true?"), implemented with LOOP warehouse fields, not a fifth agent.
