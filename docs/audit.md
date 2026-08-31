@@ -2,7 +2,7 @@
 
 LOOP is **not a new harness**. TrueForge still runs the loop, MCP client, Daytona sandbox, Approve/Deny, subagents, and session persist. This repo is agent policy + a job + a colocated fixture MCP.
 
-Judge live URL: https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Stock TrueForge UI. No login.
+Judge live URL: https://loop.heisenbug.in. Stock TrueForge UI. No login. Render free is exhausted — Heroku stand-up: [heroku.md](heroku.md).
 
 ## Qualify beats (must be visible in Agent Steps)
 

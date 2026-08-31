@@ -2,6 +2,9 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { colocatedFixtureEnv, fixtureListenBind } from "../fixtures/mcp/listen.js";
+import { applyHostedPlatformEnv } from "../src/hosted-env.js";
+
+applyHostedPlatformEnv(process.env);
 
 const here = dirname(fileURLToPath(import.meta.url));
 const compiled = here.endsWith("/dist/scripts") || here.endsWith("\\dist\\scripts");

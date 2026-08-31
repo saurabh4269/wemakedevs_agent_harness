@@ -16,7 +16,7 @@ If it would work as a chatbot, it does not qualify. A judge has to see TrueForge
 2. **Sandbox** — Type A clones this public repo (the Daytona snapshot is empty) and patches `fixtures/tenant/src/checkout.ts` so `enterprise` aliases `enterprise-annual-v3`.
 3. **Pause** — root `open_draft_pr` (`merge: false`) sits on Allow/Deny.
 
-**Judge URL:** https://loop.heisenbug.in — no login. Fallback https://loop-trueforge.onrender.com. Free web sleeps; ping `/healthz` first (~30s wake). Stock TrueForge chat is enough. `apps/loop-ui` is an optional Doing / Waiting / Did rail on the same incident.
+**Judge URL:** https://loop.heisenbug.in — no login. Stock TrueForge chat is enough. `apps/loop-ui` is an optional Doing / Waiting / Did rail on the same incident. Render free is exhausted; Heroku stand-up: [docs/heroku.md](docs/heroku.md).
 
 Warehouse answers and the draft PR URL are **fixtures** (`mode:fixture`, not Grafana, not GitHub.com). The pause, the sandbox, and the three looks are real TrueForge. Official page wants tools connected, not mocked — that is an honest Best Use risk. We say it in the video.
 
@@ -63,7 +63,7 @@ Copy .env.example to .env locally. Do not commit secrets.
 | --- | --- | --- |
 | Local npx trueforge | 8790 | SQLite |
 | Docker Compose hosted topology | 8791 | Postgres + Redis |
-| Public host loop.heisenbug.in | 443 | Render Postgres + Redis |
+| Public host loop.heisenbug.in | 443 | Heroku Postgres + Redis (Render free exhausted) |
 
 Local npx is the path below. Compose notes are at the bottom.
 
@@ -209,39 +209,26 @@ fixtures/tenant is a tiny TypeScript checkout the sandbox can patch. From that f
 
 TrueForge Daytona sandboxes start from a snapshot **without** this git repo. LOOP materializes the tenant inside the sandbox by cloning the public repo (no secrets), then patches `fixtures/tenant/src/checkout.ts`. Do not `cp fixtures/tenant` from a host path that is not in the sandbox cwd.
 
-## Hosting (Render)
+## Hosting (Heroku — Render free exhausted)
 
-Public judges should use https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com — do not disable the onrender subdomain). Hosted TrueForge is **not** local npx SQLite and **not** a Cloudflare tunnel. One free web service (`loop-trueforge`) runs `STANDALONE=false` against Postgres + Redis. The fixture MCP is **colocated** in that image on `127.0.0.1:8788` (Render private services have no free plan). OIDC is unset on purpose so anyone who can reach the host is admin (no-login judges). Free web sleeps when idle — ping `/healthz` first (~30s wake) before a judge demo. The live service tracks `main` with `autoDeployTrigger: commit`. Merge to main deploys the image.
+Public judges should use https://loop.heisenbug.in. Hosted TrueForge is **not** local npx SQLite. One Heroku container dyno runs `STANDALONE=false` against Heroku Postgres + Redis. The fixture MCP is **colocated** in that image on `127.0.0.1:8788`. OIDC is unset on purpose so anyone who can reach the host is admin (no-login judges). Use a **Basic** dyno (Eco sleeps). Commands: [docs/heroku.md](docs/heroku.md).
 
 Leave local `npx` TrueForge on :8790 running. Sitting pause session `01m1a87xjewncn310ymqy3yz01` is local-only. Do not Approve/Deny it.
 
-### Greenfield workspace (Blueprint Apply)
+Custom domain is Cloudflare CNAME `loop` on `heisenbug.in` only — never touch apex or `www` (Vercel). After Heroku ACM, that CNAME target is the hostname from `heroku domains`. `thexplorers.xyz` is expired; do not use it.
 
-If the workspace has **no** `loop-postgres` / `loop-redis` yet:
+### Hosted import
 
-https://dashboard.render.com/blueprint/new?repo=https://github.com/saurabh4269/wemakedevs_agent_harness
-
-Select branch `main`. Paste OpenRouter / NVIDIA / Daytona keys in the dashboard (`sync: false` — they are not in git). Do not enable OIDC env vars.
-
-This workspace already has the live web service. Custom domain is Cloudflare CNAME `loop` → `loop-trueforge.onrender.com` on `heisenbug.in` only — never touch apex or `www` (Vercel). `thexplorers.xyz` is expired; do not use it. A greenfield Apply elsewhere would mint another `onrender.com` hostname; do not Apply here.
-
-### Existing Saurabh workspace — do not Apply
-
-Workspace `tea-ctoktrjtq21c73cufog0` (Oregon, free) already has:
-
-- Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`)
-- Key Value `loop-redis` (`red-daaa7ohsrm7s73ed64mg`)
-
-**Do not Apply the Blueprint there** — Render would duplicate those datastores. Web service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is already live and wired to those instances. The live service tracks `main` with `autoDeployTrigger: commit`. Merge to main deploys the image. `render.yaml` still lists the datastores so a greenfield Apply elsewhere stays valid.
-
-### Hosted import (already done)
-
-Hosted LOOP agent `01m1aaemb86czjax2v232nxygf` is imported. Point LOOP MCP warehouse / github at the **in-container** fixture:
+Point LOOP MCP warehouse / github at the **in-container** fixture:
 
 - `http://127.0.0.1:8788/warehouse`
 - `http://127.0.0.1:8788/github`
 
-Hosted model is OpenAI GPT-5.6 Luna (FQN `openai/gpt-5-6-luna`). Local film agent may stay on 4.1-mini. Do not put keys in git.
+Hosted model is OpenAI GPT-5.6 Luna (FQN `openai/gpt-5-6-luna`). After a new Postgres, re-run `import-loop.ts` against https://loop.heisenbug.in with the Luna env vars in the runbook. Local film agent may stay on 4.1-mini. Do not put keys in git.
+
+### Render (previous host — do not Apply)
+
+Workspace `tea-ctoktrjtq21c73cufog0` already has `loop-postgres` / `loop-redis` / `loop-trueforge`. **Do not Apply the Blueprint** — it would duplicate those datastores. Stop the Render web service once Heroku `/healthz` is 200 so it stops burning a dead free quota.
 
 ### Local Compose (optional)
 
@@ -299,7 +286,8 @@ scripts/benchmark.ts      LOOP vs chat baseline table
 skills/*/SKILL.md         git-backed skills
 fixtures/mcp/             mode:fixture warehouse + github MCP
 fixtures/tenant/          patchable checkout
-src/                      independence, freshness, write policy, benchmark, spec
+src/                      independence, freshness, write policy, benchmark, spec, hosted-env
+heroku.yml                Heroku container stack
 tests/
 docs/                     agent handoff (start at docs/README.md)
 apps/loop-ui/             Vite TrueForgeUI embed (agent loop)

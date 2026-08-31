@@ -22,7 +22,7 @@ https://github.com/saurabh4269/wemakedevs_agent_harness
 
 **Deployed (optional)**
 https://loop.heisenbug.in
-Fallback: https://loop-trueforge.onrender.com
+Fallback after Heroku cutover: `https://<app>.herokuapp.com` (app name contains `loop`).
 Do not put `loop.thexplorers.xyz`.
 
 **Video**

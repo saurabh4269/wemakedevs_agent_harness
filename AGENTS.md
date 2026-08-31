@@ -59,10 +59,11 @@ agents/loop.json          TrueForge agent { name, manifest }
 fixtures/mcp/             mode:fixture warehouse + github
 fixtures/tenant/          patchable checkout (enterprise alias still enterprise-annual after *-v3)
 skills/*/SKILL.md         git-backed skills
-src/                      independence, freshness, write-policy, spec, benchmark
+src/                      independence, freshness, write-policy, spec, benchmark, hosted-env
 scripts/import-loop.ts    SDK import
 scripts/benchmark.ts      LOOP vs chat baseline (`npm run benchmark`)
 scripts/start-hosted-trueforge.ts  colocated fixture + TrueForge
+heroku.yml                Heroku container stack (web + Postgres + Redis)
 deploy/trueforge.Dockerfile
 tests/
 apps/loop-ui/             optional TrueForgeUI embed
@@ -75,7 +76,7 @@ render.yaml               Blueprint for a *greenfield* workspace only
 Full commands: [docs/runbook.md](docs/runbook.md).
 
 - **Local film host:** `npx @truefoundry/trueforge@latest` on `[::1]:8790` (SQLite). **Do not kill it.** Local agent `loop` is `openrouter/gpt-4.1-mini`. Do not PUT that model off 4.1-mini while the sitting pause is the film source.
-- **Judge host:** https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Render web `loop-trueforge` tracks **`main`** with **`autoDeployTrigger: commit`**. Merge to main deploys the image. **Do not Apply the Blueprint.**
+- **Judge host:** https://loop.heisenbug.in. Render free is exhausted — stand up Heroku with [docs/heroku.md](docs/heroku.md). Do **not** Apply `render.yaml`. Do not put `HEROKU_API_KEY` or `RENDER_API_KEY` in git.
 - **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
 - TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
 - Prefer OpenAI GPT-5.6 Luna on the judge host. Local film may stay OpenRouter 4.1-mini. NVIDIA NIM is backup locally. Daytona required for skills/sandbox.
@@ -87,7 +88,7 @@ Full commands: [docs/runbook.md](docs/runbook.md).
 - Prior internal control-plane work, Goodman, or Bhoonaksha. Prior art only. Do not ship it. Do not mention it in README, form, or judge-facing copy.
 - Auth for judges. Login ON only if live GitHub writes require it.
 - Custom chat unless it is a themed `@truefoundry/trueforge-ui` embed (`apps/loop-ui`). Sai: stock TrueForge UI unless the product needs another.
-- A GitHub Action that stores `RENDER_API_KEY` in git. Native Render auto-deploy on `main` is the CI/CD.
+- A GitHub Action that stores `RENDER_API_KEY` or `HEROKU_API_KEY` in git. Deploy from the Heroku dashboard/CLI.
 - A second product for generative UI / Code Mode. Those extras stay inside the same LOOP incident.
 
 ## Demo prompt

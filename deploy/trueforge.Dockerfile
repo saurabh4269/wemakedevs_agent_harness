@@ -8,5 +8,6 @@ COPY scripts ./scripts
 COPY apps/loop-ui ./apps/loop-ui
 RUN npm ci && npx tsc -p tsconfig.build.json && npm prune --omit=dev
 ENV HOST=0.0.0.0 NODE_ENV=production STANDALONE=false LOOP_FIXTURE_PORT=8788
+# Render used 10000; Heroku injects $PORT. TrueForge binds HOST+PORT. Fixture stays 127.0.0.1:8788.
 EXPOSE 10000
 CMD ["node","dist/scripts/start-hosted-trueforge.js"]

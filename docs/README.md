@@ -8,6 +8,7 @@ Start here: root [AGENTS.md](../AGENTS.md), then this index, then [learnings.md]
 | --- | --- |
 | [learnings.md](learnings.md) | Pitfalls and the fix for each. Read after AGENTS.md. |
 | [runbook.md](runbook.md) | How to run locally, deploy, import, wake, DNS. Commands. No secrets. |
+| [heroku.md](heroku.md) | Move the judge host off exhausted Render free onto Heroku credits. |
 | [status.md](status.md) | **Living.** PRs, live host, sessions, blockers. Rewrite, do not append. |
 | [next.md](next.md) | Ordered remaining work. |
 | [hackathon.md](hackathon.md) | Official rules, tracks, Qodo trail, qualify trio |
@@ -37,3 +38,4 @@ How to run is also the root [README.md](../README.md).
 9. Prior WeMakeDevs winners / TrueForge example agents → [previous-winners.md](previous-winners.md). Curate. No transcript dumps.
 10. Never commit secrets. Never paste `.env`. Point at `/home/box/.secrets/loop-trueforge.env` and stop.
 11. Change of independence / write / tenant gates → [benchmark.md](benchmark.md) and root README table (`npm run benchmark` must still match).
+12. Change of hosted topology (Render / Heroku) → [heroku.md](heroku.md), [runbook.md](runbook.md), [status.md](status.md). Never commit keys.

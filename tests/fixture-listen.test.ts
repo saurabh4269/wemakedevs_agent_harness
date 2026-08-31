@@ -36,7 +36,7 @@ describe("fixture MCP listen bind", () => {
     expect(() => fixtureListenBind({ LOOP_FIXTURE_PORT: "8788.5" })).toThrow(/Invalid fixture MCP port/);
   });
 
-  it("keeps the colocated sidecar on loopback 8788 while TrueForge uses Render PORT", () => {
+  it("keeps the colocated sidecar on loopback 8788 while TrueForge uses the platform PORT", () => {
     const env = colocatedFixtureEnv({ HOST: "0.0.0.0", PORT: "10000", NODE_ENV: "production" });
     expect(env.PORT).toBeUndefined();
     expect(env.HOST).toBe("127.0.0.1");

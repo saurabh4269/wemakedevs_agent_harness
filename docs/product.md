@@ -20,7 +20,7 @@ A chat baseline that copies one query into three labels would still open a PR. L
 | --- | --- | --- | --- |
 | Local `npx` | 8790 | SQLite | none |
 | Compose | 8791 | Postgres + Redis | optional OIDC |
-| Public | https://loop.heisenbug.in | Render Postgres + Redis, `PUBLIC_BASE_URL` | none (OIDC unset) |
+| Public | https://loop.heisenbug.in | Heroku Postgres + Redis, `PUBLIC_BASE_URL` | none (OIDC unset) |
 
 Judges should run without creating an account if possible.
 
