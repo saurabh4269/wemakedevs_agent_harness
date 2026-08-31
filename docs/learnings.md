@@ -74,7 +74,9 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 29. **Stale brief.** `deploys.still_true === false` means the SHA / plan catalog in the brief no longer matches. Refuse a root cause. Do not open a PR.
 
-30. **How to talk to hosted TrueForge** (no login):
+30. **Subagents must not call `get_current_datetime` or `exec`.** Hosted session `01m1b2226f575dw2j3z0bwc3gx` retried analytics/logs correctly and never asked the user, but each subagent burned a datetime (and analytics burned an exec) before the warehouse tool. NVIDIA `:free` then 503'd deploys (`Upstream error from Nvidia: Service temporarily overloaded`) and the turn died. One-tool briefs only.
+
+31. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
     - `POST /sessions` body `{"agent":{"name":"loop"}}`
     - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`

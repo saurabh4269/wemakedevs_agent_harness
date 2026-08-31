@@ -52,6 +52,11 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
     message: "failed subagent spawn retries that name once",
   },
   {
+    id: "subagent-one-tool",
+    re: /Do not call get_current_datetime, exec, or any other tool/,
+    message: "subagents must only call their warehouse tool",
+  },
+  {
     id: "stale-brief-refuse",
     re: /still_true is false/,
     message: "stale deploys.still_true must refuse a write",

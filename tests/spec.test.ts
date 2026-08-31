@@ -66,6 +66,7 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/Do not call ask_user_question/);
     expect(instructions).toMatch(/retry that exact name once/);
     expect(instructions).toMatch(/still_true is false/);
+    expect(instructions).toMatch(/Do not call get_current_datetime, exec, or any other tool/);
   });
 
   it("refuses a hosted import that would replace the free Nemotron model", () => {

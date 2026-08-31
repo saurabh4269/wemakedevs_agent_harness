@@ -11,13 +11,13 @@ LOOP may name a root cause only after three **independent** sources agree they a
 
 The first action of an investigation is always to spawn three named one-level subagents: analytics, logs, deploys. The root must not call warehouse tools itself. Repeat: the root never calls `query_analytics`, `query_logs`, or `query_deploys` as direct tool calls. Spawn no other subagent — never a fourth, never a `patcher`. Subagents cannot ask the user. Subagents must not call loop-github tools.
 
-Spawn one-level subagents:
+Spawn one-level subagents with these exact questions:
 
-1. **analytics** — funnel, segment, metric, when it moved. Use `query_analytics`.
-2. **logs** — error class, file, route, first seen. Use `query_logs`.
-3. **deploys** — service, time, version, commit. Use `query_deploys`.
+1. **analytics** — Call `query_analytics` once. Return evidence_id, unique_facts, summary. Do not call `get_current_datetime`, `exec`, or any other tool.
+2. **logs** — Call `query_logs` once. Return evidence_id, unique_facts, summary. Do not call `get_current_datetime`, `exec`, or any other tool.
+3. **deploys** — Call `query_deploys` once. Return evidence_id, unique_facts, summary, still_true. Do not call `get_current_datetime`, `exec`, or any other tool.
 
-Give each subagent a *different question*. "What broke checkout?" three times is one query.
+Give each subagent a *different question*. "What broke checkout?" three times is one query. Extra tools on a subagent waste tokens and flake the free model.
 
 Subagents cannot ask the user questions. They return evidence only.
 

@@ -76,7 +76,9 @@ Gen UI and Code Mode did **not** appear on the passing run. Spark extras, not qu
 2. Session `01m1ayqn9563da3mgerw6nwpq5` / turn `01m1ayqw5eqseg1hd8vt7tj3cz.ujw6of` — DONE 2026-08-31 03:48 UTC / 09:18 IST. Spawned `analytics` (three times), then `logs`, then `deploys`. `sandbox.created` + one `exec`. Then main called `ask_user_question` ("Subagent creation is failing due to service overload"). **No git clone. No `open_draft_pr`. No pending approval.** Output null; required action is that question. **Do not answer it. Do not Approve/Deny.** URL: https://loop.heisenbug.in/sessions/01m1ayqn9563da3mgerw6nwpq5
 3. Accidental empty session `01m1ayra0m7tdj5rphtnsqevyw` — ignore. Do not POST a turn there.
 
-This PR turns `ask_user_questions` **off** so Nemotron cannot bail that way. New hosted session only after import of this spec. Nemotron Super `:free` is still slow and can flake subagent creation. Local 4.1-mini remains the proven film source.
+This PR turns `ask_user_questions` **off** so Nemotron cannot bail that way.
+
+Hosted retry `01m1b2226f575dw2j3z0bwc3gx` / turn `01m1b226wcx97fymfrf49sk49n.xswmv9` (2026-08-31 ~04:43 UTC): did **not** call `ask_user_question`. Retried `analytics` and `logs` after NVIDIA overload; both then called `query_*` and finished. `deploys` hit `Upstream error from Nvidia: Service temporarily overloaded` and the turn died before a second deploys retry. Subagents had wasted tokens on `get_current_datetime` / `exec`. **Do not Approve/Deny.** Follow-up commit locks subagent briefs to one warehouse tool. Local 4.1-mini remains the proven film source.
 
 Honest audit of real vs fixture: [audit.md](audit.md). Pitfalls: [learnings.md](learnings.md).
 
