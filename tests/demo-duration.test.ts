@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compositionSeconds } from "../apps/loop-demo/src/beats.ts";
+import { compositionSeconds } from "../apps/loop-demo/src/beats.js";
 
 describe("LOOP judge demo timing", () => {
   it("stays under the 3 minute YouTube cap", () => {
