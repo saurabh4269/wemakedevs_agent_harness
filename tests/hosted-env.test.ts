@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { applyHostedPlatformEnv, parsePostgresUrl, withSslMode } from "../src/hosted-env.js";
+import {
+  applyHostedPlatformEnv,
+  parsePostgresUrl,
+  usesColocatedRedis,
+  withSslMode,
+} from "../src/hosted-env.js";
 
 describe("hosted platform env", () => {
   it("parses a Heroku-style DATABASE_URL without logging it", () => {
@@ -41,6 +46,16 @@ describe("hosted platform env", () => {
     expect(env.STANDALONE).toBe("false");
     expect(env.LOOP_FIXTURE_PORT).toBe("8788");
     expect(env.DATABASE_URL).toMatch(/sslmode=require/);
+    expect(usesColocatedRedis(env)).toBe(false);
+  });
+
+  it("defaults REDIS_URL to colocated loopback when unset", () => {
+    const env: NodeJS.ProcessEnv = {
+      DATABASE_URL: "postgres://tf:secret@db.example:5432/trueforge",
+    };
+    applyHostedPlatformEnv(env);
+    expect(env.REDIS_URL).toBe("redis://127.0.0.1:6379");
+    expect(usesColocatedRedis(env)).toBe(true);
   });
 
   it("does not clobber Render POSTGRES_HOST when both are set", () => {

@@ -8,17 +8,18 @@ Image deploy does **not** re-import the agent by itself. Prefer **porting Render
 
 ## What you are standing up
 
-Same topology as Render: one web process, Postgres, Redis, fixture MCP colocated on `127.0.0.1:8788`.
+One web process, Heroku Postgres, **colocated** Redis + fixture MCP on `127.0.0.1` (no `heroku-redis` addon).
 
 | Piece | Heroku |
 | --- | --- |
-| Web | container dyno from `deploy/trueforge.Dockerfile` (`heroku.yml`) |
+| Web | Basic container dyno from root `Dockerfile` (`heroku.yml`) |
 | Postgres | `heroku-postgresql:essential-0` → `DATABASE_URL` (mapped to `POSTGRES_*` at boot) |
-| Redis | `heroku-redis:mini` → `REDIS_URL` |
+| Redis | **In-image** `redis-server` → `REDIS_URL=redis://127.0.0.1:6379` (not mini addon) |
 | Public origin | `PUBLIC_BASE_URL=https://loop.heisenbug.in` |
 | Fallback host | `https://<app>.herokuapp.com` |
+| **Education-pack bill** | Basic ~$7 + essential-0 ~$5 ≈ **~$12/mo** (fits ~$13–15 GH Education Heroku credit) |
 
-Use **Basic** (or Standard-1X), not Eco. Eco sleeps like Render free. Credits cover Basic.
+Use **Basic**, not Eco. Eco sleeps like Render free. Do **not** attach `heroku-redis:mini` (~$3/mo) — TrueForge still needs Redis for distributed mode, but a loopback sidecar is enough for one dyno.
 
 ## 1. CLI (once)
 
@@ -45,10 +46,10 @@ heroku stack:set container -a "$APP"
 heroku dyno:resize web=basic -a "$APP"
 
 heroku addons:create heroku-postgresql:essential-0 --version 17 -a "$APP"
-heroku addons:create heroku-redis:mini -a "$APP"
+# Do NOT create heroku-redis:mini — image runs redis-server on 127.0.0.1:6379.
 ```
 
-Essential-0 / mini are the cheap credit-friendly plans. Do not attach a production-tier database for this demo. **`--version 17`** matches Render (`render.yaml` `postgresMajorVersion: "17"`). A 17→16 restore often fails.
+Essential-0 is the cheap credit-friendly Postgres plan. **`--version 17`** matches Render. A 17→16 restore often fails.
 
 ## 3. Config (no secrets in git)
 
@@ -76,12 +77,12 @@ OIDC stays unset (no-login judges). Anyone who can reach the host is admin — s
 
 ## 4. Deploy this repo
 
-`heroku.yml` builds `Dockerfile` at the **repo root** (Heroku sets the Docker build context to the Dockerfile’s directory). Keep root `Dockerfile` identical to `deploy/trueforge.Dockerfile` (Render still uses the `deploy/` path). The image installs `ca-certificates` for Postgres TLS.
+`heroku.yml` builds `Dockerfile` at the **repo root** (Heroku sets the Docker build context to the Dockerfile’s directory). Keep root `Dockerfile` identical to `deploy/trueforge.Dockerfile` (Render still uses the `deploy/` path). The image installs `ca-certificates` and **`redis-server`** (loopback peering).
 
-Heroku Redis mini TLS still fails Node’s default verify. Set once:
+Heroku Postgres TLS still fails Node’s default verify. Set once (scoped tradeoff for the demo host):
 
 ```bash
-heroku config:set NODE_TLS_REJECT_UNAUTHORIZED=0 -a "$APP"
+heroku config:set NODE_TLS_REJECT_UNAUTHORIZED=0 REDIS_URL=redis://127.0.0.1:6379 -a "$APP"
 ```
 
 From a clone of `main` (Docker Desktop / buildx often rejects plain `docker push` to `registry.heroku.com` with `unsupported` — use Docker media types):

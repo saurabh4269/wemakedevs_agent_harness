@@ -62,9 +62,28 @@ export function applyHostedPlatformEnv(env: NodeJS.ProcessEnv = process.env): No
   if (!env.REDIS_URL?.trim() && env.REDIS_TLS_URL?.trim()) {
     env.REDIS_URL = env.REDIS_TLS_URL.trim();
   }
+  // Single-dyno Heroku: peer Redis colocated in the container (no mini addon).
+  if (!env.REDIS_URL?.trim()) {
+    env.REDIS_URL = "redis://127.0.0.1:6379";
+  }
 
   env.HOST = env.HOST?.trim() || "0.0.0.0";
   env.STANDALONE = env.STANDALONE?.trim() || "false";
   env.LOOP_FIXTURE_PORT = env.LOOP_FIXTURE_PORT?.trim() || "8788";
   return env;
+}
+
+/** True when REDIS_URL points at loopback (sidecar redis-server in this image). */
+export function usesColocatedRedis(env: NodeJS.ProcessEnv = process.env): boolean {
+  const raw = env.REDIS_URL?.trim() ?? "";
+  if (!raw) {
+    return true;
+  }
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    return host === "127.0.0.1" || host === "localhost" || host === "::1";
+  } catch {
+    return false;
+  }
 }
