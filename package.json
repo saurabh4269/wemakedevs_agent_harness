@@ -12,6 +12,7 @@
     "test": "vitest run && npm test -w loop-ui",
     "fixture:mcp": "tsx fixtures/mcp/server.ts",
     "import:loop": "tsx scripts/import-loop.ts",
+    "benchmark": "tsx scripts/benchmark.ts",
     "ui": "npm run dev -w loop-ui",
     "ui:build": "npm run build -w loop-ui",
     "start:hosted": "tsx scripts/start-hosted-trueforge.ts"

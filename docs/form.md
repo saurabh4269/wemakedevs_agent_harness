@@ -38,7 +38,7 @@ LOOP is one incident responder. You paste a conversion-drop signal. The root doe
 
 If they are independent, it is a Type A break. The Daytona sandbox clones this public repo (the snapshot is empty), patches the enterprise plan alias in `fixtures/tenant/src/checkout.ts`, and the root calls `open_draft_pr` with merge off. TrueForge pauses. A person has to Allow or Deny. LOOP never merges and never deploys prod.
 
-Warehouse answers and the PR URL are labeled fixtures. The pause, the sandbox, and the three looks are not. We say that in the video.
+Warehouse answers and the PR URL are labeled fixtures. The pause, the sandbox, and the three looks are not. We say that in the video. `npm run benchmark` is LOOP vs a chat baseline that would still open a PR after copying one query three times — gates, not Grafana.
 
 AI assistants used this week: Cursor (Grok / Cloud Agent) for implementation and docs. We read every change. Qodo reviewed the PRs.
 

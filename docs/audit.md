@@ -23,9 +23,11 @@ Prompt:
 | Warehouse answers (`query_analytics` / `query_logs` / `query_deploys`) | **Fixture** — canned story in `fixtures/mcp/stories.ts`, not Grafana |
 | `open_draft_pr` | **Fixture** — `mode:fixture`, `live_github: false`, `html_url` is `https://github.example.invalid/loop-tenant/pull/42`. Never talks to GitHub.com |
 | Hosted Postgres + Redis, Render image, custom domain TLS | **Real** |
-| Qodo trail on merged PRs #1–#3 and #5–#7 | **Real** |
+| Qodo trail on merged PRs #1–#2 and #5–#9 | **Real** (`/agentic_review` on each). Screenshots are not the evidence. |
 
 Official page wants tools “connected, not mocked.” Judges will see `mode:fixture` in Agent Steps. Do not hide that. Pitch: a real-shaped incident on a real harness, with tools we own so a judge needs no login.
+
+Runnable comparison vs a chat baseline: [benchmark.md](benchmark.md) (`npm run benchmark`). Same honesty: gates, not live conversion.
 
 ## Honest TrueForge limit
 

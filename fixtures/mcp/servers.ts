@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { GITHUB_TOOLS, WAREHOUSE_TOOLS } from "./catalog.js";
 import { mayOpenDraftPr } from "../../src/freshness.js";
+import { refuseIfMergeRequested, refuseProdDeploy } from "../../src/write-policy.js";
 import {
   FIXTURE_MODE,
   deployFreshness,
@@ -98,13 +99,14 @@ export function createGithubServer(): McpServer {
       annotations: GITHUB_TOOLS[0].annotations,
     },
     async ({ title, body, branch, merge, still_true, scenario }) => {
-      if (merge) {
+      const mergeGate = refuseIfMergeRequested(merge);
+      if (mergeGate.refuse) {
         return jsonResult(
           {
             mode: FIXTURE_MODE,
             live_github: false,
             merged: false,
-            error: "LOOP never merges. Draft PRs only.",
+            error: mergeGate.error,
           },
           true,
         );
@@ -175,18 +177,7 @@ export function createGithubServer(): McpServer {
       },
       annotations: GITHUB_TOOLS[2].annotations,
     },
-    async ({ environment, version }) =>
-      jsonResult(
-        {
-          mode: FIXTURE_MODE,
-          live_github: false,
-          deployed: false,
-          environment,
-          version,
-          error: "LOOP never prod-deploys the tenant. Refused.",
-        },
-        true,
-      ),
+    async ({ environment, version }) => jsonResult(refuseProdDeploy({ environment, version }), true),
   );
 
   return server;

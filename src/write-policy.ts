@@ -15,6 +15,36 @@ export type CatalogTool = {
 export const WRITE_SERVER = "loop-github";
 export const READ_SERVER = "loop-warehouse";
 
+export const NEVER_MERGE_ERROR = "LOOP never merges. Draft PRs only.";
+export const NEVER_PROD_DEPLOY_ERROR = "LOOP never prod-deploys the tenant. Refused.";
+
+export function refuseIfMergeRequested(
+  merge: boolean | undefined,
+): { refuse: true; error: string } | { refuse: false } {
+  if (merge === true) {
+    return { refuse: true, error: NEVER_MERGE_ERROR };
+  }
+  return { refuse: false };
+}
+
+export function refuseProdDeploy(input: { environment: string; version: string }): {
+  mode: "fixture";
+  live_github: false;
+  deployed: false;
+  environment: string;
+  version: string;
+  error: string;
+} {
+  return {
+    mode: "fixture",
+    live_github: false,
+    deployed: false,
+    environment: input.environment,
+    version: input.version,
+    error: NEVER_PROD_DEPLOY_ERROR,
+  };
+}
+
 export function annotationsForKind(kind: ToolKind): ToolAnnotations {
   if (kind === "read") {
     return { readOnlyHint: true, destructiveHint: false };
