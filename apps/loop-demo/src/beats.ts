@@ -9,68 +9,78 @@ export type Caption = {
   line: string;
 };
 
-/** Spoken beats. Timestamps are rewritten after TTS by generate-voiceover.ts. */
+/**
+ * Spoken beats. Written like a person walking a friend through the product —
+ * not a trailer voice. Timestamps come from generate-voiceover.ts.
+ */
 export const VOICEOVER_BEATS: { id: string; text: string }[] = [
   {
     id: "open",
-    text: "Checkout conversion dropped about nineteen percent since Friday afternoon on desktop Chrome. LOOP is an incident responder. One TrueForge agent. Chat is the UI.",
+    text: "Hey — so checkout conversion dropped about nineteen percent since Friday afternoon, desktop Chrome. LOOP is our incident responder. One TrueForge agent. Chat is the UI.",
   },
   {
     id: "looks",
-    text: "Paste that signal. LOOP does not investigate itself. It spawns three one-level looks with distinct questions: analytics, logs, and deploys. Watch Agent Steps. Analytics returns the metric, the funnel step, the segment. Logs name the error, the code path, the timestamp, the count. Deploys pin the service, the release time, the catalog v-three rollout that afternoon.",
+    text: "You just paste that signal. LOOP doesn't go hunting by itself. It spins up three looks — analytics, logs, and deploys — each with a different question. Watch Agent Steps. Analytics gives you the metric, the funnel step, the segment. Logs give you the error, the file, the timestamp, the count. Deploys pin the service, the time it shipped, that catalog v-three rollout Friday afternoon.",
   },
   {
     id: "fixtures",
-    text: "Those warehouse answers are labeled fixtures. We say that out loud. The TrueForge pause, the Daytona sandbox, and the three named looks are real.",
+    text: "Quick honest bit. Those warehouse answers are fixtures. We say that out loud. The pause, the Daytona sandbox, and the three named looks are real.",
   },
   {
     id: "sandbox",
-    text: "Independence holds. This is a Type A break. The catalog rename left the enterprise alias pointing at a plan that no longer exists. In Daytona the snapshot is empty. Empty cwd is the normal case. LOOP clones the public harness, then patches checkout so enterprise aliases enterprise-annual-v-three.",
+    text: "Independence holds, so this is a Type A break. Catalog got renamed, and the enterprise alias was still pointing at a plan that doesn't exist anymore. Daytona snapshot is empty — that's normal. LOOP clones the public harness, then patches checkout so enterprise aliases enterprise-annual-v-three.",
   },
   {
     id: "pause",
-    text: "Then the write. LOOP opens a draft pull request with merge off. Approve and Deny sit in Agent Steps. We do not click. Writes wait for a human. LOOP never merges. LOOP never deploys production.",
+    text: "Then the write. LOOP opens a draft PR, merge off. Allow and Deny just sit there in Agent Steps. We don't click. Writes wait for a person. LOOP never merges. LOOP never deploys prod.",
   },
   {
     id: "lesson",
-    text: "Refresh. The pause is still there. A person owns the write. Three independent looks. A sandbox patch. A human on the PR. That is LOOP.",
+    text: "Refresh... and the pause is still there. A human owns the write. Three looks, a sandbox patch, a person on the PR. That's LOOP.",
   },
 ];
 
+/** Steering for gpt-4o-mini-tts. Keep this in git so the VO is reproducible. */
+export const VOICEOVER_INSTRUCTIONS = `Voice: young adult male founder, warm, close-mic, like a Loom walkthrough to a friend.
+Accent: natural international English with a light Indian cadence. Do not put on a British narrator or American radio announcer.
+Delivery: conversational, slightly smiling, thinking out loud. Short breaths between thoughts. Not a movie trailer. Not a documentary.
+Pace: unhurried, everyday talking speed. Emphasize product words the way a person would, not in all-caps.
+If this clip is one section of a longer demo, continue the same energy — don't restart like a new take.`;
+
 export const CAPTIONS: Caption[] = [
   {
-    startSec: 0.3,
-    endSec: 10.7,
+    startSec: 0.2,
+    endSec: 10.9,
     kicker: "INCIDENT",
     line: "Checkout conversion dropped ~19% on desktop Chrome",
   },
   {
-    startSec: 11.2,
-    endSec: 34.2,
+    startSec: 10.9,
+    endSec: 35.5,
     kicker: "THREE LOOKS",
     line: "analytics · logs · deploys — root does not self-investigate",
   },
   {
-    startSec: 34.8,
-    endSec: 44.0,
+    startSec: 35.5,
+    endSec: 44.7,
     kicker: "HONEST",
     line: "Warehouse + GitHub are fixtures. Pause, sandbox, looks are real.",
   },
   {
-    startSec: 44.5,
+    startSec: 44.7,
     endSec: 63.5,
     kicker: "TYPE A",
     line: "Clone the harness. Patch enterprise → enterprise-annual-v3",
   },
   {
-    startSec: 64.1,
-    endSec: 76.2,
+    startSec: 63.5,
+    endSec: 75.1,
     kicker: "WRITES WAIT",
     line: "open_draft_pr · merge false · do not click Approve",
   },
   {
-    startSec: 76.8,
-    endSec: 86.0,
+    startSec: 75.1,
+    endSec: 83.0,
     kicker: "LESSON",
     line: "Three looks. A sandbox patch. A person on the PR.",
   },
@@ -86,12 +96,12 @@ export type Zoom = {
 };
 
 export const ZOOMS: Zoom[] = [
-  { startSec: 0, endSec: 10.7, scale: 1, x: 0, y: 0 },
-  { startSec: 11.2, endSec: 34.2, scale: 1.08, x: 16, y: -8 },
-  { startSec: 34.8, endSec: 44.0, scale: 1.04, x: 0, y: 4 },
-  { startSec: 44.5, endSec: 63.5, scale: 1.1, x: -10, y: 12 },
-  { startSec: 64.1, endSec: 76.2, scale: 1.12, x: 8, y: 16 },
-  { startSec: 76.8, endSec: 101.4, scale: 1.02, x: 0, y: 0 },
+  { startSec: 0, endSec: 10.9, scale: 1, x: 0, y: 0 },
+  { startSec: 10.9, endSec: 35.5, scale: 1.08, x: 16, y: -8 },
+  { startSec: 35.5, endSec: 44.7, scale: 1.04, x: 0, y: 4 },
+  { startSec: 44.7, endSec: 63.5, scale: 1.1, x: -10, y: 12 },
+  { startSec: 63.5, endSec: 75.1, scale: 1.12, x: 8, y: 16 },
+  { startSec: 75.1, endSec: 83.0, scale: 1.02, x: 0, y: 0 },
 ];
 
 export const TITLE_SECONDS = 4.5;

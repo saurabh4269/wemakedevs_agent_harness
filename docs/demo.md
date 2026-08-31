@@ -52,7 +52,7 @@ Pick agent `loop`. Send this and nothing else:
 
 ## Remotion take (Screen Studio vibe)
 
-Composition lives in `apps/loop-demo`. It frames the hosted Luna PASS as a floating Safari window on Sequoia-style golden-hour wallpaper (padding, rounded chrome, drop shadow, traffic lights). Voiceover is `tts-1-hd` / `fable`. Duration **93s**.
+Composition lives in `apps/loop-demo`. It frames the hosted Luna PASS as a floating Safari window on Sequoia-style golden-hour wallpaper (padding, rounded chrome, drop shadow, traffic lights). Voiceover is `gpt-4o-mini-tts` / `cedar`, conversational founder walkthrough (not a trailer voice). Duration **93s**. MP4 in git: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4).
 
 ```bash
 # wallpaper + voiceover + cropped screen (gitignored public/)
@@ -61,6 +61,6 @@ npx tsx apps/loop-demo/scripts/prepare-assets.ts
 npm run render -w loop-demo
 ```
 
-Do not commit `apps/loop-demo/public/` (wallpaper, mp3, mp4). Rendered YouTube file is an artifact, not git. Upload that MP4 to **YouTube** for the form. Do not Approve the film session.
+Do not commit `apps/loop-demo/public/` (wallpaper, working mp3/mp4). The YouTube-ready file **is** in `docs/demo/loop-judge-demo.mp4`. Upload that to **YouTube** for the form. Do not Approve the film session.
 
 PR #1–#3 and #5–#9 merged. Living state: [status.md](status.md).

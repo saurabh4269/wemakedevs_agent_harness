@@ -1,8 +1,8 @@
 # Next
 
-Ordered remaining work. Rewrite when the top item changes. Last rewrite: **2026-08-31 ~12:45 IST**.
+Ordered remaining work. Rewrite when the top item changes. Last rewrite: **2026-08-31 ~14:10 IST**.
 
-1. **Upload the 93s demo to YouTube.** Remotion take: Safari window on Sequoia wallpaper of hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`. Do not click Approve until after any re-take. Composition: `apps/loop-demo`. Shot list: [demo.md](demo.md).
+1. **Upload [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4) to YouTube.** Conversational cedar voiceover. Do not click Approve until after any re-take.
 2. **Publish the Field Report** to `saurabh4269.github.io` as `content/trueforge-harness.mdx`.
 3. **Form** when the YouTube URL exists. Answers: [form.md](form.md).
 

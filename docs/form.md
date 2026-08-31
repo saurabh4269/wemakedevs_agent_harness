@@ -26,7 +26,7 @@ Fallback: https://loop-trueforge.onrender.com
 Do not put `loop.thexplorers.xyz`.
 
 **Video**
-YouTube, ≤3 min. A 93s Remotion take already exists: Safari window on Sequoia wallpaper, hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz`, Fable voiceover, fixtures said out loud, pause not clicked. Upload that file. Replace the 4s Vimeo placeholder. Do not click Approve until after the take if you re-film.
+YouTube, ≤3 min. File in repo: [docs/demo/loop-judge-demo.mp4](demo/loop-judge-demo.mp4) (93s, Safari on Sequoia wallpaper, hosted Luna PASS, conversational cedar voiceover, fixtures said out loud, pause not clicked). Upload that to YouTube. Replace the 4s Vimeo placeholder.
 
 **Blog**
 https://saurabh4269.github.io/blog/trueforge-harness/

@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { VOICEOVER_BEATS } from "../src/beats";
+import { VOICEOVER_BEATS, VOICEOVER_INSTRUCTIONS } from "../src/beats";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicDir = path.join(root, "public");
@@ -46,37 +46,59 @@ const ffprobeDuration = (file: string): Promise<number> =>
     });
   });
 
-const run = (cmd: string, args: string[]): Promise<void> =>
-  new Promise((resolve, reject) => {
-    const child = spawn(cmd, args, { stdio: "inherit" });
-    child.on("close", (code) => {
-      if (code === 0) {
-        resolve();
-        return;
-      }
-      reject(new Error(`${cmd} exited ${code}`));
-    });
-  });
+type SpeakOpts = {
+  key: string;
+  text: string;
+  dest: string;
+  model: string;
+  voice: string;
+  instructions?: string;
+};
 
-const speak = async (key: string, text: string, dest: string): Promise<void> => {
+const speak = async ({ key, text, dest, model, voice, instructions }: SpeakOpts): Promise<void> => {
+  const body: Record<string, unknown> = {
+    model,
+    voice,
+    input: text,
+    response_format: "mp3",
+  };
+  if (instructions) {
+    body.instructions = instructions;
+  }
   const res = await fetch("https://api.openai.com/v1/audio/speech", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      model: "tts-1-hd",
-      voice: "fable",
-      speed: 0.97,
-      input: text,
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
-    throw new Error(`tts ${res.status}`);
+    const errText = await res.text();
+    throw new Error(`tts ${res.status} ${errText.slice(0, 240)}`);
   }
   const buf = Buffer.from(await res.arrayBuffer());
   await writeFile(dest, buf);
+};
+
+const speakWithFallback = async (key: string, text: string, dest: string): Promise<void> => {
+  const attempts: Omit<SpeakOpts, "key" | "text" | "dest">[] = [
+    { model: "gpt-4o-mini-tts", voice: "cedar", instructions: VOICEOVER_INSTRUCTIONS },
+    { model: "gpt-4o-mini-tts", voice: "ash", instructions: VOICEOVER_INSTRUCTIONS },
+    { model: "tts-1-hd", voice: "echo" },
+  ];
+  let last = "tts failed";
+  for (const attempt of attempts) {
+    try {
+      await speak({ key, text, dest, ...attempt });
+      process.stdout.write(`tts ${attempt.model} ${attempt.voice}\n`);
+      return;
+    } catch (err) {
+      last = err instanceof Error ? err.message : "tts failed";
+      process.stderr.write(`${last}\n`);
+    }
+  }
+  throw new Error(last);
 };
 
 const main = async (): Promise<void> => {
@@ -84,62 +106,25 @@ const main = async (): Promise<void> => {
   await mkdir(tmpDir, { recursive: true });
   await mkdir(publicDir, { recursive: true });
 
-  const parts: { id: string; file: string; duration: number }[] = [];
-  let cursor = 0.35;
-  const timeline: { id: string; startSec: number; endSec: number }[] = [];
-
-  for (const beat of VOICEOVER_BEATS) {
-    const file = path.join(tmpDir, `${beat.id}.mp3`);
-    await speak(key, beat.text, file);
-    const duration = await ffprobeDuration(file);
-    parts.push({ id: beat.id, file, duration });
-    timeline.push({ id: beat.id, startSec: cursor, endSec: cursor + duration });
-    cursor += duration + 0.55;
-  }
-
-  const wavs: string[] = [];
-  const silence = path.join(tmpDir, "silence.wav");
-  await run("ffmpeg", [
-    "-y",
-    "-f",
-    "lavfi",
-    "-i",
-    "anullsrc=r=24000:cl=mono",
-    "-t",
-    "0.55",
-    silence,
-  ]);
-  wavs.push(silence);
-  for (const part of parts) {
-    const wav = path.join(tmpDir, `${part.id}.wav`);
-    await run("ffmpeg", ["-y", "-i", part.file, "-ar", "24000", "-ac", "1", wav]);
-    wavs.push(wav, silence);
-  }
-  const listPath = path.join(tmpDir, "concat.txt");
-  await writeFile(
-    listPath,
-    wavs.map((f) => `file '${f}'`).join("\n") + "\n",
-  );
-
+  // One continuous take — concatenating clips makes the VO restart energy each beat.
+  const script = VOICEOVER_BEATS.map((b) => b.text).join("\n\n");
   const outMp3 = path.join(publicDir, "voiceover.mp3");
-  await run("ffmpeg", [
-    "-y",
-    "-f",
-    "concat",
-    "-safe",
-    "0",
-    "-i",
-    listPath,
-    "-c:a",
-    "libmp3lame",
-    "-q:a",
-    "2",
-    outMp3,
-  ]);
+  await speakWithFallback(key, script, outMp3);
   const total = await ffprobeDuration(outMp3);
+
+  const charTotal = VOICEOVER_BEATS.reduce((n, b) => n + b.text.length, 0);
+  let cursor = 0.2;
+  const timeline: { id: string; startSec: number; endSec: number }[] = [];
+  for (const beat of VOICEOVER_BEATS) {
+    const share = beat.text.length / charTotal;
+    const dur = total * share;
+    timeline.push({ id: beat.id, startSec: cursor, endSec: cursor + dur });
+    cursor += dur;
+  }
+
   await writeFile(
     path.join(publicDir, "voiceover.json"),
-    `${JSON.stringify({ total, timeline }, null, 2)}\n`,
+    `${JSON.stringify({ total, timeline, model: "gpt-4o-mini-tts", voice: "cedar" }, null, 2)}\n`,
   );
   process.stdout.write(`voiceover ${total.toFixed(2)}s\n`);
 };
