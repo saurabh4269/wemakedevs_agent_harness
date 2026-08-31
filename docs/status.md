@@ -1,6 +1,6 @@
 # Status
 
-Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~11:10 IST**.
+Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last rewrite: **2026-08-31 ~11:25 IST**.
 
 ## PRs
 
@@ -14,9 +14,9 @@ Rewrite this file when PRs, blockers, or URLs change. Do not append a log. Last 
 | [#6](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/6) | `feat/docs-organizer-research` | Organizer extras + previous-winners | **Merged** (`8b6b043`). |
 | [#7](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/7) | `feat/render-host` | Hosted TrueForge + live URL + audit | **Merged** (`25fd7a0`). |
 | [#8](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/8) | `docs/living-handoff-autodeploy` | Living handoff + `render.yaml` auto-deploy on `main` | **Merged** (`93882ac`). |
-| [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | Open. Qodo Highs must be 0, then **human merge**. `gh` cannot merge. |
+| [#9](https://github.com/saurabh4269/wemakedevs_agent_harness/pull/9) | `cursor/hosted-qualify-harden-7d0f` | Hosted-qualify: Luna, `ask_user` off, native write, `still_true` gate | **Merged** (`a9200b2`). |
 
-`origin/main` tip at last rewrite: `93882ac`. Worktrees: one writer per branch. New work from `origin/main`.
+`origin/main` tip at last rewrite: `a9200b2`. Image auto-deploys from `main`. Re-import LOOP with `LOOP_SKILL_REF=main`. New work from `origin/main`.
 
 ## Live TrueForge
 
