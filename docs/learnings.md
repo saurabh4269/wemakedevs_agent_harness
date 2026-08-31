@@ -26,9 +26,9 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 10. **`main` auto-deploys.** Live service tracks branch `main`, `autoDeployTrigger: commit` (PATCHed 2026-08-31; previously `feat/render-host` + autoDeploy off). Env-only PUT does not restart a process. Merge to main deploys the **image**. Do not add a GitHub Action that stores `RENDER_API_KEY` in git.
 
-11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change, run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with the Nemotron `:free` env (see [runbook.md](runbook.md)). Dockerfile-only changes do not need re-import.
+11. **Image deploy does not re-import LOOP.** Hosted TrueForge persists the agent in Postgres. After `agents/loop.json` or skills change, run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. Dockerfile-only changes do not need re-import.
 
-12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Hosted must pass `OPENROUTER_MODEL_ID=nvidia/nemotron-3-super-120b-a12b:free`, `OPENROUTER_MODEL_NAME=nemotron-3-super-120b-a12b-free`, `LOOP_MODEL_FQN=openrouter/nemotron-3-super-120b-a12b-free`. Without those it replaces the free provider. Last import also dropped `model.params.max_tokens: 8192` because `agents/loop.json` only has `temperature: 0.2`.
+12. **`import-loop.ts` defaults OpenRouter to `openai/gpt-4.1-mini`.** Judge host must pass `LOOP_MODEL_FQN=openai/gpt-5-6-luna`, `OPENAI_MODEL_ID=gpt-5.6-luna`, `OPENAI_MODEL_NAME=gpt-5-6-luna`. `hostedModelGuard` refuses anything else on `loop.heisenbug.in` / `loop-trueforge.onrender.com`.
 
 13. **Free instance sleeps.** Ping `GET /healthz` first (~25–30s white "Loading application…") before a judge or a demo.
 
@@ -40,7 +40,7 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 ## Models / keys
 
-17. **User OpenRouter is FREE ($0 credits).** Hosted model is Nemotron Super `:free`. Do not use `openai/gpt-5.6-luna`. Do not put paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini until that sitting pause is no longer the film source.
+17. **Hosted is OpenAI GPT-5.6 Luna** (cost-tier of the family, `$0.20 / $1.20` per MTok). TrueForge 422'd `reasoning_effort` on this model — omit it. OpenRouter `:free` Nemotron 503'd then hit `free-models-per-day`. Do not put Sol/Terra or paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini.
 
 18. **Do not kill local TrueForge on `[::1]:8790`.** IPv6. `127.0.0.1:8790` may miss it. SQLite path `/home/box/.local/trueforge/db.sqlite`. Sitting pause `01m1a87xjewncn310ymqy3yz01` lives there.
 
@@ -68,13 +68,35 @@ Read after [AGENTS.md](../AGENTS.md). Each item is a failure we already hit plus
 
 26. **Grok Bot Auto-review** (this box, not Qodo) blocked: PUT of hosted agent clone/write instructions; follow-up POST turn to `01m1advv5np7mqwse1xf2hdpyc`; a standing GitHub routine that would auto-merge + POST Render deploys. Do not retry those via a quieter reformulation. Safer path: merge to `main` (auto-deploy) + `import-loop.ts`. Long `python3 -c` and large runner scripts can fail with "executable content could not be bound". Workaround: explicit `curl` to the TrueForge API.
 
-27. **How to talk to hosted TrueForge** (no login):
+27. **`ask_user_question` is not a pause.** Hosted Nemotron called it after the three looks and stopped. That is not the qualify beat. `ask_user_questions.enabled` is **false**. Instructions: do not call it; retry a failed named subagent once; then continue. Do not turn it back on to "be helpful."
+
+28. **Hosted import can clobber the judge model.** Judge host must pass the Luna FQN + OpenAI model id/name. `hostedModelGuard` throws otherwise.
+
+29. **Stale brief.** `deploys.still_true === false` means the SHA / plan catalog in the brief no longer matches. Refuse a root cause. Do not open a PR.
+
+30. **Subagents must not call `get_current_datetime` or `exec`.** Hosted session `01m1b2226f575dw2j3z0bwc3gx` retried analytics/logs correctly and never asked the user, but each subagent burned a datetime (and analytics burned an exec) before the warehouse tool. NVIDIA `:free` then 503'd deploys (`Upstream error from Nvidia: Service temporarily overloaded`) and the turn died. One-tool briefs only.
+
+31. **After the alias patch, do not run `npx`.** Hosted session `01m1b281j4khan5aqjnf8xy9nq` spawned all three in one message, retried analytics, cloned, and patched `enterprise` → `enterprise-annual-v3`. Then it burned the rest of the turn looking for Node/`npx` (the snapshot has neither) and NVIDIA 503'd before `open_draft_pr`. Next tool after the v3 alias is the write.
+
+32. **OpenRouter `:free` has a daily request cap.** Hosted session `01m1b2hank3g4jyxqxqysdappp` died immediately: `429 Rate limit exceeded: free-models-per-day`. Hosted now uses OpenAI GPT-5.6 Luna. Film the local 4.1-mini PASS if you still need that sitting still.
+
+33. **How to talk to hosted TrueForge** (no login):
     - Base `https://loop.heisenbug.in/api/v1`
-    - `POST /sessions` body `{"agent":{"name":"loop"}}`
-    - `POST /sessions/{id}/turns` with `stream: false` and a `user.message`
-    - `GET /sessions/{id}/events?limit=100` newest first
+    - `POST /sessions` body `{"agent":{"name":"loop"}}` — session id is `data.id`
+    - `POST /sessions/{id}/turns` body `{"input":[{"type":"user.message","content":"..."}]}`. `message.parts` is ignored and yields `Invalid prompt: messages must not be empty`.
+    - `GET /sessions/{id}/events?limit=100` newest first. Max limit is **100**. Payload is `{data:[{turn_id, event}]}`.
     - MAY allow non-github pauses (sandbox `exec`) so the run can reach the write
-    - NEVER allow `open_draft_pr` / `flag_incident` / `request_prod_deploy` on film sessions
+    - NEVER allow `open_draft_pr` / `flag_incident` / `request_prod_deploy` on film sessions. Treat `call_tool` wrapping `loop-github` / `open_draft_pr` as a write — leave it sitting.
+
+34. **Native MCP, not `call_tool`.** Hosted Luna PASS `01m1b50dbbh3vgy6brbaw5vsaz` spawned the three looks, cloned, patched v3, emitted OpenUI, then paused on system `call_tool` → `loop-github` / `open_draft_pr` (`merge: false`). The pause is real, but Agent Steps show `call_tool`. Instructions and skills now require native `open_draft_pr` with `still_true: true` as a **tool argument**, and forbid `list_tools` / `get_tool_info`.
+
+35. **Do not Approve hosted Luna PASS** `01m1b50dbbh3vgy6brbaw5vsaz`. Film it. Same rule as the local 4.1-mini PASS.
+
+36. **OpenAI key in chat.** Rotate if the transcript is shared. Keep it in gitignored `.env` / Render `sync: false`. Never commit it.
+
+37. **Missing look fails closed.** Retry `create_sub_agent` only when that name has no thread yet. Do not spawn a duplicate named child. If analytics, logs, or deploys is still missing after that one create-retry, refuse a root cause — do not patch, do not open a PR. Unless `deploys.still_true` is exactly true (missing/malformed counts as stale), refuse. Qodo Highs on PR #9.
+
+38. **Qodo Nemotron rule is stale.** User required hosted GPT-5.6 Luna after OpenRouter `:free` 503/429. Do not switch the judge host back to Nemotron to satisfy rule 3011881. Judge-host import now also fails if `OPENAI_API_KEY` is missing.
 
 ## Organizers (short)
 

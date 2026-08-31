@@ -39,9 +39,10 @@ const independentDeploys: SourceReport = {
     "released_at 2026-08-28T14:08:22Z",
     "version web-checkout@2026.08.28-14",
     "commit 9f3c1a2 refresh plan catalog ids to *-v3",
+    "still_true true current_commit 9f3c1a2 current_plan_catalog *-v3",
   ],
   summary:
-    "Deploy timeline: web-checkout rolled catalog ids to *-v3 at 14:08 UTC on 2026-08-28. Previous version web-checkout@2026.08.27-18 had no plan-id errors.",
+    "Deploy timeline: web-checkout rolled catalog ids to *-v3 at 14:08 UTC on 2026-08-28. Previous version web-checkout@2026.08.27-18 had no plan-id errors. still_true=true current_commit=9f3c1a2.",
 };
 
 const collapsedClaim = "Conversion dropped because checkout is broken.";
@@ -80,6 +81,27 @@ export const STORIES: Record<StoryName, { analytics: SourceReport; logs: SourceR
   },
 };
 
+export type DeployFreshnessPayload = {
+  still_true: boolean;
+  current_commit: string;
+  current_plan_catalog: string;
+};
+
+export function deployFreshness(name: StoryName): DeployFreshnessPayload {
+  if (name === "independent") {
+    return {
+      still_true: true,
+      current_commit: "9f3c1a2",
+      current_plan_catalog: "*-v3",
+    };
+  }
+  return {
+    still_true: false,
+    current_commit: "unknown",
+    current_plan_catalog: "unknown",
+  };
+}
+
 export function isStoryName(value: string): value is StoryName {
   return value === "independent" || value === "collapsed";
 }
@@ -99,5 +121,6 @@ export function payloadFor(source: SourceReport["source"], name: StoryName): Rec
     unique_facts: report.uniqueFacts,
     summary: report.summary,
     live_github: false,
+    ...(source === "deploys" ? deployFreshness(name) : {}),
   };
 }

@@ -1,8 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { GITHUB_TOOLS, WAREHOUSE_TOOLS } from "./catalog.js";
+import { mayOpenDraftPr } from "../../src/freshness.js";
 import {
   FIXTURE_MODE,
+  deployFreshness,
   isStoryName,
   payloadFor,
   type StoryName,
@@ -45,7 +47,7 @@ export function createWarehouseServer(): McpServer {
             default_story: defaultStory(),
             stories: ["independent", "collapsed"],
             tenant: "fixtures/tenant",
-            note: "Sources must stay independent. Collapsed story should refuse a root cause.",
+            note: "Sources must stay independent. Collapsed story should refuse a root cause. deploys.still_true false means the brief is stale — do not open a PR.",
           }),
       );
       continue;
@@ -85,10 +87,17 @@ export function createGithubServer(): McpServer {
         body: z.string().min(1),
         branch: z.string().min(1).default("fix/plan-id-alias"),
         merge: z.boolean().optional().describe("Must stay false. LOOP never merges."),
+        still_true: z
+          .boolean()
+          .describe("Must be true as a tool argument. Stale deploys.still_true refuses a write."),
+        scenario: z
+          .enum(["independent", "collapsed"])
+          .optional()
+          .describe("Must match the warehouse story. collapsed refuses a write."),
       },
       annotations: GITHUB_TOOLS[0].annotations,
     },
-    async ({ title, body, branch, merge }) => {
+    async ({ title, body, branch, merge, still_true, scenario }) => {
       if (merge) {
         return jsonResult(
           {
@@ -96,6 +105,25 @@ export function createGithubServer(): McpServer {
             live_github: false,
             merged: false,
             error: "LOOP never merges. Draft PRs only.",
+          },
+          true,
+        );
+      }
+      const envStory = defaultStory();
+      const requestedStory = resolveStory(scenario);
+      const freshnessGate = mayOpenDraftPr({
+        storyFreshness: deployFreshness(envStory),
+        claimedStillTrue: still_true,
+        requestedStory,
+        envStory,
+      });
+      if (!freshnessGate.ok) {
+        return jsonResult(
+          {
+            mode: FIXTURE_MODE,
+            live_github: false,
+            merged: false,
+            error: freshnessGate.error,
           },
           true,
         );

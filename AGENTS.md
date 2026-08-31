@@ -21,7 +21,7 @@ Hackathon hero card is **Incident responder**. That is this product.
 5. **Never prod-deploy the tenant.** `request_prod_deploy` always refuses. Fixture GitHub never talks to live GitHub.
 6. **Do not Apply `render.yaml`** on workspace `tea-ctoktrjtq21c73cufog0`. It would duplicate Postgres/Redis. The live web service already exists.
 7. **Do not Approve/Deny** film/qualify sessions listed in [docs/status.md](docs/status.md).
-8. **Hosted model stays OpenRouter `:free` Nemotron.** User OpenRouter account has $0 credits. Do not use `openai/gpt-5.6-luna` or paid `gpt-4.1-mini` on the hosted agent.
+8. **Hosted model is OpenAI GPT-5.6 Luna.** Cost-tier. Do not use Sol/Terra on hosted. Local film agent may stay on 4.1-mini.
 9. **Do not touch** `heisenbug.in` apex or `www` (Vercel). Only the `loop` CNAME is ours.
 10. **Do not mention** prior control-plane work, Goodman, or Bhoonaksha in README, form, or judge-facing copy.
 
@@ -41,7 +41,7 @@ Spawn exactly three **one-level** subagents. Distinct questions. Subagents do no
 
 If independent, skill `type-a-vs-b`:
 
-- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo). Empty cwd with no `wemakedevs_agent_harness/` is the **normal case and still clones**. If that dir exists without `checkout.ts`, `rm -rf` then clone. Clone at most twice. If still missing, skip and say clone failed — do not loop, do not fabricate tenant sources. Patch `fixtures/tenant/src/checkout.ts` (`enterprise` alias `enterprise-annual` → `enterprise-annual-v3`). Then the root **MUST** call MCP `open_draft_pr` with `merge: false`. A written next-steps list is not a substitute. Skipping the write because the cwd looked empty is forbidden.
+- **Type A** (break): `sandbox.created` means a sandbox exists. Clone `https://github.com/saurabh4269/wemakedevs_agent_harness.git` into the Daytona sandbox (snapshot has no repo). Empty cwd with no `wemakedevs_agent_harness/` is the **normal case and still clones**. If that dir exists without `checkout.ts`, `rm -rf` then clone. Clone at most twice. If still missing, skip and say clone failed — do not loop, do not fabricate tenant sources. Patch `fixtures/tenant/src/checkout.ts` (`enterprise` alias `enterprise-annual` → `enterprise-annual-v3`). Then the root **MUST** call native MCP `open_draft_pr` with `merge: false` and `still_true: true` (not `call_tool`). A written next-steps list is not a substitute. Skipping the write because the cwd looked empty is forbidden.
 - **Type B** (opportunity): proposal only. Do not patch production.
 
 Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `flag_incident`, `request_prod_deploy`). `require_approval_for_tools` is `@write` and `@destructive`. Wait for Allow/Deny. Never merge. Never prod-deploy.
@@ -50,7 +50,7 @@ Then skill `license-to-write`. Writes live on `loop-github` (`open_draft_pr`, `f
 
 **Shared tool set.** TrueForge dynamic subagents inherit the **root** MCP tools. `config.dynamic_sub_agents` is `{ enabled: true }` only — `DynamicSubAgentsConfig` has no per-subagent `enable_tools` / `disable_tools`. Do not invent one. A subagent can see `open_draft_pr`. Demo: deny the extra **patcher** write; approve the **root**.
 
-Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`.
+Skills require sandbox. Hosted Daytona provider is **ready**. LOOP spec sets `config.sandbox.enabled: true`. `ask_user_questions.enabled` is **false** — hosted Nemotron used it to bail.
 
 ## Layout
 
@@ -75,9 +75,9 @@ Full commands: [docs/runbook.md](docs/runbook.md).
 
 - **Local film host:** `npx @truefoundry/trueforge@latest` on `[::1]:8790` (SQLite). **Do not kill it.** Local agent `loop` is `openrouter/gpt-4.1-mini`. Do not PUT that model off 4.1-mini while the sitting pause is the film source.
 - **Judge host:** https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com). Render web `loop-trueforge` tracks **`main`** with **`autoDeployTrigger: commit`**. Merge to main deploys the image. **Do not Apply the Blueprint.**
-- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with the Nemotron `:free` env vars in the runbook. `import-loop.ts` defaults OpenRouter upsert to `openai/gpt-4.1-mini` — without those env vars it replaces the free hosted model.
+- **Import is not on boot.** Postgres persists the hosted agent. After `agents/loop.json` / skills change, re-run `npx tsx scripts/import-loop.ts` against `TRUEFORGE_BASE_URL=https://loop.heisenbug.in` with `LOOP_MODEL_FQN=openai/gpt-5-6-luna` and `OPENAI_MODEL_*`. `import-loop.ts` refuses a judge-host upsert that is not that FQN.
 - TrueForge wants Node **22.14+**. Package `engines.node` is `>=22.14.0`. Tests can still run on Node 20.
-- Prefer OpenRouter. NVIDIA NIM backup. Daytona required for skills/sandbox.
+- Prefer OpenAI GPT-5.6 Luna on the judge host. Local film may stay OpenRouter 4.1-mini. NVIDIA NIM is backup locally. Daytona required for skills/sandbox.
 
 ## What NOT to build
 

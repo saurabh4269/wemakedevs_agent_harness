@@ -4,11 +4,15 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isResourceName } from "../src/resource-name.js";
 import {
+  HOSTED_FREE_MODEL_FQN,
   LOOP_AGENT_NAME,
   LOOP_INSTRUCTION_RULES,
   LOOP_SKILL_NAMES,
   REQUIRED_SUBAGENTS,
   TRUEFORGE_HAS_PER_SUBAGENT_TOOLS,
+  hostedModelGuard,
+  hostedOpenAiKeyGuard,
+  shouldRegisterBackupProviders,
   validateLoopAgent,
   type SavedAgent,
 } from "../src/spec.js";
@@ -34,6 +38,10 @@ describe("LOOP agent spec shape", () => {
     expect(agent.manifest.config?.sandbox?.enabled).toBe(true);
     expect(agent.manifest.config?.dynamic_sub_agents?.enabled).toBe(true);
     expect(agent.manifest.config?.generative_ui?.enabled).toBe(true);
+    expect(agent.manifest.config?.ask_user_questions?.enabled).toBe(false);
+    expect(agent.manifest.model.params?.max_tokens).toBe(4096);
+    expect(agent.manifest.model.params?.parallel_tool_calls).toBe(true);
+    expect(agent.manifest.config?.iteration_limit).toBe(40);
     expect(agent.manifest.skills?.map((skill) => skill.name)).toEqual([...LOOP_SKILL_NAMES]);
     const parts = agent.manifest.model.name.split("/");
     expect(parts).toHaveLength(2);
@@ -59,6 +67,53 @@ describe("LOOP agent spec shape", () => {
       expect(instructions, rule.id).toMatch(rule.re);
     }
     expect(instructions).not.toMatch(/until those three reports exist/);
+    expect(instructions).toMatch(/Do not call ask_user_question/);
+    expect(instructions).toMatch(/retry that exact name once/);
+    expect(instructions).toMatch(/still_true is false/);
+    expect(instructions).toMatch(/Do not call get_current_datetime, exec, or any other tool/);
+    expect(instructions).toMatch(/Never wrap query_analytics, query_logs, query_deploys, or open_draft_pr in call_tool/);
+    expect(instructions).toMatch(/Pass still_true: true as a tool argument/);
+    expect(instructions).toMatch(/Do not call list_tools or get_tool_info/);
+    expect(instructions).toMatch(/If any of those three reports is missing, refuse a root cause/);
+    expect(instructions).toMatch(/Unless deploys\.still_true is exactly true/);
+    expect(instructions).toMatch(/Do not spawn a name a second time if that thread already exists/);
+    expect(instructions).not.toMatch(/continue with whatever returned/);
+  });
+
+  it("refuses a hosted import that is not OpenAI GPT-5.6 Luna", () => {
+    const luna = {
+      modelId: "gpt-5.6-luna",
+      modelName: "gpt-5-6-luna",
+    };
+    expect(hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in.", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop-trueforge.onrender.com", HOSTED_FREE_MODEL_FQN, luna)).toBeUndefined();
+    expect(hostedModelGuard("https://loop.heisenbug.in", "openrouter/gpt-4.1-mini", luna)).toMatch(
+      /gpt-5-6-luna/,
+    );
+    expect(
+      hostedModelGuard("https://loop.heisenbug.in", HOSTED_FREE_MODEL_FQN, {
+        modelId: "openai/gpt-4.1-mini",
+        modelName: "gpt-4.1-mini",
+      }),
+    ).toMatch(/OpenAI/);
+    expect(hostedModelGuard("http://localhost:8790", "openrouter/gpt-4.1-mini")).toBeUndefined();
+    expect(shouldRegisterBackupProviders("https://loop.heisenbug.in")).toBe(false);
+    expect(shouldRegisterBackupProviders("https://loop-trueforge.onrender.com")).toBe(false);
+    expect(shouldRegisterBackupProviders("http://localhost:8790")).toBe(true);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", undefined)).toMatch(/OPENAI_API_KEY/);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "")).toMatch(/OPENAI_API_KEY/);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "   ")).toMatch(/OPENAI_API_KEY/);
+    expect(hostedOpenAiKeyGuard("https://loop.heisenbug.in", "sk-present")).toBeUndefined();
+    expect(hostedOpenAiKeyGuard("http://localhost:8790", undefined)).toBeUndefined();
+  });
+
+  it("rejects a spec that turns ask_user_questions back on", () => {
+    const clone = structuredClone(agent);
+    clone.manifest.config = { ...clone.manifest.config, ask_user_questions: { enabled: true } };
+    expect(
+      validateLoopAgent(clone).some((issue) => issue.path === "manifest.config.ask_user_questions.enabled"),
+    ).toBe(true);
   });
 
   it("teaches the root to clone the public tenant, keep the sandbox, emit OpenUI, and use Code Mode", () => {
@@ -75,7 +130,11 @@ describe("LOOP agent spec shape", () => {
     expect(instructions).toMatch(/do not write fabricated tenant sources/);
     expect(instructions).not.toMatch(/Keep trying until that file exists/);
     expect(instructions).toMatch(/empty cwd with no wemakedevs_agent_harness/);
-    expect(instructions).toMatch(/MUST call the MCP tool open_draft_pr with merge false/);
+    expect(instructions).toMatch(/MUST be the MCP tool open_draft_pr with merge false and still_true true/);
+    expect(instructions).toMatch(/Do not run npx, node, or a tenant check/);
+    const independence = readFileSync(join(root, "skills/three-source-independence/SKILL.md"), "utf8");
+    expect(independence).toMatch(/If any of analytics, logs, or deploys is \*\*missing\*\*/);
+    expect(independence).toMatch(/Unless `deploys\.still_true` is exactly \*\*true\*\*/);
     const typeA = readFileSync(join(root, "skills/type-a-vs-b/SKILL.md"), "utf8");
     expect(typeA).toMatch(/git clone --depth 1 https:\/\/github.com\/saurabh4269\/wemakedevs_agent_harness\.git/);
     expect(typeA).toMatch(/sandbox\.created means a sandbox exists/);
@@ -84,6 +143,8 @@ describe("LOOP agent spec shape", () => {
     expect(typeA).toMatch(/rm -rf/);
     expect(typeA).toMatch(/At most two clone attempts/);
     expect(typeA).toMatch(/fabricated tenant sources/);
+    expect(typeA).toMatch(/Do not wrap it in `call_tool`/);
+    expect(typeA).toMatch(/still_true: true` as a tool argument/);
     expect(typeA).not.toMatch(/Keep trying until that file exists/);
     expect(typeA).not.toMatch(/write the known tenant sources/);
   });

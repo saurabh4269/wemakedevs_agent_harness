@@ -4,7 +4,7 @@ Judge-facing shot list. Not a transcript dump. A judge or Saurabh can run this w
 
 **Qualify** (live page, fetched 2026-08-31 morning IST): a judge has to see TrueForge reaching a tool, running code in the sandbox, and stopping for a person.
 
-LOOP is the **Incident responder** hero card. Judges: stock TrueForge UI at https://loop.heisenbug.in. Local film host remains http://localhost:8790. LOOP rail at http://localhost:5173 is optional extra (PR #2 **merged** `e221fb05`, Qodo **Bugs (0)**). Do not call localhost "hosted".
+LOOP is the **Incident responder** hero card. Judges: stock TrueForge UI at https://loop.heisenbug.in. Prefer the sitting hosted Luna PASS: https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz. Local film host remains http://localhost:8790. LOOP rail at http://localhost:5173 is optional extra (PR #2 **merged** `e221fb05`, Qodo **Bugs (0)**). Do not call localhost "hosted".
 
 ## Prompt (exact)
 
@@ -18,8 +18,8 @@ Pick agent `loop`. Send this and nothing else:
 | --- | --- | --- | --- |
 | 1 | MCP warehouse tools via **three named** subagents: `analytics` / `logs` / `deploys` | Agent steps show `query_analytics`, `query_logs`, `query_deploys` on those threads. Root does **not** call `query_*`. | Stop. This is the "reach a tool" qualify beat. |
 | 2 | Daytona sandbox patch of `fixtures/tenant` | Type A: sandbox `git clone` of the public harness, then `checkout.ts` so `enterprise` aliases `enterprise-annual-v3`. Seed = git clone, not write-files. Provider **ready**. Qualify **PASS** on session `01m1a87xjewncn310ymqy3yz01`. | If clone/patch fails, stop. Do not fake a patch. Do not `sed /opt/tf/tenant`. |
-| 3 | Pause on root `open_draft_pr` with Approve / Deny | Agent steps: write tool held. Buttons visible. Do not click yet. | Stop. This is the "stopping for a person" qualify beat. |
-| 4 | Refresh still paused. Deny extra patcher write. Approve root | Reload http://localhost:8790. Same session, same pause. If a `patcher` subagent also paused on a write: **Deny** it. **Approve** the root `open_draft_pr` only. Never merge. Never prod-deploy. | If refresh loses the pause, Best Use session claim is dead. |
+| 3 | Pause on root `open_draft_pr` with Approve / Deny | Agent steps: write tool held. Buttons visible. Do not click yet. Hosted Luna PASS sits on `call_tool` → `open_draft_pr`; still a write pause. | Stop. This is the "stopping for a person" qualify beat. |
+| 4 | Refresh still paused. Deny extra patcher write. Approve root | Reload https://loop.heisenbug.in (or local :8790). Same session, same pause. If a `patcher` subagent also paused on a write: **Deny** it. **Approve** the root write only **after** the take. Never merge. Never prod-deploy. | If refresh loses the pause, Best Use session claim is dead. |
 
 ## YouTube structure (3 min or less)
 
@@ -43,10 +43,11 @@ Pick agent `loop`. Send this and nothing else:
 
 ## Prep (off camera)
 
-1. TrueForge at http://localhost:8790 (npx, SQLite, no login). Fixture MCP at `127.0.0.1:8788`. Agent `loop` imported.
-2. Optional extra: LOOP rail on port 5173 for Doing / Waiting / Did.
-3. Daytona: provider ready. Passing seed is `git clone` of the public harness, then patch `enterprise-annual-v3`. Pause is sitting on root `open_draft_pr` — film that; do not click yet.
-4. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
-5. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
+1. Wake https://loop.heisenbug.in (`GET /healthz` → `OK!`). Agent `loop`, model `openai/gpt-5-6-luna`.
+2. Open sitting session https://loop.heisenbug.in/sessions/01m1b50dbbh3vgy6brbaw5vsaz (or paste the demo prompt into a new chat if that session is gone).
+3. Daytona: provider ready. Passing seed is `git clone` of the public harness, then patch `enterprise-annual-v3`. Pause is sitting on the root write — film that; do not click yet.
+4. Backup tape: local TrueForge at http://localhost:8790, session `01m1a87xjewncn310ymqy3yz01`.
+5. Optional extras on the same tape: generative UI after the three looks; Code Mode printout; linger Agent Steps at the pause. [organizers.md](organizers.md).
+6. Film Agent steps, not a zoomed chat bubble. Say out loud that warehouse + GitHub are labeled fixtures; TrueForge pause/sandbox/subagents are real.
 
 PR #1–#3 and #5–#7 merged. Living state: [status.md](status.md).

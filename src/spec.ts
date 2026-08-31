@@ -16,11 +16,107 @@ export const REQUIRED_SUBAGENTS = ["analytics", "logs", "deploys"] as const;
 /** TrueForge AgentSpec has no per-subagent MCP enable/disable. DynamicSubAgentsConfig is only `{ enabled }`. */
 export const TRUEFORGE_HAS_PER_SUBAGENT_TOOLS = false;
 
+export const HOSTED_MODEL_FQN = "openai/gpt-5-6-luna";
+export const HOSTED_OPENAI_MODEL_ID = "gpt-5.6-luna";
+export const HOSTED_OPENAI_MODEL_NAME = "gpt-5-6-luna";
+
+/** @deprecated Use HOSTED_MODEL_FQN. Kept so older tests/docs grep still resolve. */
+export const HOSTED_FREE_MODEL_FQN = HOSTED_MODEL_FQN;
+
+export function isJudgeHost(hostname: string): boolean {
+  const host = hostname.replace(/\.+$/, "").toLowerCase();
+  return host === "loop.heisenbug.in" || host === "loop-trueforge.onrender.com";
+}
+
+export function shouldRegisterBackupProviders(baseUrl: string): boolean {
+  try {
+    return !isJudgeHost(new URL(baseUrl).hostname);
+  } catch {
+    return true;
+  }
+}
+
+export function hostedOpenAiKeyGuard(baseUrl: string, apiKey: string | undefined): string | undefined {
+  let host = "";
+  try {
+    host = new URL(baseUrl).hostname;
+  } catch {
+    return undefined;
+  }
+  if (!isJudgeHost(host)) {
+    return undefined;
+  }
+  if (!apiKey || apiKey.trim() === "") {
+    return "judge-host import requires OPENAI_API_KEY";
+  }
+  return undefined;
+}
+
+export function hostedModelGuard(
+  baseUrl: string,
+  modelFqn: string | undefined,
+  provider?: { modelId?: string; modelName?: string },
+): string | undefined {
+  let host = "";
+  try {
+    host = new URL(baseUrl).hostname;
+  } catch {
+    return undefined;
+  }
+  if (!isJudgeHost(host)) {
+    return undefined;
+  }
+  if (modelFqn !== HOSTED_MODEL_FQN) {
+    return `hosted TrueForge must keep ${HOSTED_MODEL_FQN}`;
+  }
+  const modelId = provider?.modelId ?? "";
+  const modelName = provider?.modelName ?? "";
+  if (modelId !== HOSTED_OPENAI_MODEL_ID || modelName !== HOSTED_OPENAI_MODEL_NAME) {
+    return `hosted OpenAI provider must be ${HOSTED_OPENAI_MODEL_ID} named ${HOSTED_OPENAI_MODEL_NAME}`;
+  }
+  return undefined;
+}
+
 export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; message: string }> = [
   {
     id: "first-action-three",
     re: /FIRST ACTION[\s\S]*analytics, logs, deploys/,
     message: "first action must spawn analytics, logs, deploys",
+  },
+  {
+    id: "no-ask-user-question",
+    re: /Do not call ask_user_question/,
+    message: "root must not call ask_user_question",
+  },
+  {
+    id: "retry-named-once",
+    re: /retry that exact name once/,
+    message: "failed subagent spawn retries that name once",
+  },
+  {
+    id: "no-duplicate-named-child",
+    re: /Do not spawn a name a second time if that thread already exists/,
+    message: "do not spawn a duplicate named subagent",
+  },
+  {
+    id: "missing-report-fail-closed",
+    re: /If any of those three reports is missing, refuse a root cause/,
+    message: "missing analytics, logs, or deploys must refuse a root cause",
+  },
+  {
+    id: "subagent-one-tool",
+    re: /Do not call get_current_datetime, exec, or any other tool/,
+    message: "subagents must only call their warehouse tool",
+  },
+  {
+    id: "stale-brief-refuse",
+    re: /still_true is false/,
+    message: "stale deploys.still_true must refuse a write",
+  },
+  {
+    id: "still-true-exactly-true",
+    re: /Unless deploys\.still_true is exactly true/,
+    message: "missing or malformed still_true must refuse a write",
   },
   {
     id: "no-warehouse-on-root",
@@ -94,8 +190,28 @@ export const LOOP_INSTRUCTION_RULES: ReadonlyArray<{ id: string; re: RegExp; mes
   },
   {
     id: "must-open-draft-pr",
-    re: /MUST call the MCP tool open_draft_pr with merge false/,
+    re: /MUST be the MCP tool open_draft_pr with merge false and still_true true/,
     message: "Type A must call open_draft_pr, not write next steps",
+  },
+  {
+    id: "no-npx-after-patch",
+    re: /Do not run npx, node, or a tenant check/,
+    message: "after the alias patch, do not run npx",
+  },
+  {
+    id: "native-mcp-not-call-tool",
+    re: /Never wrap query_analytics, query_logs, query_deploys, or open_draft_pr in call_tool/,
+    message: "warehouse and github tools must be native MCP calls, not call_tool",
+  },
+  {
+    id: "still-true-tool-arg",
+    re: /Pass still_true: true as a tool argument/,
+    message: "open_draft_pr must pass still_true as a tool argument",
+  },
+  {
+    id: "no-list-tools",
+    re: /Do not call list_tools or get_tool_info/,
+    message: "after the three looks, do not list_tools",
   },
   {
     id: "sandbox-created-exists",
@@ -181,6 +297,12 @@ export function validateLoopAgent(agent: SavedAgent): SpecIssue[] {
   }
   if (!spec.config?.generative_ui?.enabled) {
     issues.push({ path: "manifest.config.generative_ui.enabled", message: "generative_ui must be on" });
+  }
+  if (spec.config?.ask_user_questions?.enabled) {
+    issues.push({
+      path: "manifest.config.ask_user_questions.enabled",
+      message: "ask_user_questions must stay off — hosted Nemotron used it to bail",
+    });
   }
 
   const skillNames = (spec.skills ?? []).map((skill) => skill.name);

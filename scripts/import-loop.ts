@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TrueForge } from "@truefoundry/trueforge-sdk";
 import type { SavedAgent } from "../src/spec.js";
-import { validateLoopAgent } from "../src/spec.js";
+import { hostedModelGuard, hostedOpenAiKeyGuard, shouldRegisterBackupProviders, validateLoopAgent } from "../src/spec.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -62,7 +62,39 @@ function redacted(ok: boolean): string {
   return ok ? "present (not printed)" : "missing";
 }
 
+async function registerOpenAI(baseUrl: string): Promise<void> {
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const missingKey = hostedOpenAiKeyGuard(baseUrl, apiKey);
+  if (missingKey) {
+    throw new Error(missingKey);
+  }
+  if (!apiKey) {
+    process.stdout.write("OpenAI provider: skipped (OPENAI_API_KEY unset)\n");
+    return;
+  }
+  const modelId = process.env.OPENAI_MODEL_ID ?? "gpt-5.6-luna";
+  const modelName = process.env.OPENAI_MODEL_NAME ?? "gpt-5-6-luna";
+  await putSettings(baseUrl, "/api/v1/settings/model-providers", {
+    manifest: {
+      type: "openai",
+      auth: { api_key: apiKey },
+      models: [
+        {
+          model_id: modelId,
+          name: modelName,
+          properties: { context_length: 400000, max_output_tokens: 16384 },
+        },
+      ],
+    },
+  });
+  process.stdout.write(`OpenAI provider: upserted as openai/${modelName} (key ${redacted(true)})\n`);
+}
+
 async function registerOpenRouter(baseUrl: string): Promise<void> {
+  if (!shouldRegisterBackupProviders(baseUrl)) {
+    process.stdout.write("OpenRouter provider: skipped on judge host (LOOP uses openai/gpt-5-6-luna)\n");
+    return;
+  }
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     process.stdout.write("OpenRouter provider: skipped (OPENROUTER_API_KEY unset)\n");
@@ -89,6 +121,10 @@ async function registerOpenRouter(baseUrl: string): Promise<void> {
 }
 
 async function registerNvidia(baseUrl: string): Promise<void> {
+  if (!shouldRegisterBackupProviders(baseUrl)) {
+    process.stdout.write("NVIDIA NIM provider: skipped on judge host (LOOP uses openai/gpt-5-6-luna)\n");
+    return;
+  }
   const apiKey = process.env.NVIDIA_API_KEY;
   const modelId = process.env.NVIDIA_MODEL_ID;
   const modelName = process.env.NVIDIA_MODEL_NAME;
@@ -197,6 +233,18 @@ async function main(): Promise<void> {
     raw.manifest.model.name = modelFqn;
   }
 
+  const hostedGuard = hostedModelGuard(baseUrl, raw.manifest.model.name, {
+    modelId: process.env.OPENAI_MODEL_ID,
+    modelName: process.env.OPENAI_MODEL_NAME,
+  });
+  if (hostedGuard) {
+    throw new Error(hostedGuard);
+  }
+  const hostedKey = hostedOpenAiKeyGuard(baseUrl, process.env.OPENAI_API_KEY?.trim());
+  if (hostedKey) {
+    throw new Error(hostedKey);
+  }
+
   const issues = validateLoopAgent(raw);
   if (issues.length > 0) {
     throw new Error(`loop spec invalid:\n${issues.map((issue) => `- ${issue.path}: ${issue.message}`).join("\n")}`);
@@ -209,6 +257,7 @@ async function main(): Promise<void> {
   });
 
   process.stdout.write(`TrueForge: ${baseUrl}\n`);
+  await registerOpenAI(baseUrl);
   await registerOpenRouter(baseUrl);
   await registerNvidia(baseUrl);
   await registerDaytona(baseUrl);

@@ -12,9 +12,9 @@ Living PR/blocker/URL state: **[status.md](status.md)**. Pitfalls: **[learnings.
 
 ## Secrets
 
-**Never in git.** Box path: `/home/box/.secrets/loop-trueforge.env` (OpenRouter, NVIDIA backup, Daytona). `.env.example` empty slots only. Render dashboard `sync: false`. Do not echo secrets. Do not commit `.env`. A Daytona key was pasted in chat — rotate if that transcript is shared.
+**Never in git.** Box path: `/home/box/.secrets/loop-trueforge.env`. Hosted uses OpenAI GPT-5.6 Luna (`OPENAI_API_KEY` in gitignored `.env` / Render `sync: false`). `.env.example` empty slots only. Do not echo secrets. Do not commit `.env`. Keys pasted in chat (OpenAI, Daytona) — rotate if that transcript is shared.
 
-Prefer OpenRouter `:free` on hosted. NVIDIA backup. Daytona required for skills/sandbox. User OpenRouter account has **$0 credits**.
+Hosted model is Luna. Local film may stay OpenRouter 4.1-mini. Daytona required for skills/sandbox.
 
 ## Form (draft, not submitted)
 
@@ -32,4 +32,4 @@ Constraints and URLs: [form.md](form.md). Copy must sound human, about **this we
 
 ## Priority
 
-See [next.md](next.md). Short: land this handoff plus auto-deploy, then a new hosted conversion-drop (or film the local PASS), then YouTube, then blog, then form. Qodo Highs 0 before every merge. CodeRabbit is noise.
+See [next.md](next.md). Short: land PR #9 after Qodo Highs 0, human-merge, re-import Luna with `LOOP_SKILL_REF=main`, film the hosted pause, publish the Field Report, then form. CodeRabbit is noise.

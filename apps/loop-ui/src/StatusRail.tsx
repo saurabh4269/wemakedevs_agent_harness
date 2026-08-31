@@ -55,6 +55,7 @@ export function StatusRail({
       <p className="loop-rail-kicker">Agent loop</p>
       <h1>LOOP</h1>
       <p className="loop-rail-hint">Watch Waiting — that is the pause before any write.</p>
+      <p className="loop-rail-honest">Warehouse and GitHub are fixtures. The pause and sandbox are real.</p>
       {view.phase === "error" ? (
         <p className="loop-rail-error" role="alert">
           {view.error || "Could not load LOOP status"}
