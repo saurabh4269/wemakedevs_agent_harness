@@ -23,7 +23,7 @@ Prompt:
 | Warehouse answers (`query_analytics` / `query_logs` / `query_deploys`) | **Fixture** — canned story in `fixtures/mcp/stories.ts`, not Grafana |
 | `open_draft_pr` | **Fixture** — `mode:fixture`, `live_github: false`, `html_url` is `https://github.example.invalid/loop-tenant/pull/42`. Never talks to GitHub.com |
 | Hosted Postgres + Redis, Render image, custom domain TLS | **Real** |
-| Qodo trail on merged PRs #1–#3 | **Real** |
+| Qodo trail on merged PRs #1–#3 and #5–#7 | **Real** |
 
 Official page wants tools “connected, not mocked.” Judges will see `mode:fixture` in Agent Steps. Do not hide that. Pitch: a real-shaped incident on a real harness, with tools we own so a judge needs no login.
 
@@ -34,6 +34,9 @@ Dynamic subagents share the root tool set. There is no per-subagent `enable_tool
 ## Hosted vs local
 
 - **Judges:** https://loop.heisenbug.in — LOOP agent `01m1aaemb86czjax2v232nxygf`, OpenRouter Nemotron Super `:free` (`openrouter/nemotron-3-super-120b-a12b-free`).
-- **Film source (do not click):** local session `01m1a87xjewncn310ymqy3yz01` on `localhost:8790` (4.1-mini). Qualify PASS. Never Approve/Deny that session.
+- **Film source (do not click):** local session `01m1a87xjewncn310ymqy3yz01` on `[::1]:8790` (4.1-mini). Qualify PASS. Never Approve/Deny that session.
+
+
+- **Hosted FAIL, do not retry:** `01m1advv5np7mqwse1xf2hdpyc` (empty-cwd skip, no `open_draft_pr`); `01m1ayqn9563da3mgerw6nwpq5` (asked the user about subagent overload; no clone, no pause). Ignore empty `01m1ayra0m7tdj5rphtnsqevyw`.
 
 Free OpenRouter: do not use Luna or paid 4.1-mini on the hosted agent.

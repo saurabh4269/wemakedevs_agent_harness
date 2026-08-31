@@ -13,3 +13,11 @@
 10. **Production-shaped product.** A filmed run is a consequence, not the reason the system exists. Do not add demo-only theater.
 11. **Hosted TrueForge on Render.** Not Vercel, not a Cloudflare tunnel, not standalone SQLite (upstream: local-only, not production-safe). Topology is one free web service (`loop-trueforge`) with Postgres + Redis, `STANDALONE=false`. Fixture MCP is colocated in the TrueForge image on `127.0.0.1:8788` so LOOP talks in-process; a Render private service is not free. OIDC unset for no-login judges. Model/Daytona keys stay `sync: false` in the Blueprint (dashboard only). Existing Saurabh workspace already has `loop-postgres` / `loop-redis` — do not Blueprint-Apply there (duplicates); greenfield Apply is for a new workspace.
 
+
+12. **Auto-deploy on `main`.** Live Render service `loop-trueforge` tracks branch `main` with `autoDeployTrigger: commit`. Merge (after Qodo Highs 0) deploys the image. Do not Apply the Blueprint on workspace `tea-ctoktrjtq21c73cufog0` (duplicates DBs). Do not store `RENDER_API_KEY` in git. Image deploy does not re-import LOOP; Postgres holds the agent.
+
+13. **Hosted model is OpenRouter Nemotron Super `:free`.** User OpenRouter account has $0 credits. FQN `openrouter/nemotron-3-super-120b-a12b-free`. Do not use Luna or paid `gpt-4.1-mini` on hosted. Local film agent may stay on 4.1-mini until that sitting pause is no longer the film source. `import-loop.ts` must be passed the Nemotron env vars or it upserts 4.1-mini.
+
+14. **Fixture MCP is labeled on purpose.** Warehouse is a canned story. `open_draft_pr` returns `mode:fixture` and a fake `html_url`. Say that out loud. Do not hide it from Kunal/Sai. Qualify still uses real TrueForge MCP, Daytona, and the write-approval pause.
+
+15. **Clock deadline passed; keep building.** Official close was Sun 30 Aug 2026 8:00pm London. Live page still said Submissions are open as of 2026-08-31 morning IST. No written late policy. Do not invent one.

@@ -172,7 +172,7 @@ TrueForge Daytona sandboxes start from a snapshot **without** this git repo. LOO
 
 ## Hosting (Render)
 
-Public judges should use https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com — do not disable the onrender subdomain). Hosted TrueForge is **not** local npx SQLite and **not** a Cloudflare tunnel. One free web service (`loop-trueforge`) runs `STANDALONE=false` against Postgres + Redis. The fixture MCP is **colocated** in that image on `127.0.0.1:8788` (Render private services have no free plan). OIDC is unset on purpose so anyone who can reach the host is admin (no-login judges). Free web sleeps when idle — ping `/healthz` first (~30s wake) before a judge demo. `autoDeploy` is off.
+Public judges should use https://loop.heisenbug.in (fallback https://loop-trueforge.onrender.com — do not disable the onrender subdomain). Hosted TrueForge is **not** local npx SQLite and **not** a Cloudflare tunnel. One free web service (`loop-trueforge`) runs `STANDALONE=false` against Postgres + Redis. The fixture MCP is **colocated** in that image on `127.0.0.1:8788` (Render private services have no free plan). OIDC is unset on purpose so anyone who can reach the host is admin (no-login judges). Free web sleeps when idle — ping `/healthz` first (~30s wake) before a judge demo. The live service tracks `main` with `autoDeployTrigger: commit`. Merge to main deploys the image.
 
 Leave local `npx` TrueForge on :8790 running. Sitting pause session `01m1a87xjewncn310ymqy3yz01` is local-only. Do not Approve/Deny it.
 
@@ -182,7 +182,7 @@ If the workspace has **no** `loop-postgres` / `loop-redis` yet:
 
 https://dashboard.render.com/blueprint/new?repo=https://github.com/saurabh4269/wemakedevs_agent_harness
 
-Select branch `feat/render-host` until this lands on main. Paste OpenRouter / NVIDIA / Daytona keys in the dashboard (`sync: false` — they are not in git). Do not enable OIDC env vars.
+Select branch `main`. Paste OpenRouter / NVIDIA / Daytona keys in the dashboard (`sync: false` — they are not in git). Do not enable OIDC env vars.
 
 This workspace already has the live web service. Custom domain is Cloudflare CNAME `loop` → `loop-trueforge.onrender.com` on `heisenbug.in` only — never touch apex or `www` (Vercel). `thexplorers.xyz` is expired; do not use it. A greenfield Apply elsewhere would mint another `onrender.com` hostname; do not Apply here.
 
@@ -193,7 +193,7 @@ Workspace `tea-ctoktrjtq21c73cufog0` (Oregon, free) already has:
 - Postgres `loop-postgres` (`dpg-daaa7k4s728c73fr0feg-a`)
 - Key Value `loop-redis` (`red-daaa7ohsrm7s73ed64mg`)
 
-**Do not Apply the Blueprint there** — Render would duplicate those datastores. Web service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is already live and wired to those instances. `autoDeploy` is off. `render.yaml` still lists the datastores so a greenfield Apply elsewhere stays valid.
+**Do not Apply the Blueprint there** — Render would duplicate those datastores. Web service `loop-trueforge` (`srv-daaaa65g1s2s73cjsq0g`) is already live and wired to those instances. The live service tracks `main` with `autoDeployTrigger: commit`. Merge to main deploys the image. `render.yaml` still lists the datastores so a greenfield Apply elsewhere stays valid.
 
 ### Hosted import (already done)
 
@@ -202,7 +202,7 @@ Hosted LOOP agent `01m1aaemb86czjax2v232nxygf` is imported. Point LOOP MCP wareh
 - `http://127.0.0.1:8788/warehouse`
 - `http://127.0.0.1:8788/github`
 
-Hosted model is OpenRouter free Nemotron (`nvidia/nemotron-3-super-120b-a12b:free`, FQN `openrouter/nemotron-3-super-120b-a12b-free`), `max_tokens` 8192. Do not change the local live agent model. Do not put keys in git.
+Hosted model is OpenRouter free Nemotron (`nvidia/nemotron-3-super-120b-a12b:free`, FQN `openrouter/nemotron-3-super-120b-a12b-free`). Last import dropped `max_tokens` 8192 (`agents/loop.json` only sets temperature). Do not change the local live agent model. Do not put keys in git.
 
 ### Local Compose (optional)
 
